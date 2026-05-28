@@ -4,7 +4,7 @@ class_name QuestNPC
 @export var quest_id: String = "kill_slimes"
 @export var quest_name: String = "Kill 5 Slimes"
 
-var quest_book: Control = null
+var quest_book: QuestBook = null
 
 func _ready():
 	super._ready()
@@ -18,8 +18,8 @@ func _ready():
 	QuestManager.quest_turned_in.connect(_on_quest_turned_in)
 
 func _input(event):
-	if player_in_range and event.is_action_pressed("interact"):
-		if quest_book and quest_book.visible:
+	if player_in_range and event.is_action_pressed("interact") and not (event is InputEventKey and event.is_echo()):
+		if quest_book and quest_book.control.visible:
 			quest_book.close()
 		else:
 			_open_quest_book()

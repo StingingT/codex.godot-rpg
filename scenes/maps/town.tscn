@@ -6,7 +6,6 @@
 [ext_resource type="PackedScene" uid="uid://hud123456789" path="res://scenes/ui/hud.tscn" id="4_hud"]
 [ext_resource type="PackedScene" uid="uid://shopnpc123456" path="res://scenes/npcs/shop_npc.tscn" id="5_shop_npc"]
 [ext_resource type="PackedScene" uid="uid://questnpc123456" path="res://scenes/npcs/quest_npc.tscn" id="6_quest_npc"]
-[ext_resource type="PackedScene" uid="uid://portalnpc123456" path="res://scenes/npcs/portal_npc.tscn" id="7_portal_npc"]
 [ext_resource type="PackedScene" uid="uid://dialogue123456" path="res://scenes/ui/dialogue_box.tscn" id="8_dialogue_box"]
 
 [ext_resource type="Script" path="res://scripts/world/spawn_manager.gd" id="99_spawn"]
@@ -81,9 +80,8 @@ position = Vector2(400, 300)
 [node name="Portals" type="Node2D" parent="."]
 
 [node name="ToFields" parent="Portals" instance=ExtResource("3_portal")]
-position = Vector2(800, 300)
-target_map = "fields"
-target_position = Vector2(100, 300)
+position = Vector2(560, 180)
+portal_name = "World Portal"
 
 [node name="Camera2D" type="Camera2D" parent="Player"]
 zoom = Vector2(2, 2)
@@ -98,9 +96,6 @@ position = Vector2(200, 200)
 
 [node name="QuestGiver" parent="NPCs" instance=ExtResource("6_quest_npc")]
 position = Vector2(400, 150)
-
-[node name="PortalMaster" parent="NPCs" instance=ExtResource("7_portal_npc")]
-position = Vector2(600, 200)
 
 [node name="DialogueBox" parent="." instance=ExtResource("8_dialogue_box")]
 

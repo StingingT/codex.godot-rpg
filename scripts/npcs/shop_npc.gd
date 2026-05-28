@@ -5,6 +5,7 @@ class_name ShopNPC
 @export var shop_name: String = "General Store"
 
 var shop_ui: Control = null
+var shop_layer: CanvasLayer = null
 
 func _ready():
 	super._ready()
@@ -12,7 +13,7 @@ func _ready():
 	npc_name = "Shopkeeper"
 
 func _input(event):
-	if player_in_range and event.is_action_pressed("interact"):
+	if player_in_range and event.is_action_pressed("interact") and not (event is InputEventKey and event.is_echo()):
 		if not DialogueManager.is_dialogue_active:
 			_open_shop()
 
@@ -23,8 +24,11 @@ func _open_shop():
 	
 	# Create shop UI if not exists
 	if not shop_ui:
+		shop_layer = CanvasLayer.new()
+		shop_layer.layer = 20
+		get_tree().root.add_child(shop_layer)
 		shop_ui = preload("res://scenes/ui/shop_ui.tscn").instantiate()
-		get_tree().current_scene.add_child(shop_ui)
+		shop_layer.add_child(shop_ui)
 	
 	# Load shop data
 	var shop_data = _load_shop_data()

@@ -1,4 +1,5 @@
 extends CanvasLayer
+class_name MapSelector
 
 signal map_selected(map_id: String)
 

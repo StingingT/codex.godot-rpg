@@ -8,7 +8,7 @@ class_name PortalNPC
 	{"id": "dungeon", "name": "Ancient Dungeon", "level_req": 12}
 ]
 
-var map_selector: Control = null
+var map_selector: MapSelector = null
 
 func _ready():
 	super._ready()
@@ -17,12 +17,12 @@ func _ready():
 	add_to_group("portal")
 
 func _input(event):
-	if player_in_range and event.is_action_pressed("interact"):
+	if player_in_range and event.is_action_pressed("interact") and not (event is InputEventKey and event.is_echo()):
 		_open_map_selector()
 
 func _open_map_selector():
-	if map_selector and map_selector.visible:
-		map_selector.hide()
+	if map_selector and map_selector.control.visible:
+		map_selector.control.hide()
 		return
 	
 	if not map_selector:
@@ -35,5 +35,5 @@ func _open_map_selector():
 		map_selector.open(player.stats.level, available_maps)
 
 func _on_map_selected(map_id: String):
-	map_selector.hide()
+	map_selector.control.hide()
 	MapManager.change_map(map_id)

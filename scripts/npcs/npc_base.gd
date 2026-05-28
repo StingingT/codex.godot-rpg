@@ -23,7 +23,7 @@ func _ready():
 	_update_indicator()
 
 func _input(event):
-	if player_in_range and event.is_action_pressed("interact"):
+	if player_in_range and event.is_action_pressed("interact") and not (event is InputEventKey and event.is_echo()):
 		if not DialogueManager.is_dialogue_active:
 			_start_dialogue()
 
