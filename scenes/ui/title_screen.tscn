@@ -1,17 +1,17 @@
-[gd_scene load_steps=3 format=3 uid="uid://title123456789"]
+[gd_scene load_steps=4 format=3 uid="uid://bnncdjrkp1b61"]
 
 [ext_resource type="Script" path="res://scripts/ui/title_screen.gd" id="1_title"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
-bg_color = Color(0.1, 0.1, 0.15, 1.0)
+bg_color = Color(0.1, 0.1, 0.15, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_class_btn"]
-bg_color = Color(0.2, 0.2, 0.25, 1.0)
+bg_color = Color(0.2, 0.2, 0.25, 1)
 border_width_left = 2
 border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
-border_color = Color(0.5, 0.5, 0.6, 1.0)
+border_color = Color(0.5, 0.5, 0.6, 1)
 
 [node name="TitleScreen" type="Control"]
 layout_mode = 3
