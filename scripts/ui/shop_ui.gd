@@ -190,6 +190,8 @@ func _load_item_data(item_id: String) -> ItemData:
 		var armor = ArmorData.new()
 		armor.armor_type = data.get("armor_type", 0)
 		armor.defense = data.get("defense", 5)
+		armor.vitality_bonus = data.get("vitality_bonus", 0)
+		armor.hp_bonus = data.get("hp_bonus", 0)
 		item = armor
 	else:
 		item = ItemData.new()
@@ -200,5 +202,10 @@ func _load_item_data(item_id: String) -> ItemData:
 	item.item_type = item_type
 	item.buy_price = data.get("buy_price", 100)
 	item.sell_price = data.get("sell_price", 50)
+	item.stackable = data.get("stackable", false)
+	item.max_stack = data.get("max_stack", 1)
+	item.attack_bonus = data.get("attack_bonus", 0)
+	item.heal_amount = data.get("heal_amount", 0)
+	item.mana_amount = data.get("mana_amount", 0)
 	
 	return item

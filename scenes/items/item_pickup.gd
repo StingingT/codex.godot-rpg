@@ -76,6 +76,13 @@ func _load_item_data(load_id: String) -> ItemData:
 		weapon.attack_speed = data.get("attack_speed", 1.0)
 		weapon.knockback = data.get("knockback", 100.0)
 		item = weapon
+	elif item_type == 1 or data.has("armor_type"):
+		var armor = ArmorData.new()
+		armor.armor_type = data.get("armor_type", 0)
+		armor.defense = data.get("defense", 5)
+		armor.vitality_bonus = data.get("vitality_bonus", 0)
+		armor.hp_bonus = data.get("hp_bonus", 0)
+		item = armor
 	else:
 		item = ItemData.new()
 	
@@ -89,6 +96,9 @@ func _load_item_data(load_id: String) -> ItemData:
 	item.sell_price = data.get("sell_price", 50)
 	item.stackable = data.get("stackable", false)
 	item.max_stack = data.get("max_stack", 1)
+	item.attack_bonus = data.get("attack_bonus", 0)
+	item.heal_amount = data.get("heal_amount", 0)
+	item.mana_amount = data.get("mana_amount", 0)
 	
 	# Try to load sprite
 	var sprite_path = "res://assets/sprites/weapons/" + load_id + ".png"

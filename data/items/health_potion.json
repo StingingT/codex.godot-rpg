@@ -3,6 +3,7 @@
   "item_name": "Health Potion",
   "description": "Restores 50 HP when consumed.",
   "item_type": 2,
+  "heal_amount": 50,
   "stackable": true,
   "max_stack": 99,
   "buy_price": 25,

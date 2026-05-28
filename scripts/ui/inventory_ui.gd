@@ -61,6 +61,7 @@ func _update_inventory() -> void:
 		if slot_data.item != null:
 			button.text = slot_data.item.item_name.substr(0, 2)
 			button.tooltip_text = slot_data.item.item_name + " x" + str(slot_data.quantity)
+			_add_stack_badge(button, int(slot_data.quantity))
 			button.pressed.connect(_on_slot_pressed.bind(slot_data.item))
 		else:
 			button.disabled = true
@@ -86,8 +87,9 @@ func _update_equipment() -> void:
 		if item != null:
 			button.text = item.item_name
 			button.tooltip_text = item.item_name
+			button.pressed.connect(_on_equipment_pressed.bind(slot_name, item))
 		else:
-			button.disabled = true
+			button.disabled = false
 		
 		equipment_slots.add_child(button)
 
@@ -95,12 +97,11 @@ func _on_slot_pressed(item: ItemData) -> void:
 	selected_item = item
 	item_info.show()
 	info_name.text = item.item_name
-	info_desc.text = item.description
+	info_desc.text = _build_item_description(item)
 	
-	# Show equip button only for weapons
-	# Check using get_script() or property existence
-	if item.get("weapon_type") != null:
+	if _get_equipment_slot(item) != "":
 		equip_button.show()
+		equip_button.text = "Equip"
 	else:
 		equip_button.hide()
 
@@ -108,13 +109,79 @@ func _on_equip_pressed() -> void:
 	if not player or not selected_item:
 		return
 	
-	# Check if it's a weapon by checking for weapon_type property
-	if selected_item.get("weapon_type") != null:
-		player.inventory.equip_item(selected_item, "weapon")
-		item_info.hide()
+	var slot := _get_equipment_slot(selected_item)
+	if equip_button.text == "Unequip":
+		player.inventory.unequip_item(slot)
+	elif slot != "":
+		player.inventory.equip_item(selected_item, slot)
+	_update_inventory()
+	_update_equipment()
+	item_info.hide()
+
+func _on_equipment_pressed(slot_name: String, item: ItemData) -> void:
+	selected_item = item
+	item_info.show()
+	info_name.text = item.item_name
+	info_desc.text = _build_item_description(item)
+	equip_button.show()
+	equip_button.text = "Unequip"
+
+func _get_equipment_slot(item: ItemData) -> String:
+	if item == null:
+		return ""
+	if item.get("weapon_type") != null:
+		return "weapon"
+	if item.get("armor_type") != null:
+		return "helmet" if int(item.get("armor_type")) == 1 else "armor"
+	if int(item.get("attack_bonus")) > 0:
+		return "accessory"
+	return ""
+
+func _build_item_description(item: ItemData) -> String:
+	var desc := item.description + "\n\n"
+	if item.get("damage"):
+		desc += "Increases damage by: +%d\n" % int(item.get("damage"))
+	if item.get("attack_speed"):
+		desc += "Attack speed: %.1fx\n" % float(item.get("attack_speed"))
+	if item.get("defense"):
+		desc += "Increases defense by: +%d\n" % int(item.get("defense"))
+	if item.get("vitality_bonus"):
+		desc += "Vitality bonus: +%d\n" % int(item.get("vitality_bonus"))
+	if item.get("hp_bonus"):
+		desc += "Increases max HP by: +%d\n" % int(item.get("hp_bonus"))
+	if item.get("attack_bonus"):
+		desc += "Increases attack by: +%d\n" % int(item.get("attack_bonus"))
+	if item.get("heal_amount"):
+		desc += "Heals: %d HP\n" % int(item.get("heal_amount"))
+	if item.get("mana_amount"):
+		desc += "Restores: %d Mana\n" % int(item.get("mana_amount"))
+	if desc.ends_with("\n\n"):
+		desc += "No stat changes."
+	return desc
 
 func _on_close_pressed() -> void:
 	close()
+
+func _add_stack_badge(button: Button, quantity: int) -> void:
+	if quantity <= 1:
+		return
+	var badge := Label.new()
+	badge.text = str(quantity)
+	badge.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	badge.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	badge.vertical_alignment = VERTICAL_ALIGNMENT_BOTTOM
+	badge.add_theme_font_size_override("font_size", 11)
+	badge.add_theme_color_override("font_color", Color.WHITE)
+	badge.add_theme_color_override("font_shadow_color", Color.BLACK)
+	badge.add_theme_constant_override("shadow_offset_x", 1)
+	badge.add_theme_constant_override("shadow_offset_y", 1)
+	badge.anchor_right = 1.0
+	badge.anchor_bottom = 1.0
+	badge.offset_left = 2.0
+	badge.offset_top = 2.0
+	badge.offset_right = -4.0
+	badge.offset_bottom = -2.0
+	button.add_child(badge)
 
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_cancel") and visible:

@@ -234,6 +234,7 @@ func _update_inventory():
 		if slot.item:
 			button.text = slot.item.item_name.substr(0, 4)
 			button.tooltip_text = "%s (x%d)" % [slot.item.item_name, slot.quantity]
+			_add_stack_badge(button, int(slot.quantity))
 			
 			# Style based on item type
 			match slot.item.item_type:
@@ -344,10 +345,12 @@ func _on_skill_unlock_pressed():
 				player.stats.attack = int(player.stats.attack * (1 + effect.mul))
 			"max_hp":
 				player.stats.max_hp = int(player.stats.max_hp * (1 + effect.mul))
+				player.stats.current_hp = player.stats.get_max_hp()
 			"defense":
 				player.stats.defense = int(player.stats.defense * (1 + effect.mul))
 			"speed":
 				player.stats.speed = player.stats.speed * (1 + effect.mul)
+		player.stats.emit_stat_signals()
 		
 		_update_skills()
 		_update_stats()
@@ -368,6 +371,7 @@ func _on_equipment_slot_pressed(slot_type: String):
 		_show_item_info(equipped)
 		# Change equip button to "Unequip"
 		equip_button.text = "Unequip"
+		equip_button.show()
 	else:
 		item_info_panel.hide()
 
@@ -375,6 +379,7 @@ func _on_inventory_item_selected(item: ItemData):
 	selected_item = item
 	_show_item_info(item)
 	equip_button.text = "Equip"
+	equip_button.visible = _is_equippable(item)
 
 func _on_item_gui_input(event: InputEvent, item: ItemData):
 	if event is InputEventMouseButton:
@@ -390,7 +395,7 @@ func _show_context_menu():
 	
 	if selected_item.item_type == ItemData.ItemType.CONSUMABLE:
 		context_menu.add_item("Use", 0)
-	else:
+	elif _is_equippable(selected_item):
 		context_menu.add_item("Equip", 0)
 	
 	context_menu.add_item("Drop", 1)
@@ -422,7 +427,7 @@ func _on_context_menu_selected(id: int):
 				_update_equipment()
 			elif selected_item.item_type == ItemData.ItemType.CONSUMABLE:
 				_use_consumable(selected_item)
-			elif selected_item.get("attack_bonus") != null:
+			elif int(selected_item.get("attack_bonus")) > 0:
 				player.inventory.equip_item(selected_item, "accessory")
 				_update_inventory()
 				_update_equipment()
@@ -446,7 +451,7 @@ func _on_equip_button_pressed():
 				player.inventory.unequip_item("helmet")
 			else:
 				player.inventory.unequip_item("armor")
-		elif selected_item.get("attack_bonus") != null:
+		elif int(selected_item.get("attack_bonus")) > 0:
 			player.inventory.unequip_item("accessory")
 		
 		_update_equipment()
@@ -491,15 +496,17 @@ func _show_item_info(item: ItemData):
 	var desc_text = item.description + "\n\n"
 	
 	if item.get("damage"):
-		desc_text += "Damage: %d\n" % item.get("damage")
+		desc_text += "Increases damage by: +%d\n" % item.get("damage")
 	if item.get("attack_speed"):
-		desc_text += "Attack Speed: %.1f\n" % item.get("attack_speed")
+		desc_text += "Attack speed: %.1fx\n" % item.get("attack_speed")
 	if item.get("defense"):
-		desc_text += "Defense: %d\n" % item.get("defense")
+		desc_text += "Increases defense by: +%d\n" % item.get("defense")
+	if item.get("vitality_bonus"):
+		desc_text += "Vitality bonus: +%d\n" % item.get("vitality_bonus")
 	if item.get("hp_bonus"):
-		desc_text += "HP Bonus: +%d\n" % item.get("hp_bonus")
+		desc_text += "Increases max HP by: +%d\n" % item.get("hp_bonus")
 	if item.get("attack_bonus"):
-		desc_text += "Attack Bonus: +%d\n" % item.get("attack_bonus")
+		desc_text += "Increases attack by: +%d\n" % item.get("attack_bonus")
 	if item.get("heal_amount"):
 		desc_text += "Heals: %d HP\n" % item.get("heal_amount")
 	if item.get("mana_amount"):
@@ -511,7 +518,36 @@ func _show_item_info(item: ItemData):
 		desc_text += "\n" + comparison
 	
 	item_desc_label.text = desc_text
+	equip_button.visible = equip_button.text == "Unequip" or _is_equippable(item)
 	item_info_panel.show()
+
+func _is_equippable(item: ItemData) -> bool:
+	if item == null:
+		return false
+	return item.get("weapon_type") != null or item.get("armor_type") != null or int(item.get("attack_bonus")) > 0
+
+func _add_stack_badge(button: Button, quantity: int) -> void:
+	if quantity <= 1:
+		return
+	var badge := Label.new()
+	badge.text = str(quantity)
+	badge.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	badge.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	badge.vertical_alignment = VERTICAL_ALIGNMENT_BOTTOM
+	badge.add_theme_font_size_override("font_size", 11)
+	badge.add_theme_color_override("font_color", Color.WHITE)
+	badge.add_theme_color_override("font_shadow_color", Color.BLACK)
+	badge.add_theme_constant_override("shadow_offset_x", 1)
+	badge.add_theme_constant_override("shadow_offset_y", 1)
+	badge.anchor_left = 0.0
+	badge.anchor_top = 0.0
+	badge.anchor_right = 1.0
+	badge.anchor_bottom = 1.0
+	badge.offset_left = 2.0
+	badge.offset_top = 2.0
+	badge.offset_right = -4.0
+	badge.offset_bottom = -2.0
+	button.add_child(badge)
 
 func _get_comparison_text(item: ItemData) -> String:
 	if not player or not item:
@@ -530,7 +566,7 @@ func _get_comparison_text(item: ItemData) -> String:
 			equipped = player.inventory.equipment.helmet
 		else:
 			equipped = player.inventory.equipment.armor
-	elif item.get("attack_bonus") != null:
+	elif int(item.get("attack_bonus")) > 0:
 		equipped = player.inventory.equipment.accessory
 	
 	if not equipped:

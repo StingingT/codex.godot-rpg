@@ -15,7 +15,7 @@ var current_mana: int
 # Leveling
 var level: int = 1
 var current_xp: int = 0
-var xp_to_next: int = 100
+var xp_to_next: int = 50
 const MAX_LEVEL: int = 20
 
 # Points
@@ -87,8 +87,8 @@ func add_xp(amount: int) -> void:
 func _level_up() -> void:
 	level += 1
 	
-	# Calculate XP for next level (easier curve for testing)
-	xp_to_next = int(100 * pow(level, 1.1))
+	# Flat test curve while core gameplay is being tuned.
+	xp_to_next = 50
 	
 	# Award points
 	var ap_gained = 5
@@ -264,7 +264,7 @@ func load_save_data(data: Dictionary) -> void:
 	current_mana = data.get("current_mana", max_mana)
 	level = data.get("level", 1)
 	current_xp = data.get("current_xp", 0)
-	xp_to_next = data.get("xp_to_next", 100)
+	xp_to_next = min(int(data.get("xp_to_next", 50)), 50)
 	attribute_points = data.get("attribute_points", 0)
 	skill_points = data.get("skill_points", 0)
 	
@@ -273,3 +273,13 @@ func load_save_data(data: Dictionary) -> void:
 		distributed_ap[stat] = saved_ap.get(stat, 0)
 	
 	_recalculate_derived_stats()
+	xp_changed.emit(current_xp, xp_to_next, level)
+	ap_changed.emit(attribute_points)
+	sp_changed.emit(skill_points)
+
+func emit_stat_signals() -> void:
+	hp_changed.emit(current_hp, get_max_hp())
+	mana_changed.emit(current_mana, get_max_mana())
+	xp_changed.emit(current_xp, xp_to_next, level)
+	ap_changed.emit(attribute_points)
+	sp_changed.emit(skill_points)

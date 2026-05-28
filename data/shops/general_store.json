@@ -15,6 +15,18 @@
       "quantity": -1
     },
     {
+      "item_id": "bronze_helmet",
+      "buy_price": 150,
+      "sell_price": 75,
+      "quantity": -1
+    },
+    {
+      "item_id": "leather_bracelet",
+      "buy_price": 80,
+      "sell_price": 40,
+      "quantity": -1
+    },
+    {
       "item_id": "health_potion",
       "buy_price": 25,
       "sell_price": 10,

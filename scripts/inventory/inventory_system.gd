@@ -217,6 +217,9 @@ func _load_item_from_json(item_id: String) -> ItemData:
 	item.sell_price = data.get("sell_price", 50)
 	item.stackable = data.get("stackable", false)
 	item.max_stack = data.get("max_stack", 1)
+	item.attack_bonus = data.get("attack_bonus", 0)
+	item.heal_amount = data.get("heal_amount", 0)
+	item.mana_amount = data.get("mana_amount", 0)
 	
 	# Try to load sprite
 	var sprite_path = "res://assets/sprites/weapons/" + item_id + ".png"

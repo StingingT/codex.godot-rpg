@@ -14,3 +14,6 @@ enum ItemType { WEAPON, ARMOR, CONSUMABLE, MATERIAL, QUEST }
 @export var buy_price: int = 0
 @export var sell_price: int = 0
 @export var required_level: int = 1
+@export var attack_bonus: int = 0
+@export var heal_amount: int = 0
+@export var mana_amount: int = 0
