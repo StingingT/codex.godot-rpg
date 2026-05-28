@@ -7,6 +7,7 @@
 script = ExtResource("2_quest_npc")
 npc_id = "quest_giver"
 npc_name = "Quest Giver"
+quest_chain = ["kill_slimes", "hunt_skeletons"]
 available_quests = ["kill_slimes", "collect_herbs"]
 completed_quests = ["kill_slimes"]
 

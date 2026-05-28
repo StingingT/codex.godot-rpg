@@ -33,6 +33,7 @@ extends Control
 
 var player: Player = null
 var selected_item: ItemData = null
+var selected_equipment_slot: String = ""
 var selected_slot_index: int = -1
 var selected_skill: String = ""
 
@@ -100,6 +101,10 @@ func _ready():
 	armor_slot.pressed.connect(_on_equipment_slot_pressed.bind("armor"))
 	helmet_slot.pressed.connect(_on_equipment_slot_pressed.bind("helmet"))
 	accessory_slot.pressed.connect(_on_equipment_slot_pressed.bind("accessory"))
+	weapon_slot.gui_input.connect(_on_equipment_slot_gui_input.bind("weapon"))
+	armor_slot.gui_input.connect(_on_equipment_slot_gui_input.bind("armor"))
+	helmet_slot.gui_input.connect(_on_equipment_slot_gui_input.bind("helmet"))
+	accessory_slot.gui_input.connect(_on_equipment_slot_gui_input.bind("accessory"))
 	
 	# Connect AP distribution buttons
 	ap_buttons_container.get_node("StrButton").pressed.connect(_on_ap_button_pressed.bind("str"))
@@ -121,7 +126,8 @@ func _build_skill_list():
 	for skill_id in skills.keys():
 		var skill = skills[skill_id]
 		var button = Button.new()
-		button.custom_minimum_size = Vector2(0, 32)
+		button.custom_minimum_size = Vector2(0, 28)
+		button.add_theme_font_size_override("font_size", 14)
 		button.text = skill.name
 		button.pressed.connect(_on_skill_selected.bind(skill_id))
 		skill_list.add_child(button)
@@ -151,7 +157,7 @@ func _update_stats():
 	xp_label.text = "XP: %d / %d" % [stats.current_xp, stats.xp_to_next]
 	
 	# Update main stats label
-	stats_label.text = "HP: %d / %d\nMana: %d / %d\nAttack: %d\nDefense: %d\nSpeed: %.1f" % [
+	stats_label.text = "HP: %d/%d\nMana: %d/%d\nAtk: %d\nDef: %d\nSpd: %.1f" % [
 		stats.current_hp, stats.get_max_hp(),
 		stats.current_mana, stats.get_max_mana(),
 		stats.get_total_attack(),
@@ -195,27 +201,35 @@ func _update_equipment():
 	
 	# Update weapon slot
 	if equipment.weapon:
-		weapon_slot.text = "Weapon: %s" % equipment.weapon.item_name
+		weapon_slot.text = "Weapon: %s" % _short_item_name(equipment.weapon)
+		weapon_slot.tooltip_text = equipment.weapon.item_name
 	else:
 		weapon_slot.text = "Weapon (Empty)"
+		weapon_slot.tooltip_text = ""
 	
 	# Update armor slot
 	if equipment.armor:
-		armor_slot.text = "Armor: %s" % equipment.armor.item_name
+		armor_slot.text = "Armor: %s" % _short_item_name(equipment.armor)
+		armor_slot.tooltip_text = equipment.armor.item_name
 	else:
 		armor_slot.text = "Armor (Empty)"
+		armor_slot.tooltip_text = ""
 	
 	# Update helmet slot
 	if equipment.helmet:
-		helmet_slot.text = "Helmet: %s" % equipment.helmet.item_name
+		helmet_slot.text = "Helmet: %s" % _short_item_name(equipment.helmet)
+		helmet_slot.tooltip_text = equipment.helmet.item_name
 	else:
 		helmet_slot.text = "Helmet (Empty)"
+		helmet_slot.tooltip_text = ""
 	
 	# Update accessory slot
 	if equipment.accessory:
-		accessory_slot.text = "Accessory: %s" % equipment.accessory.item_name
+		accessory_slot.text = "Accessory: %s" % _short_item_name(equipment.accessory)
+		accessory_slot.tooltip_text = equipment.accessory.item_name
 	else:
 		accessory_slot.text = "Accessory (Empty)"
+		accessory_slot.tooltip_text = ""
 
 	equipment_stats_label.text = _build_equipment_summary()
 
@@ -233,7 +247,8 @@ func _update_inventory():
 	# Add inventory slots
 	for slot in player.inventory.items:
 		var button = Button.new()
-		button.custom_minimum_size = Vector2(44, 44)
+		button.custom_minimum_size = Vector2(40, 40)
+		button.add_theme_font_size_override("font_size", 13)
 		
 		if slot.item:
 			button.text = slot.item.item_name.substr(0, 4)
@@ -370,18 +385,26 @@ func _on_equipment_slot_pressed(slot_type: String):
 		"accessory": equipped = player.inventory.equipment.accessory
 	
 	if equipped:
-		if player.inventory.unequip_item(slot_type):
-			GameManager.show_notification("Unequipped %s" % equipped.item_name)
-			_update_equipment()
-			_update_inventory()
-			_update_stats()
-			if player.stats:
-				player.stats.emit_stat_signals()
+		selected_item = equipped
+		selected_equipment_slot = slot_type
+		_show_equipment_item_info(equipped)
 	else:
-		item_info_panel.hide()
+		selected_item = null
+		selected_equipment_slot = ""
+		equipment_stats_label.text = _build_equipment_summary()
+
+func _on_equipment_slot_gui_input(event: InputEvent, slot_type: String) -> void:
+	if event is InputEventMouseButton:
+		if event.button_index == MOUSE_BUTTON_RIGHT and event.pressed:
+			var equipped := _get_equipped_item(slot_type)
+			if equipped:
+				selected_item = equipped
+				selected_equipment_slot = slot_type
+				_show_equipment_context_menu()
 
 func _on_inventory_item_selected(item: ItemData):
 	selected_item = item
+	selected_equipment_slot = ""
 	_show_item_info(item)
 	equip_button.text = "Equip"
 	equip_button.visible = _is_equippable(item)
@@ -390,6 +413,7 @@ func _on_item_gui_input(event: InputEvent, item: ItemData):
 	if event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_RIGHT and event.pressed:
 			selected_item = item
+			selected_equipment_slot = ""
 			_show_context_menu()
 
 func _show_context_menu():
@@ -409,10 +433,27 @@ func _show_context_menu():
 	context_menu.position = get_global_mouse_position()
 	context_menu.popup()
 
+func _show_equipment_context_menu() -> void:
+	if not selected_item:
+		return
+	context_menu.clear()
+	context_menu.add_item("Examine", 2)
+	context_menu.add_item("Unequip", 3)
+	context_menu.position = get_global_mouse_position()
+	context_menu.popup()
+
 func _on_context_menu_selected(id: int):
 	if not selected_item or not player:
 		return
 	
+	if selected_equipment_slot != "":
+		match id:
+			2:
+				_show_equipment_item_info(selected_item)
+			3:
+				_unequip_selected_equipment()
+		return
+
 	match id:
 		0: # Equip or Use
 			if selected_item.get("weapon_type") != null:
@@ -538,6 +579,7 @@ func _drop_selected_item() -> void:
 		get_tree().current_scene.add_child(pickup)
 		GameManager.show_notification("Dropped %s" % selected_item.item_name)
 		selected_item = null
+		selected_equipment_slot = ""
 		item_info_panel.hide()
 		_update_inventory()
 
@@ -562,6 +604,50 @@ func _build_equipment_summary() -> String:
 		if item.get("vitality_bonus"):
 			vit += int(item.get("vitality_bonus"))
 	return "Equipment stats\nDamage/Attack: +%d\nDefense: +%d\nHP: +%d\nVitality: +%d" % [attack, defense, hp, vit]
+
+func _show_equipment_item_info(item: ItemData) -> void:
+	equipment_stats_label.text = _build_item_detail_text(item)
+
+func _build_item_detail_text(item: ItemData) -> String:
+	if not item:
+		return _build_equipment_summary()
+	var text := item.item_name + "\n"
+	if item.get("damage"):
+		text += "Damage: +%d\n" % int(item.get("damage"))
+	if item.get("attack_bonus"):
+		text += "Attack: +%d\n" % int(item.get("attack_bonus"))
+	if item.get("defense"):
+		text += "Defense: +%d\n" % int(item.get("defense"))
+	if item.get("hp_bonus"):
+		text += "HP: +%d\n" % int(item.get("hp_bonus"))
+	if item.get("vitality_bonus"):
+		text += "Vitality: +%d\n" % int(item.get("vitality_bonus"))
+	return text.strip_edges()
+
+func _get_equipped_item(slot_type: String) -> ItemData:
+	if not player or not player.inventory:
+		return null
+	return player.inventory.equipment.get(slot_type)
+
+func _unequip_selected_equipment() -> void:
+	if selected_equipment_slot == "" or not player or not player.inventory:
+		return
+	var item := selected_item
+	if player.inventory.unequip_item(selected_equipment_slot):
+		GameManager.show_notification("Unequipped %s" % item.item_name)
+		selected_item = null
+		selected_equipment_slot = ""
+		_update_equipment()
+		_update_inventory()
+		_update_stats()
+		if player.stats:
+			player.stats.emit_stat_signals()
+
+func _short_item_name(item: ItemData) -> String:
+	if not item:
+		return ""
+	var name := item.item_name
+	return name if name.length() <= 16 else name.substr(0, 15) + "."
 
 func _is_equippable(item: ItemData) -> bool:
 	if item == null:

@@ -18,10 +18,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -300.0
-offset_top = -165.0
-offset_right = 300.0
-offset_bottom = 165.0
+offset_left = -260.0
+offset_top = -150.0
+offset_right = 260.0
+offset_bottom = 150.0
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -32,6 +32,7 @@ anchor_right = 1.0
 offset_top = 8.0
 offset_bottom = 28.0
 grow_horizontal = 2
+theme_override_font_sizes/font_size = 18
 text = "Character"
 horizontal_alignment = 1
 
@@ -43,9 +44,10 @@ anchor_bottom = 1.0
 offset_left = 12.0
 offset_top = 32.0
 offset_right = -12.0
-offset_bottom = -32.0
+offset_bottom = -30.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_font_sizes/font_size = 16
 
 [node name="Stats" type="Control" parent="Panel/TabContainer"]
 layout_mode = 2
@@ -53,43 +55,48 @@ layout_mode = 2
 [node name="LevelLabel" type="Label" parent="Panel/TabContainer/Stats"]
 layout_mode = 0
 offset_left = 10.0
-offset_top = 8.0
+offset_top = 6.0
 offset_right = 120.0
-offset_bottom = 26.0
+offset_bottom = 22.0
+theme_override_font_sizes/font_size = 14
 text = "Level: 1/20"
 
 [node name="XPLabel" type="Label" parent="Panel/TabContainer/Stats"]
 layout_mode = 0
-offset_left = 10.0
-offset_top = 28.0
-offset_right = 160.0
-offset_bottom = 46.0
+offset_left = 112.0
+offset_top = 6.0
+offset_right = 220.0
+offset_bottom = 22.0
+theme_override_font_sizes/font_size = 14
 text = "XP: 0 / 100"
 
 [node name="APLabel" type="Label" parent="Panel/TabContainer/Stats"]
 layout_mode = 0
-offset_left = 10.0
-offset_top = 48.0
-offset_right = 80.0
-offset_bottom = 66.0
+offset_left = 230.0
+offset_top = 6.0
+offset_right = 300.0
+offset_bottom = 22.0
+theme_override_font_sizes/font_size = 14
 text = "AP: 0"
 modulate = Color(0.3, 0.8, 0.3, 1)
 
 [node name="SPLabel" type="Label" parent="Panel/TabContainer/Stats"]
 layout_mode = 0
-offset_left = 90.0
-offset_top = 48.0
-offset_right = 160.0
-offset_bottom = 66.0
+offset_left = 310.0
+offset_top = 6.0
+offset_right = 380.0
+offset_bottom = 22.0
+theme_override_font_sizes/font_size = 14
 text = "SP: 0"
 modulate = Color(0.3, 0.6, 0.9, 1)
 
 [node name="StatsLabel" type="Label" parent="Panel/TabContainer/Stats"]
 layout_mode = 0
 offset_left = 10.0
-offset_top = 70.0
-offset_right = 180.0
-offset_bottom = 180.0
+offset_top = 34.0
+offset_right = 145.0
+offset_bottom = 130.0
+theme_override_font_sizes/font_size = 14
 text = "HP: 100/100
 Mana: 50/50
 Attack: 10
@@ -98,10 +105,11 @@ Speed: 80.0"
 
 [node name="AttributesLabel" type="Label" parent="Panel/TabContainer/Stats"]
 layout_mode = 0
-offset_left = 10.0
-offset_top = 180.0
-offset_right = 180.0
-offset_bottom = 270.0
+offset_left = 155.0
+offset_top = 34.0
+offset_right = 220.0
+offset_bottom = 145.0
+theme_override_font_sizes/font_size = 14
 text = "STR: 0
 DEX: 0
 VIT: 0
@@ -110,74 +118,90 @@ LCK: 0"
 
 [node name="APButtonsContainer" type="VBoxContainer" parent="Panel/TabContainer/Stats"]
 layout_mode = 0
-offset_left = 190.0
-offset_top = 178.0
-offset_right = 220.0
-offset_bottom = 270.0
+offset_left = 230.0
+offset_top = 32.0
+offset_right = 258.0
+offset_bottom = 145.0
 theme_override_constants/separation = 2
 
 [node name="StrButton" type="Button" parent="Panel/TabContainer/Stats/APButtonsContainer"]
 layout_mode = 2
+custom_minimum_size = Vector2(24, 20)
+theme_override_font_sizes/font_size = 14
 text = "+"
 
 [node name="DexButton" type="Button" parent="Panel/TabContainer/Stats/APButtonsContainer"]
 layout_mode = 2
+custom_minimum_size = Vector2(24, 20)
+theme_override_font_sizes/font_size = 14
 text = "+"
 
 [node name="VitButton" type="Button" parent="Panel/TabContainer/Stats/APButtonsContainer"]
 layout_mode = 2
+custom_minimum_size = Vector2(24, 20)
+theme_override_font_sizes/font_size = 14
 text = "+"
 
 [node name="IntButton" type="Button" parent="Panel/TabContainer/Stats/APButtonsContainer"]
 layout_mode = 2
+custom_minimum_size = Vector2(24, 20)
+theme_override_font_sizes/font_size = 14
 text = "+"
 
 [node name="LckButton" type="Button" parent="Panel/TabContainer/Stats/APButtonsContainer"]
 layout_mode = 2
+custom_minimum_size = Vector2(24, 20)
+theme_override_font_sizes/font_size = 14
 text = "+"
 
 [node name="EquipmentLabel" type="Label" parent="Panel/TabContainer/Stats"]
 layout_mode = 0
-offset_left = 200.0
-offset_top = 8.0
-offset_right = 320.0
-offset_bottom = 26.0
+offset_left = 280.0
+offset_top = 34.0
+offset_right = 390.0
+offset_bottom = 50.0
+theme_override_font_sizes/font_size = 14
 text = "Equipment"
 
 [node name="EquipmentContainer" type="VBoxContainer" parent="Panel/TabContainer/Stats"]
 layout_mode = 0
-offset_left = 200.0
-offset_top = 32.0
-offset_right = 380.0
-offset_bottom = 145.0
+offset_left = 280.0
+offset_top = 56.0
+offset_right = 488.0
+offset_bottom = 150.0
 theme_override_constants/separation = 4
 
 [node name="WeaponSlot" type="Button" parent="Panel/TabContainer/Stats/EquipmentContainer"]
 layout_mode = 2
-custom_minimum_size = Vector2(180, 24)
+custom_minimum_size = Vector2(200, 20)
+theme_override_font_sizes/font_size = 14
 text = "Weapon (Empty)"
 
 [node name="ArmorSlot" type="Button" parent="Panel/TabContainer/Stats/EquipmentContainer"]
 layout_mode = 2
-custom_minimum_size = Vector2(180, 24)
+custom_minimum_size = Vector2(200, 20)
+theme_override_font_sizes/font_size = 14
 text = "Armor (Empty)"
 
 [node name="HelmetSlot" type="Button" parent="Panel/TabContainer/Stats/EquipmentContainer"]
 layout_mode = 2
-custom_minimum_size = Vector2(180, 24)
+custom_minimum_size = Vector2(200, 20)
+theme_override_font_sizes/font_size = 14
 text = "Helmet (Empty)"
 
 [node name="AccessorySlot" type="Button" parent="Panel/TabContainer/Stats/EquipmentContainer"]
 layout_mode = 2
-custom_minimum_size = Vector2(180, 24)
+custom_minimum_size = Vector2(200, 20)
+theme_override_font_sizes/font_size = 14
 text = "Accessory (Empty)"
 
 [node name="EquipmentStatsLabel" type="Label" parent="Panel/TabContainer/Stats"]
 layout_mode = 0
-offset_left = 390.0
-offset_top = 32.0
-offset_right = 565.0
-offset_bottom = 150.0
+offset_left = 280.0
+offset_top = 154.0
+offset_right = 488.0
+offset_bottom = 210.0
+theme_override_font_sizes/font_size = 13
 text = "Equipment stats"
 autowrap_mode = 3
 
@@ -191,15 +215,16 @@ offset_left = 10.0
 offset_top = 8.0
 offset_right = 120.0
 offset_bottom = 26.0
+theme_override_font_sizes/font_size = 14
 text = "Gold: 0"
 modulate = Color(1, 0.84, 0, 1)
 
 [node name="ItemGrid" type="GridContainer" parent="Panel/TabContainer/Inventory"]
 layout_mode = 0
 offset_left = 10.0
-offset_top = 35.0
-offset_right = 260.0
-offset_bottom = 245.0
+offset_top = 32.0
+offset_right = 230.0
+offset_bottom = 208.0
 columns = 5
 theme_override_constants/h_separation = 4
 theme_override_constants/v_separation = 4
@@ -207,10 +232,10 @@ theme_override_constants/v_separation = 4
 [node name="ItemInfoPanel" type="Panel" parent="Panel/TabContainer/Inventory"]
 visible = false
 layout_mode = 0
-offset_left = 270.0
-offset_top = 35.0
-offset_right = 565.0
-offset_bottom = 245.0
+offset_left = 240.0
+offset_top = 32.0
+offset_right = 488.0
+offset_bottom = 208.0
 
 [node name="ItemName" type="Label" parent="Panel/TabContainer/Inventory/ItemInfoPanel"]
 layout_mode = 1
@@ -219,6 +244,7 @@ anchor_right = 1.0
 offset_top = 8.0
 offset_bottom = 26.0
 grow_horizontal = 2
+theme_override_font_sizes/font_size = 14
 text = "Item Name"
 horizontal_alignment = 1
 
@@ -233,6 +259,7 @@ offset_right = -8.0
 offset_bottom = -38.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_font_sizes/font_size = 13
 text = "Item description..."
 autowrap_mode = 3
 
@@ -249,6 +276,7 @@ offset_right = 40.0
 offset_bottom = -8.0
 grow_horizontal = 2
 grow_vertical = 0
+theme_override_font_sizes/font_size = 14
 text = "Equip"
 
 [node name="Skills" type="Control" parent="Panel/TabContainer"]
@@ -261,23 +289,24 @@ offset_left = 10.0
 offset_top = 8.0
 offset_right = 200.0
 offset_bottom = 28.0
+theme_override_font_sizes/font_size = 14
 text = "SP: 0"
 modulate = Color(0.3, 0.6, 0.9, 1)
 
 [node name="SkillList" type="VBoxContainer" parent="Panel/TabContainer/Skills"]
 layout_mode = 0
 offset_left = 10.0
-offset_top = 35.0
-offset_right = 270.0
-offset_bottom = 245.0
+offset_top = 32.0
+offset_right = 230.0
+offset_bottom = 208.0
 
 [node name="SkillInfoPanel" type="Panel" parent="Panel/TabContainer/Skills"]
 visible = false
 layout_mode = 0
-offset_left = 285.0
-offset_top = 35.0
-offset_right = 565.0
-offset_bottom = 245.0
+offset_left = 240.0
+offset_top = 32.0
+offset_right = 488.0
+offset_bottom = 208.0
 
 [node name="SkillName" type="Label" parent="Panel/TabContainer/Skills/SkillInfoPanel"]
 layout_mode = 1
@@ -286,6 +315,7 @@ anchor_right = 1.0
 offset_top = 8.0
 offset_bottom = 26.0
 grow_horizontal = 2
+theme_override_font_sizes/font_size = 14
 text = "Skill Name"
 horizontal_alignment = 1
 
@@ -300,6 +330,7 @@ offset_right = -8.0
 offset_bottom = -38.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_font_sizes/font_size = 13
 text = "Skill description..."
 autowrap_mode = 3
 
@@ -316,6 +347,7 @@ offset_right = 40.0
 offset_bottom = -8.0
 grow_horizontal = 2
 grow_vertical = 0
+theme_override_font_sizes/font_size = 14
 text = "Unlock"
 
 [node name="CloseButton" type="Button" parent="Panel"]
@@ -326,11 +358,12 @@ anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
 offset_left = -40.0
-offset_top = -32.0
+offset_top = -28.0
 offset_right = 40.0
-offset_bottom = -8.0
+offset_bottom = -4.0
 grow_horizontal = 2
 grow_vertical = 0
+theme_override_font_sizes/font_size = 14
 text = "Close"
 
 [node name="ContextMenu" type="PopupMenu" parent="."]

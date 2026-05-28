@@ -16,6 +16,7 @@ var is_picked_up: bool = false
 func _ready():
 	body_entered.connect(_on_body_entered)
 	body_exited.connect(_on_body_exited)
+	_create_placeholder_marker()
 	
 	# Start bobbing animation using the configured variables
 	var tween = create_tween()
@@ -127,3 +128,19 @@ func _show_pickup_text(item_name: String):
 
 func _get_pickup_text_parent() -> Node:
 	return get_tree().current_scene if get_tree().current_scene != null else get_tree().root
+
+func _create_placeholder_marker() -> void:
+	if sprite and sprite.texture:
+		return
+	for x in [-5.0, 0.0, 5.0]:
+		var dot := Polygon2D.new()
+		dot.color = Color.WHITE
+		dot.polygon = PackedVector2Array([
+			Vector2(-1.5, -1.5),
+			Vector2(1.5, -1.5),
+			Vector2(1.5, 1.5),
+			Vector2(-1.5, 1.5)
+		])
+		dot.position = Vector2(x, 0.0)
+		dot.z_index = 5
+		add_child(dot)

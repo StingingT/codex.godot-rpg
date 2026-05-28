@@ -1,0 +1,22 @@
+{
+  "quest_id": "hunt_skeletons",
+  "quest_name": "Bone Patrol",
+  "description": "Skeletons have started marching out of the cave. Defeat 5 skeletons and return to the Quest Giver.",
+  "level_requirement": 1,
+  "prerequisites": ["kill_slimes"],
+  "objectives": [
+    {
+      "type": "kill",
+      "target": "skeleton",
+      "required": 5,
+      "current": 0
+    }
+  ],
+  "rewards": {
+    "xp": 400,
+    "gold": 200,
+    "items": []
+  },
+  "giver": "quest_giver",
+  "turn_in": "quest_giver"
+}
