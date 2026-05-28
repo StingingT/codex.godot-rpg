@@ -14,6 +14,7 @@ extends Control
 
 var selected_shop_item: Dictionary = {}
 var selected_player_item: ItemData = null
+var selected_player_slot: Dictionary = {}
 var shop_data: Dictionary = {}
 var player_inventory: Inventory = null
 
@@ -69,7 +70,7 @@ func _update_shop_items():
 			continue
 		
 		var button = Button.new()
-		button.custom_minimum_size = Vector2(0, 40)
+		button.custom_minimum_size = Vector2(0, 34)
 		button.text = "%s - %dg" % [item.item_name, buy_price]
 		button.pressed.connect(_on_shop_item_selected.bind(item_data, item))
 		shop_items_list.add_child(button)
@@ -86,10 +87,10 @@ func _update_player_items():
 			continue
 		
 		var button = Button.new()
-		button.custom_minimum_size = Vector2(0, 40)
+		button.custom_minimum_size = Vector2(0, 34)
 		var sell_price = slot.item.sell_price
 		button.text = "%s x%d - %dg" % [slot.item.item_name, slot.quantity, sell_price]
-		button.pressed.connect(_on_player_item_selected.bind(slot.item))
+		button.pressed.connect(_on_player_item_selected.bind(slot))
 		player_items_list.add_child(button)
 
 func _on_tab_changed(tab: int):
@@ -102,7 +103,7 @@ func _on_shop_item_selected(shop_item_data: Dictionary, item: ItemData):
 	var buy_price = shop_item_data.get("buy_price", 100)
 	
 	item_name_label.text = item.item_name
-	item_desc_label.text = item.description
+	item_desc_label.text = _build_item_description(item)
 	item_price_label.text = "Price: %d gold" % buy_price
 	action_button.text = "Buy"
 	
@@ -111,13 +112,14 @@ func _on_shop_item_selected(shop_item_data: Dictionary, item: ItemData):
 	
 	item_info_panel.show()
 
-func _on_player_item_selected(item: ItemData):
-	selected_player_item = item
+func _on_player_item_selected(slot: Dictionary):
+	selected_player_slot = slot
+	selected_player_item = slot.item
 	selected_shop_item = {}
 	
-	item_name_label.text = item.item_name
-	item_desc_label.text = item.description
-	item_price_label.text = "Sell Price: %d gold" % item.sell_price
+	item_name_label.text = selected_player_item.item_name
+	item_desc_label.text = _build_item_description(selected_player_item)
+	item_price_label.text = "Sell Price: %d gold" % selected_player_item.sell_price
 	action_button.text = "Sell"
 	action_button.disabled = false
 	
@@ -162,7 +164,24 @@ func _do_sell():
 func _clear_selection():
 	selected_shop_item = {}
 	selected_player_item = null
+	selected_player_slot = {}
 	item_info_panel.hide()
+
+func _build_item_description(item: ItemData) -> String:
+	var desc := item.description + "\n\n"
+	if item.get("damage"):
+		desc += "Damage: +%d\n" % int(item.get("damage"))
+	if item.get("defense"):
+		desc += "Defense: +%d\n" % int(item.get("defense"))
+	if item.get("hp_bonus"):
+		desc += "Max HP: +%d\n" % int(item.get("hp_bonus"))
+	if item.get("attack_bonus"):
+		desc += "Attack: +%d\n" % int(item.get("attack_bonus"))
+	if item.get("heal_amount"):
+		desc += "Heals: %d HP\n" % int(item.get("heal_amount"))
+	if item.get("mana_amount"):
+		desc += "Restores: %d Mana\n" % int(item.get("mana_amount"))
+	return desc.strip_edges()
 
 func _load_item_data(item_id: String) -> ItemData:
 	var file_path = "res://data/items/" + item_id + ".json"

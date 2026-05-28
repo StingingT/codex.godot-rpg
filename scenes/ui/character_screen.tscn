@@ -18,10 +18,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -280.0
-offset_top = -180.0
-offset_right = 280.0
-offset_bottom = 180.0
+offset_left = -300.0
+offset_top = -165.0
+offset_right = 300.0
+offset_bottom = 165.0
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -43,7 +43,7 @@ anchor_bottom = 1.0
 offset_left = 12.0
 offset_top = 32.0
 offset_right = -12.0
-offset_bottom = -40.0
+offset_bottom = -32.0
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -87,9 +87,9 @@ modulate = Color(0.3, 0.6, 0.9, 1)
 [node name="StatsLabel" type="Label" parent="Panel/TabContainer/Stats"]
 layout_mode = 0
 offset_left = 10.0
-offset_top = 75.0
+offset_top = 70.0
 offset_right = 180.0
-offset_bottom = 200.0
+offset_bottom = 180.0
 text = "HP: 100/100
 Mana: 50/50
 Attack: 10
@@ -99,9 +99,9 @@ Speed: 80.0"
 [node name="AttributesLabel" type="Label" parent="Panel/TabContainer/Stats"]
 layout_mode = 0
 offset_left = 10.0
-offset_top = 205.0
+offset_top = 180.0
 offset_right = 180.0
-offset_bottom = 280.0
+offset_bottom = 270.0
 text = "STR: 0
 DEX: 0
 VIT: 0
@@ -111,9 +111,9 @@ LCK: 0"
 [node name="APButtonsContainer" type="VBoxContainer" parent="Panel/TabContainer/Stats"]
 layout_mode = 0
 offset_left = 190.0
-offset_top = 205.0
+offset_top = 178.0
 offset_right = 220.0
-offset_bottom = 280.0
+offset_bottom = 270.0
 theme_override_constants/separation = 2
 
 [node name="StrButton" type="Button" parent="Panel/TabContainer/Stats/APButtonsContainer"]
@@ -148,29 +148,38 @@ text = "Equipment"
 layout_mode = 0
 offset_left = 200.0
 offset_top = 32.0
-offset_right = 360.0
-offset_bottom = 160.0
-theme_override_constants/separation = 8
+offset_right = 380.0
+offset_bottom = 145.0
+theme_override_constants/separation = 4
 
 [node name="WeaponSlot" type="Button" parent="Panel/TabContainer/Stats/EquipmentContainer"]
 layout_mode = 2
-custom_minimum_size = Vector2(160, 28)
+custom_minimum_size = Vector2(180, 24)
 text = "Weapon (Empty)"
 
 [node name="ArmorSlot" type="Button" parent="Panel/TabContainer/Stats/EquipmentContainer"]
 layout_mode = 2
-custom_minimum_size = Vector2(160, 28)
+custom_minimum_size = Vector2(180, 24)
 text = "Armor (Empty)"
 
 [node name="HelmetSlot" type="Button" parent="Panel/TabContainer/Stats/EquipmentContainer"]
 layout_mode = 2
-custom_minimum_size = Vector2(160, 28)
+custom_minimum_size = Vector2(180, 24)
 text = "Helmet (Empty)"
 
 [node name="AccessorySlot" type="Button" parent="Panel/TabContainer/Stats/EquipmentContainer"]
 layout_mode = 2
-custom_minimum_size = Vector2(160, 28)
+custom_minimum_size = Vector2(180, 24)
 text = "Accessory (Empty)"
+
+[node name="EquipmentStatsLabel" type="Label" parent="Panel/TabContainer/Stats"]
+layout_mode = 0
+offset_left = 390.0
+offset_top = 32.0
+offset_right = 565.0
+offset_bottom = 150.0
+text = "Equipment stats"
+autowrap_mode = 3
 
 [node name="Inventory" type="Control" parent="Panel/TabContainer"]
 visible = false
@@ -189,8 +198,8 @@ modulate = Color(1, 0.84, 0, 1)
 layout_mode = 0
 offset_left = 10.0
 offset_top = 35.0
-offset_right = 280.0
-offset_bottom = 260.0
+offset_right = 260.0
+offset_bottom = 245.0
 columns = 5
 theme_override_constants/h_separation = 4
 theme_override_constants/v_separation = 4
@@ -198,10 +207,10 @@ theme_override_constants/v_separation = 4
 [node name="ItemInfoPanel" type="Panel" parent="Panel/TabContainer/Inventory"]
 visible = false
 layout_mode = 0
-offset_left = 290.0
+offset_left = 270.0
 offset_top = 35.0
-offset_right = 530.0
-offset_bottom = 180.0
+offset_right = 565.0
+offset_bottom = 245.0
 
 [node name="ItemName" type="Label" parent="Panel/TabContainer/Inventory/ItemInfoPanel"]
 layout_mode = 1
@@ -221,7 +230,7 @@ anchor_bottom = 1.0
 offset_left = 8.0
 offset_top = 32.0
 offset_right = -8.0
-offset_bottom = -40.0
+offset_bottom = -38.0
 grow_horizontal = 2
 grow_vertical = 2
 text = "Item description..."
@@ -259,16 +268,16 @@ modulate = Color(0.3, 0.6, 0.9, 1)
 layout_mode = 0
 offset_left = 10.0
 offset_top = 35.0
-offset_right = 300.0
-offset_bottom = 260.0
+offset_right = 270.0
+offset_bottom = 245.0
 
 [node name="SkillInfoPanel" type="Panel" parent="Panel/TabContainer/Skills"]
 visible = false
 layout_mode = 0
-offset_left = 320.0
+offset_left = 285.0
 offset_top = 35.0
-offset_right = 530.0
-offset_bottom = 180.0
+offset_right = 565.0
+offset_bottom = 245.0
 
 [node name="SkillName" type="Label" parent="Panel/TabContainer/Skills/SkillInfoPanel"]
 layout_mode = 1
@@ -288,7 +297,7 @@ anchor_bottom = 1.0
 offset_left = 8.0
 offset_top = 32.0
 offset_right = -8.0
-offset_bottom = -40.0
+offset_bottom = -38.0
 grow_horizontal = 2
 grow_vertical = 2
 text = "Skill description..."

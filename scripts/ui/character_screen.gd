@@ -13,6 +13,7 @@ extends Control
 @onready var armor_slot: Button = $Panel/TabContainer/Stats/EquipmentContainer/ArmorSlot
 @onready var helmet_slot: Button = $Panel/TabContainer/Stats/EquipmentContainer/HelmetSlot
 @onready var accessory_slot: Button = $Panel/TabContainer/Stats/EquipmentContainer/AccessorySlot
+@onready var equipment_stats_label: Label = $Panel/TabContainer/Stats/EquipmentStatsLabel
 @onready var item_grid: GridContainer = $Panel/TabContainer/Inventory/ItemGrid
 @onready var gold_label: Label = $Panel/TabContainer/Inventory/GoldLabel
 @onready var item_info_panel: Panel = $Panel/TabContainer/Inventory/ItemInfoPanel
@@ -120,7 +121,7 @@ func _build_skill_list():
 	for skill_id in skills.keys():
 		var skill = skills[skill_id]
 		var button = Button.new()
-		button.custom_minimum_size = Vector2(0, 40)
+		button.custom_minimum_size = Vector2(0, 32)
 		button.text = skill.name
 		button.pressed.connect(_on_skill_selected.bind(skill_id))
 		skill_list.add_child(button)
@@ -184,6 +185,7 @@ func _on_ap_button_pressed(stat: String):
 		_update_stats()
 		_update_points()
 		_update_ap_buttons()
+		player.stats.emit_stat_signals()
 
 func _update_equipment():
 	if not player or not player.inventory:
@@ -215,6 +217,8 @@ func _update_equipment():
 	else:
 		accessory_slot.text = "Accessory (Empty)"
 
+	equipment_stats_label.text = _build_equipment_summary()
+
 func _update_inventory():
 	if not player or not player.inventory:
 		return
@@ -229,7 +233,7 @@ func _update_inventory():
 	# Add inventory slots
 	for slot in player.inventory.items:
 		var button = Button.new()
-		button.custom_minimum_size = Vector2(50, 50)
+		button.custom_minimum_size = Vector2(44, 44)
 		
 		if slot.item:
 			button.text = slot.item.item_name.substr(0, 4)
@@ -358,7 +362,6 @@ func _on_skill_unlock_pressed():
 		_on_skill_selected(selected_skill)
 
 func _on_equipment_slot_pressed(slot_type: String):
-	# Show info for equipped item or allow unequip
 	var equipped: ItemData = null
 	match slot_type:
 		"weapon": equipped = player.inventory.equipment.weapon
@@ -367,11 +370,13 @@ func _on_equipment_slot_pressed(slot_type: String):
 		"accessory": equipped = player.inventory.equipment.accessory
 	
 	if equipped:
-		selected_item = equipped
-		_show_item_info(equipped)
-		# Change equip button to "Unequip"
-		equip_button.text = "Unequip"
-		equip_button.show()
+		if player.inventory.unequip_item(slot_type):
+			GameManager.show_notification("Unequipped %s" % equipped.item_name)
+			_update_equipment()
+			_update_inventory()
+			_update_stats()
+			if player.stats:
+				player.stats.emit_stat_signals()
 	else:
 		item_info_panel.hide()
 
@@ -412,8 +417,6 @@ func _on_context_menu_selected(id: int):
 		0: # Equip or Use
 			if selected_item.get("weapon_type") != null:
 				player.inventory.equip_item(selected_item, "weapon")
-				_update_inventory()
-				_update_equipment()
 			elif selected_item.get("armor_type") != null:
 				# Determine slot based on armor_type
 				var armor_type = selected_item.get("armor_type")
@@ -423,17 +426,17 @@ func _on_context_menu_selected(id: int):
 				if armor_type == 1:
 					slot = "helmet"
 				player.inventory.equip_item(selected_item, slot)
-				_update_inventory()
-				_update_equipment()
 			elif selected_item.item_type == ItemData.ItemType.CONSUMABLE:
 				_use_consumable(selected_item)
 			elif int(selected_item.get("attack_bonus")) > 0:
 				player.inventory.equip_item(selected_item, "accessory")
-				_update_inventory()
-				_update_equipment()
-		1: # Drop
-			player.inventory.remove_item(selected_item, 1)
 			_update_inventory()
+			_update_equipment()
+			_update_stats()
+			if player.stats:
+				player.stats.emit_stat_signals()
+		1: # Drop
+			_drop_selected_item()
 		2: # Examine
 			_show_item_info(selected_item)
 
@@ -456,6 +459,9 @@ func _on_equip_button_pressed():
 		
 		_update_equipment()
 		_update_inventory()
+		_update_stats()
+		if player.stats:
+			player.stats.emit_stat_signals()
 		item_info_panel.hide()
 	else:
 		# Equip the item
@@ -520,6 +526,42 @@ func _show_item_info(item: ItemData):
 	item_desc_label.text = desc_text
 	equip_button.visible = equip_button.text == "Unequip" or _is_equippable(item)
 	item_info_panel.show()
+
+func _drop_selected_item() -> void:
+	if not selected_item or not player or not player.inventory:
+		return
+	if player.inventory.remove_item(selected_item, 1):
+		var pickup := preload("res://scenes/items/item_pickup.tscn").instantiate()
+		pickup.item_id = selected_item.item_id
+		pickup.quantity = 1
+		pickup.global_position = player.global_position + (player.last_direction.normalized() * 18.0)
+		get_tree().current_scene.add_child(pickup)
+		GameManager.show_notification("Dropped %s" % selected_item.item_name)
+		selected_item = null
+		item_info_panel.hide()
+		_update_inventory()
+
+func _build_equipment_summary() -> String:
+	if not player or not player.inventory:
+		return "Equipment stats"
+	var attack := 0
+	var defense := 0
+	var hp := 0
+	var vit := 0
+	for item in player.inventory.equipment.values():
+		if item == null:
+			continue
+		if item.get("damage"):
+			attack += int(item.get("damage"))
+		if item.get("attack_bonus"):
+			attack += int(item.get("attack_bonus"))
+		if item.get("defense"):
+			defense += int(item.get("defense"))
+		if item.get("hp_bonus"):
+			hp += int(item.get("hp_bonus"))
+		if item.get("vitality_bonus"):
+			vit += int(item.get("vitality_bonus"))
+	return "Equipment stats\nDamage/Attack: +%d\nDefense: +%d\nHP: +%d\nVitality: +%d" % [attack, defense, hp, vit]
 
 func _is_equippable(item: ItemData) -> bool:
 	if item == null:
