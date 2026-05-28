@@ -7,6 +7,7 @@ class_name Portal
 @export var portal_name: String = "Portal"
 @export var requires_all_monsters_dead: bool = false
 @export var available_maps: Array[Dictionary] = [
+	{"id": "town", "name": "Safe Haven Town", "level_req": 1},
 	{"id": "fields", "name": "Eastern Fields", "level_req": 1},
 	{"id": "swamp", "name": "Murky Swamp", "level_req": 5},
 	{"id": "cave", "name": "Dark Cave", "level_req": 8},
