@@ -251,6 +251,8 @@ func _physics_process(_delta: float) -> void:
 func _handle_ability_input() -> void:
 	for index in ability_slots.size():
 		var action := "ability_%d" % (index + 1)
+		if not InputMap.has_action(action):
+			continue
 		if Input.is_action_just_pressed(action):
 			var ability_id := ability_slots[index]
 			if ability_id != "":

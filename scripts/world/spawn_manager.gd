@@ -14,7 +14,8 @@ func _ready() -> void:
 	if encounter_table_id == "":
 		var map_data := DataRegistry.get_map(map_id)
 		encounter_table_id = str(map_data.get("encounter_table", ""))
-	spawn_initial()
+	respawn_timer = respawn_seconds
+	call_deferred("spawn_initial")
 
 func _process(delta: float) -> void:
 	respawn_timer -= delta
@@ -36,8 +37,14 @@ func spawn_missing() -> void:
 	for entry in table.get("ambient_spawns", []):
 		var monster_id := str(entry.get("monster_id", ""))
 		var max_alive := int(entry.get("max_alive", 1))
-		while _count_alive(monster_id) < max_alive:
-			_spawn_monster(monster_id, spawn_points.pick_random().global_position)
+		if monster_id == "" or max_alive <= 0:
+			continue
+		var missing_count: int = max_alive - _count_alive(monster_id)
+		for _i in range(max(missing_count, 0)):
+			var spawned := _spawn_monster(monster_id, spawn_points.pick_random().global_position)
+			if not spawned:
+				push_warning("Could not spawn monster '%s' for encounter table '%s'." % [monster_id, encounter_table_id])
+				break
 
 func spawn_boss_if_configured() -> void:
 	var table := DataRegistry.get_encounter_table(encounter_table_id)
@@ -45,30 +52,45 @@ func spawn_boss_if_configured() -> void:
 	if boss.is_empty():
 		return
 	var marker_name := str(boss.get("spawn_point", "BossSpawnPoint"))
-	var marker := get_tree().current_scene.get_node_or_null(marker_name) as Marker2D
+	var map_root := _get_map_root()
+	if map_root == null:
+		return
+	var marker := map_root.get_node_or_null(marker_name) as Marker2D
 	if marker:
 		_spawn_monster(str(boss.get("monster_id", "")), marker.global_position)
 
-func _spawn_monster(monster_id: String, spawn_position: Vector2) -> void:
+func _spawn_monster(monster_id: String, spawn_position: Vector2) -> bool:
 	var monster_data := DataRegistry.get_monster(monster_id)
 	if monster_data.is_empty():
-		return
+		return false
 	var scene_path := str(monster_data.get("scene", "res://scenes/monsters/monster_base.tscn"))
-	var scene: PackedScene = load(scene_path)
+	var scene := load(scene_path) as PackedScene
+	if scene == null:
+		return false
 	var monster := scene.instantiate()
+	if monster == null:
+		return false
 	monster.global_position = spawn_position
-	if monster.get("monster_type") != null:
+	if "monster_type" in monster:
 		monster.set("monster_type", monster_id)
 	if monster.has_node("StatsComponent"):
 		var stats := monster.get_node("StatsComponent") as StatsComponent
 		stats.max_hp = int(monster_data.get("max_hp", monster_data.get("hp", stats.max_hp)))
 		stats.attack = int(monster_data.get("attack", stats.attack))
 		stats.defense = int(monster_data.get("defense", stats.defense))
-	get_tree().current_scene.add_child(monster)
+	var map_root := _get_map_root()
+	if map_root == null:
+		monster.queue_free()
+		return false
+	map_root.add_child(monster)
+	return true
 
 func _get_spawn_points() -> Array[Marker2D]:
 	var result: Array[Marker2D] = []
-	var parent := get_tree().current_scene.get_node_or_null("SpawnPoints")
+	var map_root := _get_map_root()
+	if map_root == null:
+		return result
+	var parent := map_root.get_node_or_null("SpawnPoints")
 	if parent:
 		for child in parent.get_children():
 			if child is Marker2D:
@@ -77,7 +99,17 @@ func _get_spawn_points() -> Array[Marker2D]:
 
 func _count_alive(monster_id: String) -> int:
 	var count := 0
+	var map_root := _get_map_root()
+	if map_root == null:
+		return count
 	for monster in get_tree().get_nodes_in_group("monsters"):
-		if monster.get("monster_type") != null and monster.get("monster_type") == monster_id:
+		if monster != map_root and not map_root.is_ancestor_of(monster):
+			continue
+		if "monster_type" in monster and monster.get("monster_type") == monster_id:
 			count += 1
 	return count
+
+func _get_map_root() -> Node:
+	if get_tree().current_scene != null:
+		return get_tree().current_scene
+	return get_parent()
