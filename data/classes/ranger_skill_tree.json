@@ -1,0 +1,135 @@
+{
+  "tree_name": "Ranger Skill Tree",
+  "class_type": "ranger",
+  "description": "Master of ranged combat and precision strikes",
+  "nodes": [
+    {
+      "node_id": "ranger_start",
+      "skill_name": "Hunter's Instinct",
+      "description": "+5 Attack, +10% Movement Speed",
+      "node_type": "UTILITY",
+      "category": "GOLD",
+      "tier": 0,
+      "prerequisites": [],
+      "cost": 0,
+      "stat_bonuses": {"attack": 5},
+      "passive_effects": ["move_speed_10"]
+    },
+    {
+      "node_id": "ranger_piercing_shot",
+      "skill_name": "Piercing Shot",
+      "description": "Arrow pierces through enemies",
+      "node_type": "ATTACK",
+      "category": "RED",
+      "tier": 1,
+      "prerequisites": ["ranger_start"],
+      "cost": 1,
+      "active_skill": "piercing_shot"
+    },
+    {
+      "node_id": "ranger_evasive",
+      "skill_name": "Evasive Maneuvers",
+      "description": "+15% Dodge chance",
+      "node_type": "DEFENSE",
+      "category": "BLUE",
+      "tier": 1,
+      "prerequisites": ["ranger_start"],
+      "cost": 1,
+      "passive_effects": ["dodge_15"]
+    },
+    {
+      "node_id": "ranger_trap",
+      "skill_name": "Bear Trap",
+      "description": "Place a trap that immobilizes enemies",
+      "node_type": "UTILITY",
+      "category": "GREEN",
+      "tier": 1,
+      "prerequisites": ["ranger_start"],
+      "cost": 1,
+      "active_skill": "bear_trap"
+    },
+    {
+      "node_id": "ranger_multishot",
+      "skill_name": "Multishot",
+      "description": "Fire 3 arrows in a spread",
+      "node_type": "ATTACK",
+      "category": "RED",
+      "tier": 2,
+      "prerequisites": ["ranger_piercing_shot"],
+      "cost": 2,
+      "active_skill": "multishot"
+    },
+    {
+      "node_id": "ranger_poison_arrow",
+      "skill_name": "Poison Arrow",
+      "description": "Arrows apply poison dealing damage over time",
+      "node_type": "ATTACK",
+      "category": "RED",
+      "tier": 2,
+      "prerequisites": ["ranger_piercing_shot"],
+      "cost": 2,
+      "active_skill": "poison_arrow"
+    },
+    {
+      "node_id": "ranger_camouflage",
+      "skill_name": "Camouflage",
+      "description": "Become invisible to enemies for 5s",
+      "node_type": "DEFENSE",
+      "category": "BLUE",
+      "tier": 2,
+      "prerequisites": ["ranger_evasive"],
+      "cost": 2,
+      "active_skill": "camouflage"
+    },
+    {
+      "node_id": "ranger_hawk_eye",
+      "skill_name": "Hawk Eye",
+      "description": "+20% Attack Range, +10% Critical Chance",
+      "node_type": "UTILITY",
+      "category": "GREEN",
+      "tier": 2,
+      "prerequisites": ["ranger_trap"],
+      "cost": 2,
+      "passive_effects": ["range_20", "crit_10"]
+    },
+    {
+      "node_id": "ranger_rain_of_arrows",
+      "skill_name": "Rain of Arrows",
+      "description": "Barrage of arrows in target area",
+      "node_type": "ATTACK",
+      "category": "RED",
+      "tier": 3,
+      "prerequisites": ["ranger_multishot", "ranger_poison_arrow"],
+      "cost": 3,
+      "active_skill": "rain_of_arrows"
+    },
+    {
+      "node_id": "ranger_wind_walker",
+      "skill_name": "Wind Walker",
+      "description": "+25% Movement Speed, can walk through enemies",
+      "node_type": "DEFENSE",
+      "category": "BLUE",
+      "tier": 3,
+      "prerequisites": ["ranger_camouflage"],
+      "cost": 3,
+      "passive_effects": ["move_speed_25", "phasing"]
+    },
+    {
+      "node_id": "ranger_sniper_shot",
+      "skill_name": "Sniper Shot",
+      "description": "Deal 500% damage after charging for 2s",
+      "node_type": "ULTIMATE",
+      "category": "GOLD",
+      "tier": 4,
+      "prerequisites": ["ranger_rain_of_arrows", "ranger_wind_walker"],
+      "cost": 5,
+      "active_skill": "sniper_shot"
+    }
+  ],
+  "connections": [
+    [0, 1], [0, 2], [0, 3],
+    [1, 4], [1, 5], [2, 6], [3, 7],
+    [4, 8], [5, 8], [6, 9],
+    [8, 10], [9, 10]
+  ]
+}

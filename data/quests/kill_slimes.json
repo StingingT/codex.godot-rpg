@@ -1,0 +1,21 @@
+{
+  "quest_id": "kill_slimes",
+  "quest_name": "Slime Extermination",
+  "description": "Defeat 5 slimes in the Eastern Fields and return to the Quest Giver.",
+  "level_requirement": 1,
+  "objectives": [
+    {
+      "type": "kill",
+      "target": "slime",
+      "required": 5,
+      "current": 0
+    }
+  ],
+  "rewards": {
+    "xp": 200,
+    "gold": 100,
+    "items": []
+  },
+  "giver": "quest_giver",
+  "turn_in": "quest_giver"
+}

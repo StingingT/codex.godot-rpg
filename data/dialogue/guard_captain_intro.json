@@ -1,0 +1,13 @@
+{
+  "dialogue_id": "guard_captain_intro",
+  "lines": [
+    {"speaker": "Guard Captain", "text": "Halt! ...Oh, you're the new adventurer. Good, we could use the help.", "next": 1},
+    {"speaker": "Guard Captain", "text": "The swamp to the west is crawling with mutated creatures. They're getting too close to town.", "next": 2},
+    {"speaker": "Guard Captain", "text": "If you can clear out those monsters, I'll make sure you're well compensated.", "choices": [
+      {"text": "I'll handle the swamp.", "next": 3},
+      {"text": "Sounds too dangerous.", "next": 4}
+    ]},
+    {"speaker": "Guard Captain", "text": "That's what I like to hear! Show those monsters what you're made of.", "action": "start_quest:swamp_cleanup", "next": -1},
+    {"speaker": "Guard Captain", "text": "Smart to know your limits. Come back when you're stronger.", "next": -1}
+  ]
+}

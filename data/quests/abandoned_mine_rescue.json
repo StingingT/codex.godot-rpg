@@ -1,0 +1,27 @@
+{
+  "quest_id": "abandoned_mine_rescue",
+  "title": "Mine Rescue",
+  "description": "Miners have gone missing in the abandoned mine. Find them and defeat the creatures lurking within.",
+  "objectives": [
+    {
+      "type": "kill",
+      "target": "skeleton_miner",
+      "required": 8,
+      "description": "Defeat 8 Skeleton Miners"
+    },
+    {
+      "type": "collect",
+      "target": "miners_helmet",
+      "required": 3,
+      "description": "Collect 3 Miner's Helmets"
+    }
+  ],
+  "rewards": [
+    {"type": "gold", "amount": 250},
+    {"type": "xp", "amount": 300},
+    {"type": "item", "target": "iron_pickaxe"}
+  ],
+  "prerequisites": ["dark_forest_investigation"],
+  "npc_giver": "guard_captain",
+  "npc_turnin": "guard_captain"
+}

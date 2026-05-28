@@ -1,0 +1,16 @@
+{
+  "quest_id": "talk_village_elder",
+  "title": "Audience with the Elder",
+  "description": "Speak to the village elder to learn more about your next steps.",
+  "objectives": [
+    { "type": "talk", "target_id": "npc_village_elder", "required": 1 }
+  ],
+  "rewards": {
+    "xp": 50,
+    "gold": 10,
+    "items": []
+  },
+  "prerequisites": [
+    "collect_healing_herbs"
+  ]
+}

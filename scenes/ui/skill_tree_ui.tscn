@@ -1,0 +1,133 @@
+[gd_scene load_steps=4 format=3 uid="uid://skilltree123456"]
+
+[ext_resource type="Script" path="res://scripts/ui/skill_tree_ui.gd" id="1_skilltree"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bg"]
+bg_color = Color(0.08, 0.08, 0.12, 0.98)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
+bg_color = Color(0.15, 0.15, 0.2, 1.0)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.4, 0.4, 0.5, 1.0)
+
+[node name="SkillTreeUI" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_skilltree")
+
+[node name="Background" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_bg")
+
+[node name="Title" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -100.0
+offset_top = 20.0
+offset_right = 100.0
+offset_bottom = 50.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 24
+text = "Skill Tree"
+horizontal_alignment = 1
+
+[node name="SkillPointsLabel" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -150.0
+offset_top = 20.0
+offset_right = -20.0
+offset_bottom = 45.0
+grow_horizontal = 0
+text = "Skill Points: 0"
+horizontal_alignment = 2
+
+[node name="TreeContainer" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="CloseHint" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -100.0
+offset_top = -40.0
+offset_right = 100.0
+offset_bottom = -20.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "Press K to close"
+horizontal_alignment = 1
+
+[node name="SkillInfoPanel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -220.0
+offset_top = -180.0
+offset_right = -20.0
+offset_bottom = -20.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+
+[node name="SkillName" type="Label" parent="SkillInfoPanel"]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 10.0
+offset_right = 190.0
+offset_bottom = 35.0
+text = "Skill Name"
+
+[node name="SkillDescription" type="Label" parent="SkillInfoPanel"]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 45.0
+offset_right = 190.0
+offset_bottom = 110.0
+text = "Skill description goes here..."
+autowrap_mode = 3
+
+[node name="SkillCost" type="Label" parent="SkillInfoPanel"]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 115.0
+offset_right = 190.0
+offset_bottom = 135.0
+text = "Cost: 1 SP"
+
+[node name="UnlockButton" type="Button" parent="SkillInfoPanel"]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 140.0
+offset_right = 190.0
+offset_bottom = 160.0
+text = "Unlock"

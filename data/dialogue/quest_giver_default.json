@@ -1,0 +1,14 @@
+{
+  "dialogue": [
+    {
+      "speaker": "Quest Giver",
+      "text": "Hello there! I'm the local quest giver.",
+      "portrait": ""
+    },
+    {
+      "speaker": "Quest Giver",
+      "text": "I don't have any quests for you right now. Check back later!",
+      "portrait": ""
+    }
+  ]
+}

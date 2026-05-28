@@ -1,0 +1,164 @@
+[gd_scene load_steps=3 format=3 uid="uid://questbook123456"]
+
+[ext_resource type="Script" path="res://scripts/ui/quest_book.gd" id="1_questbook"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_book"]
+bg_color = Color(0.15, 0.12, 0.08, 0.98)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.4, 0.3, 0.2, 1.0)
+
+[node name="QuestBook" type="CanvasLayer"]
+layer = 10
+script = ExtResource("1_questbook")
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="BookPanel" type="Panel" parent="Control"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -280.0
+offset_top = -180.0
+offset_right = 280.0
+offset_bottom = 180.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_book")
+
+[node name="TitleLabel" type="Label" parent="Control/BookPanel"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_top = 15.0
+offset_bottom = 45.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 24
+text = "Quest Log"
+horizontal_alignment = 1
+
+[node name="LeftPage" type="Control" parent="Control/BookPanel"]
+layout_mode = 0
+offset_left = 20.0
+offset_top = 50.0
+offset_right = 270.0
+offset_bottom = 310.0
+
+[node name="QuestTitle" type="Label" parent="Control/BookPanel/LeftPage"]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 10.0
+offset_right = 240.0
+offset_bottom = 40.0
+theme_override_font_sizes/font_size = 18
+text = "Kill 5 Slimes"
+horizontal_alignment = 1
+
+[node name="QuestDescription" type="Label" parent="Control/BookPanel/LeftPage"]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 50.0
+offset_right = 240.0
+offset_bottom = 130.0
+text = "Defeat 5 slimes in the Eastern Fields and return to the Quest Giver for your reward."
+autowrap_mode = 3
+
+[node name="ProgressLabel" type="Label" parent="Control/BookPanel/LeftPage"]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 140.0
+offset_right = 240.0
+offset_bottom = 170.0
+text = "Progress: 0/5"
+horizontal_alignment = 1
+
+[node name="StatusLabel" type="Label" parent="Control/BookPanel/LeftPage"]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 180.0
+offset_right = 240.0
+offset_bottom = 210.0
+text = "Status: Not Started"
+horizontal_alignment = 1
+
+[node name="RightPage" type="Control" parent="Control/BookPanel"]
+layout_mode = 0
+offset_left = 290.0
+offset_top = 50.0
+offset_right = 540.0
+offset_bottom = 310.0
+
+[node name="RewardsTitle" type="Label" parent="Control/BookPanel/RightPage"]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 10.0
+offset_right = 240.0
+offset_bottom = 40.0
+theme_override_font_sizes/font_size = 18
+text = "Rewards"
+horizontal_alignment = 1
+
+[node name="RewardsList" type="VBoxContainer" parent="Control/BookPanel/RightPage"]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 50.0
+offset_right = 240.0
+offset_bottom = 150.0
+
+[node name="GoldReward" type="Label" parent="Control/BookPanel/RightPage/RewardsList"]
+layout_mode = 2
+text = "100 Gold"
+
+[node name="XPReward" type="Label" parent="Control/BookPanel/RightPage/RewardsList"]
+layout_mode = 2
+text = "200 XP"
+
+[node name="AcceptButton" type="Button" parent="Control/BookPanel/RightPage"]
+layout_mode = 0
+offset_left = 50.0
+offset_top = 200.0
+offset_right = 200.0
+offset_bottom = 240.0
+text = "Accept Quest"
+
+[node name="CompleteButton" type="Button" parent="Control/BookPanel/RightPage"]
+visible = false
+layout_mode = 0
+offset_left = 50.0
+offset_top = 200.0
+offset_right = 200.0
+offset_bottom = 240.0
+text = "Complete Quest"
+
+[node name="CloseButton" type="Button" parent="Control/BookPanel"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -40.0
+offset_top = -45.0
+offset_right = 40.0
+offset_bottom = -15.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "Close"
+
+[node name="BookSpine" type="Panel" parent="Control/BookPanel"]
+layout_mode = 0
+offset_left = 275.0
+offset_top = 10.0
+offset_right = 285.0
+offset_bottom = 350.0

@@ -1,0 +1,13 @@
+{
+  "item_id": "bronze_armor",
+  "item_name": "Bronze Armor",
+  "description": "A sturdy bronze chestplate that provides good protection.",
+  "item_type": 1,
+  "armor_type": 0,
+  "defense": 10,
+  "vitality_bonus": 50,
+  "hp_bonus": 50,
+  "required_level": 1,
+  "buy_price": 200,
+  "sell_price": 100
+}

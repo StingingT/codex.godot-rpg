@@ -1,0 +1,12 @@
+{
+  "shop_id": "blacksmith",
+  "name": "Blacksmith's Forge",
+  "inventory": [
+    {"item_id": "iron_sword", "price": 200, "stock": 1},
+    {"item_id": "steel_sword", "price": 500, "stock": 1},
+    {"item_id": "iron_armor", "price": 350, "stock": 1},
+    {"item_id": "steel_armor", "price": 800, "stock": 1},
+    {"item_id": "bronze_sword", "price": 50, "stock": -1}
+  ],
+  "buy_rate": 0.6
+}

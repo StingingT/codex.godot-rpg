@@ -1,0 +1,21 @@
+{
+  "quest_id": "collect_herbs",
+  "title": "Herbalist's Request",
+  "description": "The village healer needs herbs for her potions. Find them growing in the fields.",
+  "objectives": [
+    {
+      "type": "collect",
+      "target": "healing_herb",
+      "required": 3,
+      "description": "Collect 3 healing herbs"
+    }
+  ],
+  "rewards": [
+    {"type": "gold", "amount": 30},
+    {"type": "xp", "amount": 75},
+    {"type": "item", "target": "health_potion"}
+  ],
+  "prerequisites": [],
+  "npc_giver": "healer",
+  "npc_turnin": "healer"
+}

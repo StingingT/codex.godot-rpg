@@ -1,0 +1,13 @@
+{
+  "item_id": "bronze_sword",
+  "item_name": "Bronze Sword",
+  "description": "A basic sword made of bronze. Good for beginners.",
+  "item_type": 0,
+  "weapon_type": 0,
+  "damage": 12,
+  "attack_speed": 1.0,
+  "knockback": 100,
+  "required_level": 1,
+  "buy_price": 100,
+  "sell_price": 50
+}

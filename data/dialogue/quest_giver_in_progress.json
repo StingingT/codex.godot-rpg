@@ -1,0 +1,14 @@
+{
+  "dialogue": [
+    {
+      "speaker": "Quest Giver",
+      "text": "How's the quest going?",
+      "portrait": ""
+    },
+    {
+      "speaker": "Quest Giver",
+      "text": "Remember, you need to defeat 5 slimes in the Eastern Fields. Come back when you're done!",
+      "portrait": ""
+    }
+  ]
+}

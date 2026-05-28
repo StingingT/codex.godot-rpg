@@ -1,0 +1,14 @@
+{
+  "dialogue": [
+    {
+      "speaker": "Quest Giver",
+      "text": "Welcome back! Have you defeated those slimes?",
+      "portrait": ""
+    },
+    {
+      "speaker": "Quest Giver",
+      "text": "Excellent work! Here's your reward: 100 Gold and 200 XP!",
+      "portrait": ""
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "shop_id": "healer_shop",
+  "name": "Healer's Apothecary",
+  "inventory": [
+    {"item_id": "health_potion", "price": 25, "stock": -1},
+    {"item_id": "mana_potion", "price": 30, "stock": -1},
+    {"item_id": "antidote", "price": 50, "stock": 10},
+    {"item_id": "revive_scroll", "price": 200, "stock": 3}
+  ],
+  "buy_rate": 0.4
+}

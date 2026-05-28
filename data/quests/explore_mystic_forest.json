@@ -1,0 +1,16 @@
+{
+  "quest_id": "explore_mystic_forest",
+  "title": "Explore the Mystic Forest",
+  "description": "Scout the Mystic Forest and map the surrounding area.",
+  "objectives": [
+    { "type": "explore", "target_id": "area_mystic_forest", "required": 1 }
+  ],
+  "rewards": {
+    "xp": 120,
+    "gold": 30,
+    "items": []
+  },
+  "prerequisites": [
+    "talk_village_elder"
+  ]
+}

@@ -1,0 +1,135 @@
+{
+  "tree_name": "Mage Skill Tree",
+  "class_type": "mage",
+  "description": "Master of elemental magic and arcane power",
+  "nodes": [
+    {
+      "node_id": "mage_start",
+      "skill_name": "Arcane Attunement",
+      "description": "+30 Max Mana, +5 Magic Power",
+      "node_type": "UTILITY",
+      "category": "GOLD",
+      "tier": 0,
+      "prerequisites": [],
+      "cost": 0,
+      "stat_bonuses": {"max_mana": 30, "magic_power": 5}
+    },
+    {
+      "node_id": "mage_fireball",
+      "skill_name": "Fireball",
+      "description": "Launch a fireball that explodes on impact",
+      "node_type": "ATTACK",
+      "category": "RED",
+      "tier": 1,
+      "prerequisites": ["mage_start"],
+      "cost": 1,
+      "active_skill": "fireball"
+    },
+    {
+      "node_id": "mage_mana_shield",
+      "skill_name": "Mana Shield",
+      "description": "Absorb damage using mana instead of HP",
+      "node_type": "DEFENSE",
+      "category": "BLUE",
+      "tier": 1,
+      "prerequisites": ["mage_start"],
+      "cost": 1,
+      "active_skill": "mana_shield"
+    },
+    {
+      "node_id": "mage_meditation",
+      "skill_name": "Meditation",
+      "description": "+2 Mana Regen/sec",
+      "node_type": "UTILITY",
+      "category": "GREEN",
+      "tier": 1,
+      "prerequisites": ["mage_start"],
+      "cost": 1,
+      "passive_effects": ["mana_regen_2"]
+    },
+    {
+      "node_id": "mage_ice_shard",
+      "skill_name": "Ice Shard",
+      "description": "Fire a shard that slows enemies",
+      "node_type": "ATTACK",
+      "category": "RED",
+      "tier": 2,
+      "prerequisites": ["mage_fireball"],
+      "cost": 2,
+      "active_skill": "ice_shard"
+    },
+    {
+      "node_id": "mage_lightning",
+      "skill_name": "Chain Lightning",
+      "description": "Lightning jumps between enemies",
+      "node_type": "ATTACK",
+      "category": "RED",
+      "tier": 2,
+      "prerequisites": ["mage_fireball"],
+      "cost": 2,
+      "active_skill": "chain_lightning"
+    },
+    {
+      "node_id": "mage_teleport",
+      "skill_name": "Teleport",
+      "description": "Instantly move to target location",
+      "node_type": "DEFENSE",
+      "category": "BLUE",
+      "tier": 2,
+      "prerequisites": ["mage_mana_shield"],
+      "cost": 2,
+      "active_skill": "teleport"
+    },
+    {
+      "node_id": "mage_arcane_intellect",
+      "skill_name": "Arcane Intellect",
+      "description": "+20 Max Mana, spells cost 15% less",
+      "node_type": "UTILITY",
+      "category": "GREEN",
+      "tier": 2,
+      "prerequisites": ["mage_meditation"],
+      "cost": 2,
+      "stat_bonuses": {"max_mana": 20},
+      "passive_effects": ["mana_cost_reduction_15"]
+    },
+    {
+      "node_id": "mage_meteor",
+      "skill_name": "Meteor",
+      "description": "Call down a meteor dealing massive area damage",
+      "node_type": "ATTACK",
+      "category": "RED",
+      "tier": 3,
+      "prerequisites": ["mage_ice_shard", "mage_lightning"],
+      "cost": 3,
+      "active_skill": "meteor"
+    },
+    {
+      "node_id": "mage_time_warp",
+      "skill_name": "Time Warp",
+      "description": "Slow all enemies by 50% for 8s",
+      "node_type": "DEFENSE",
+      "category": "BLUE",
+      "tier": 3,
+      "prerequisites": ["mage_teleport"],
+      "cost": 3,
+      "active_skill": "time_warp"
+    },
+    {
+      "node_id": "mage_archmage",
+      "skill_name": "Archmage Form",
+      "description": "Transform into Archmage: +100% Magic Power, unlimited mana for 10s",
+      "node_type": "ULTIMATE",
+      "category": "GOLD",
+      "tier": 4,
+      "prerequisites": ["mage_meteor", "mage_time_warp"],
+      "cost": 5,
+      "active_skill": "archmage_form"
+    }
+  ],
+  "connections": [
+    [0, 1], [0, 2], [0, 3],
+    [1, 4], [1, 5], [2, 6], [3, 7],
+    [4, 8], [5, 8], [6, 9],
+    [8, 10], [9, 10]
+  ]
+}

@@ -1,0 +1,74 @@
+{
+  "slime_green": {
+    "name": "Green Slime",
+    "scene": "res://scenes/monsters/monster_base.tscn",
+    "max_hp": 30,
+    "attack": 5,
+    "defense": 1,
+    "move_speed": 35,
+    "xp_reward": 10,
+    "gold_min": 1,
+    "gold_max": 3,
+    "abilities": ["slime_splash"]
+  },
+  "slime_blue": {
+    "name": "Blue Slime",
+    "scene": "res://scenes/monsters/monster_base.tscn",
+    "max_hp": 40,
+    "attack": 7,
+    "defense": 2,
+    "move_speed": 40,
+    "xp_reward": 15,
+    "gold_min": 2,
+    "gold_max": 5,
+    "abilities": ["slime_splash", "mana_drain"]
+  },
+  "bat": {
+    "name": "Bat",
+    "scene": "res://scenes/monsters/bat.tscn",
+    "max_hp": 20,
+    "attack": 8,
+    "defense": 0,
+    "move_speed": 70,
+    "xp_reward": 8,
+    "gold_min": 1,
+    "gold_max": 2,
+    "abilities": []
+  },
+  "skeleton": {
+    "name": "Skeleton",
+    "scene": "res://scenes/monsters/skeleton.tscn",
+    "max_hp": 50,
+    "attack": 12,
+    "defense": 3,
+    "move_speed": 45,
+    "xp_reward": 25,
+    "gold_min": 5,
+    "gold_max": 10,
+    "abilities": ["bone_strike"]
+  },
+  "swamp_monster": {
+    "name": "Swamp Monster",
+    "scene": "res://scenes/monsters/swamp_monster.tscn",
+    "max_hp": 80,
+    "attack": 15,
+    "defense": 5,
+    "move_speed": 35,
+    "xp_reward": 40,
+    "gold_min": 10,
+    "gold_max": 20,
+    "abilities": ["poison_bite", "swamp_gas"]
+  },
+  "dark_knight": {
+    "name": "Dark Knight",
+    "scene": "res://scenes/monsters/dark_knight.tscn",
+    "max_hp": 200,
+    "attack": 30,
+    "defense": 15,
+    "move_speed": 45,
+    "xp_reward": 150,
+    "gold_min": 50,
+    "gold_max": 100,
+    "abilities": ["dark_slash", "armor_break", "life_drain"]
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "dialogue": [
+    {
+      "speaker": "Quest Giver",
+      "text": "Hello player! I have a quest for you.",
+      "portrait": ""
+    },
+    {
+      "speaker": "Quest Giver",
+      "text": "Defeat 5 slimes in the Eastern Fields and return to me for your reward!",
+      "portrait": ""
+    },
+    {
+      "speaker": "Quest Giver",
+      "text": "Good luck out there!",
+      "portrait": "",
+      "choices": [
+        {
+          "text": "I'll do it!",
+          "next": 3
+        },
+        {
+          "text": "Maybe later.",
+          "next": 4
+        }
+      ]
+    },
+    {
+      "speaker": "Quest Giver",
+      "text": "Excellent! Come back when you've defeated 5 slimes.",
+      "portrait": ""
+    },
+    {
+      "speaker": "Quest Giver",
+      "text": "No problem. Come back if you change your mind.",
+      "portrait": ""
+    }
+  ]
+}

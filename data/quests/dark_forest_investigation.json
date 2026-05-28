@@ -1,0 +1,27 @@
+{
+  "quest_id": "dark_forest_investigation",
+  "title": "Dark Forest Mystery",
+  "description": "Strange creatures have been spotted in the Dark Forest. Investigate and clear the area.",
+  "objectives": [
+    {
+      "type": "kill",
+      "target": "goblin_archer",
+      "required": 5,
+      "description": "Defeat 5 Goblin Archers"
+    },
+    {
+      "type": "reach_location",
+      "target": "forest_heart",
+      "required": 1,
+      "description": "Reach the heart of the forest"
+    }
+  ],
+  "rewards": [
+    {"type": "gold", "amount": 150},
+    {"type": "xp", "amount": 200},
+    {"type": "item", "target": "ranger_cloak"}
+  ],
+  "prerequisites": ["cave_exploration"],
+  "npc_giver": "mysterious_traveler",
+  "npc_turnin": "mysterious_traveler"
+}

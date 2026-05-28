@@ -1,0 +1,27 @@
+{
+  "quest_id": "cave_exploration",
+  "title": "Dark Cave Mystery",
+  "description": "Strange noises have been coming from the cave. Investigate and defeat any dangerous creatures inside.",
+  "objectives": [
+    {
+      "type": "kill",
+      "target": "skeleton",
+      "required": 3,
+      "description": "Defeat 3 skeletons"
+    },
+    {
+      "type": "kill",
+      "target": "skeleton_boss",
+      "required": 1,
+      "description": "Defeat the Skeleton King"
+    }
+  ],
+  "rewards": [
+    {"type": "gold", "amount": 200},
+    {"type": "xp", "amount": 300},
+    {"type": "item", "target": "iron_sword"}
+  ],
+  "prerequisites": ["kill_slimes"],
+  "npc_giver": "elder",
+  "npc_turnin": "elder"
+}

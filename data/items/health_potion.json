@@ -1,0 +1,10 @@
+{
+  "item_id": "health_potion",
+  "item_name": "Health Potion",
+  "description": "Restores 50 HP when consumed.",
+  "item_type": 2,
+  "stackable": true,
+  "max_stack": 99,
+  "buy_price": 25,
+  "sell_price": 10
+}

@@ -1,0 +1,146 @@
+[gd_scene load_steps=3 format=3 uid="uid://shopui123456789"]
+
+[ext_resource type="Script" path="res://scripts/ui/shop_ui.gd" id="1_shopui"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
+bg_color = Color(0.1, 0.1, 0.12, 0.98)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.6, 0.5, 0.3, 1.0)
+
+[node name="ShopUI" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_shopui")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -280.0
+offset_top = -180.0
+offset_right = 280.0
+offset_bottom = 180.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+
+[node name="ShopName" type="Label" parent="Panel"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_top = 8.0
+offset_bottom = 28.0
+grow_horizontal = 2
+text = "Shop"
+horizontal_alignment = 1
+
+[node name="GoldLabel" type="Label" parent="Panel"]
+layout_mode = 0
+offset_left = 400.0
+offset_top = 8.0
+offset_right = 540.0
+offset_bottom = 28.0
+text = "Gold: 0"
+horizontal_alignment = 2
+
+[node name="TabContainer" type="TabContainer" parent="Panel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 12.0
+offset_top = 32.0
+offset_right = -12.0
+offset_bottom = -40.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Buy" type="Control" parent="Panel/TabContainer"]
+layout_mode = 2
+
+[node name="ShopItems" type="VBoxContainer" parent="Panel/TabContainer/Buy"]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 10.0
+offset_right = 520.0
+offset_bottom = 260.0
+
+[node name="Sell" type="Control" parent="Panel/TabContainer"]
+visible = false
+layout_mode = 2
+
+[node name="PlayerItems" type="VBoxContainer" parent="Panel/TabContainer/Sell"]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 10.0
+offset_right = 520.0
+offset_bottom = 260.0
+
+[node name="ItemInfoPanel" type="Panel" parent="Panel"]
+visible = false
+layout_mode = 0
+offset_left = 20.0
+offset_top = 200.0
+offset_right = 400.0
+offset_bottom = 300.0
+
+[node name="ItemName" type="Label" parent="Panel/ItemInfoPanel"]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 5.0
+offset_right = 200.0
+offset_bottom = 25.0
+text = ""
+
+[node name="ItemDescription" type="Label" parent="Panel/ItemInfoPanel"]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 30.0
+offset_right = 270.0
+offset_bottom = 70.0
+text = ""
+autowrap_mode = 3
+
+[node name="ItemPrice" type="Label" parent="Panel/ItemInfoPanel"]
+layout_mode = 0
+offset_left = 200.0
+offset_top = 5.0
+offset_right = 370.0
+offset_bottom = 25.0
+text = ""
+horizontal_alignment = 2
+
+[node name="ActionButton" type="Button" parent="Panel/ItemInfoPanel"]
+layout_mode = 0
+offset_left = 280.0
+offset_top = 60.0
+offset_right = 370.0
+offset_bottom = 90.0
+text = "Buy"
+
+[node name="CloseButton" type="Button" parent="Panel"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -40.0
+offset_top = -32.0
+offset_right = 40.0
+offset_bottom = -8.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "Close"
+
+[node name="ContextMenu" type="PopupMenu" parent="."]

@@ -1,0 +1,18 @@
+{
+  "quest_id": "slay_stone_golem",
+  "title": "Stone Golem Threat",
+  "description": "A stone golem menaces the Mystic Forest. Defeat it to secure the area.",
+  "objectives": [
+    { "type": "boss_kill", "target_id": "golem_stone", "required": 1 }
+  ],
+  "rewards": {
+    "xp": 200,
+    "gold": 50,
+    "items": [
+      { "item_id": "stone_core", "amount": 1 }
+    ]
+  },
+  "prerequisites": [
+    "explore_mystic_forest"
+  ]
+}

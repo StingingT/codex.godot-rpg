@@ -1,0 +1,62 @@
+[gd_scene load_steps=12 format=3 uid="uid://npc123456789"]
+
+[ext_resource type="Script" path="res://scripts/npcs/npc_base.gd" id="1_npc"]
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_npc1"]
+size = Vector2(16, 24)
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_npc2"]
+size = Vector2(16, 24)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_npc"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("PlaceholderTexture2D_npc1")
+}, {
+"duration": 1.0,
+"texture": SubResource("PlaceholderTexture2D_npc2")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 2.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
+size = Vector2(12, 8)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_interaction"]
+radius = 24.0
+
+[node name="NPC" type="StaticBody2D" groups=["npcs"]]
+z_index = 5
+collision_layer = 8
+collision_mask = 0
+script = ExtResource("1_npc")
+npc_id = ""
+npc_name = "NPC"
+dialogue_id = ""
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(0, -12)
+sprite_frames = SubResource("SpriteFrames_npc")
+animation = &"idle"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -4)
+shape = SubResource("RectangleShape2D_body")
+
+[node name="InteractionZone" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="InteractionZone"]
+shape = SubResource("CircleShape2D_interaction")
+
+[node name="Indicator" type="Label" parent="."]
+offset_left = -5.0
+offset_top = -40.0
+offset_right = 5.0
+offset_bottom = -20.0
+text = "!"
+horizontal_alignment = 1

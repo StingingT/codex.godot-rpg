@@ -1,0 +1,121 @@
+{
+  "town_safe": {
+    "ambient_spawns": [],
+    "description": "Safe zone without ambient monsters."
+  },
+  "fields_low": {
+    "ambient_spawns": [
+      {
+        "monster_id": "slime_green",
+        "weight": 70,
+        "max_alive": 4
+      },
+      {
+        "monster_id": "slime_blue",
+        "weight": 20,
+        "max_alive": 2
+      },
+      {
+        "monster_id": "bat",
+        "weight": 10,
+        "max_alive": 2
+      }
+    ],
+    "boss": {
+      "monster_id": "slime_blue",
+      "spawn_point": "BossSpawnPoint"
+    }
+  },
+  "swamp_mid": {
+    "ambient_spawns": [
+      {
+        "monster_id": "slime_blue",
+        "weight": 40,
+        "max_alive": 3
+      },
+      {
+        "monster_id": "swamp_monster",
+        "weight": 30,
+        "max_alive": 2
+      },
+      {
+        "monster_id": "bat",
+        "weight": 30,
+        "max_alive": 2
+      }
+    ],
+    "boss": {
+      "monster_id": "swamp_monster",
+      "spawn_point": "BossSpawnPoint"
+    }
+  },
+  "cave_mid": {
+    "ambient_spawns": [
+      {
+        "monster_id": "bat",
+        "weight": 50,
+        "max_alive": 3
+      },
+      {
+        "monster_id": "skeleton",
+        "weight": 40,
+        "max_alive": 3
+      },
+      {
+        "monster_id": "slime_blue",
+        "weight": 10,
+        "max_alive": 1
+      }
+    ],
+    "boss": {
+      "monster_id": "skeleton",
+      "spawn_point": "BossSpawnPoint"
+    }
+  },
+  "dungeon_high": {
+    "ambient_spawns": [
+      {
+        "monster_id": "skeleton",
+        "weight": 40,
+        "max_alive": 3
+      },
+      {
+        "monster_id": "dark_knight",
+        "weight": 40,
+        "max_alive": 1
+      },
+      {
+        "monster_id": "swamp_monster",
+        "weight": 20,
+        "max_alive": 2
+      }
+    ],
+    "boss": {
+      "monster_id": "dark_knight",
+      "spawn_point": "BossSpawnPoint"
+    }
+  },
+  "test_map_low": {
+    "ambient_spawns": [
+      {
+        "monster_id": "slime_green",
+        "weight": 70,
+        "max_alive": 4
+      },
+      {
+        "monster_id": "bat",
+        "weight": 20,
+        "max_alive": 2
+      },
+      {
+        "monster_id": "skeleton",
+        "weight": 10,
+        "max_alive": 1
+      }
+    ],
+    "boss": {
+      "monster_id": "skeleton",
+      "spawn_point": "BossSpawnPoint"
+    }
+  }
+}

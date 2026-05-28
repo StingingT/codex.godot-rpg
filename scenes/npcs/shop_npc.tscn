@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3 uid="uid://shopnpc123456"]
+
+[ext_resource type="PackedScene" uid="uid://npc123456789" path="res://scenes/npcs/npc_base.tscn" id="1_base_npc"]
+[ext_resource type="Script" path="res://scripts/npcs/shop_npc.gd" id="2_shop_npc"]
+
+[node name="ShopNPC" instance=ExtResource("1_base_npc")]
+script = ExtResource("2_shop_npc")
+npc_id = "shopkeeper"
+npc_name = "Shopkeeper"
+shop_id = "general_store"
+
+[node name="AnimatedSprite2D" parent="." index="0"]
+modulate = Color(1, 0.8, 0.3, 1)

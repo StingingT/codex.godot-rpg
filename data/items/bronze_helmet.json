@@ -1,0 +1,12 @@
+{
+  "item_id": "bronze_helmet",
+  "item_name": "Bronze Helmet",
+  "description": "A sturdy bronze helmet that protects your head.",
+  "item_type": 1,
+  "armor_type": 1,
+  "defense": 5,
+  "hp_bonus": 20,
+  "required_level": 1,
+  "buy_price": 150,
+  "sell_price": 75
+}

@@ -1,0 +1,14 @@
+{
+  "dialogue_id": "healer_intro",
+  "lines": [
+    {"speaker": "Village Healer", "text": "Greetings! I'm the village healer. I can restore your health or sell you potions.", "next": 1},
+    {"speaker": "Village Healer", "text": "I'm currently low on healing herbs. If you bring me some from the fields, I'll reward you handsomely.", "choices": [
+      {"text": "I'll find those herbs.", "next": 2},
+      {"text": "Just sell me potions.", "next": 3},
+      {"text": "Maybe later.", "next": 4}
+    ]},
+    {"speaker": "Village Healer", "text": "Wonderful! Look for the glowing plants in the Eastern Fields.", "action": "start_quest:collect_herbs", "next": -1},
+    {"speaker": "Village Healer", "text": "Of course! Health potions are 25 gold each.", "action": "open_shop:healer", "next": -1},
+    {"speaker": "Village Healer", "text": "Take care out there. The monsters are getting bolder.", "next": -1}
+  ]
+}

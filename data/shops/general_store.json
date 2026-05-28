@@ -1,0 +1,30 @@
+{
+  "shop_id": "general_store",
+  "shop_name": "General Store",
+  "items": [
+    {
+      "item_id": "bronze_sword",
+      "buy_price": 100,
+      "sell_price": 50,
+      "quantity": -1
+    },
+    {
+      "item_id": "bronze_armor",
+      "buy_price": 200,
+      "sell_price": 100,
+      "quantity": -1
+    },
+    {
+      "item_id": "health_potion",
+      "buy_price": 25,
+      "sell_price": 10,
+      "quantity": -1
+    },
+    {
+      "item_id": "mana_potion",
+      "buy_price": 20,
+      "sell_price": 8,
+      "quantity": -1
+    }
+  ]
+}

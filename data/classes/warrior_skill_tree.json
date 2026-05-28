@@ -1,0 +1,137 @@
+{
+  "tree_name": "Warrior Skill Tree",
+  "class_type": "warrior",
+  "description": "Master of melee combat and physical prowess",
+  "nodes": [
+    {
+      "node_id": "warrior_start",
+      "skill_name": "Warrior's Heart",
+      "description": "+10 Max HP, +2 Attack",
+      "node_type": "UTILITY",
+      "category": "GOLD",
+      "tier": 0,
+      "prerequisites": [],
+      "cost": 0,
+      "stat_bonuses": {"max_hp": 10, "attack": 2}
+    },
+    {
+      "node_id": "warrior_power_strike",
+      "skill_name": "Power Strike",
+      "description": "Basic attack deals 150% damage",
+      "node_type": "ATTACK",
+      "category": "RED",
+      "tier": 1,
+      "prerequisites": ["warrior_start"],
+      "cost": 1,
+      "active_skill": "power_strike"
+    },
+    {
+      "node_id": "warrior_iron_skin",
+      "skill_name": "Iron Skin",
+      "description": "+5 Defense, take 10% less damage",
+      "node_type": "DEFENSE",
+      "category": "BLUE",
+      "tier": 1,
+      "prerequisites": ["warrior_start"],
+      "cost": 1,
+      "stat_bonuses": {"defense": 5},
+      "passive_effects": ["damage_reduction_10"]
+    },
+    {
+      "node_id": "warrior_endurance",
+      "skill_name": "Endurance",
+      "description": "+20 Max HP, regenerate 1 HP/sec",
+      "node_type": "UTILITY",
+      "category": "GREEN",
+      "tier": 1,
+      "prerequisites": ["warrior_start"],
+      "cost": 1,
+      "stat_bonuses": {"max_hp": 20},
+      "passive_effects": ["hp_regen_1"]
+    },
+    {
+      "node_id": "warrior_cleave",
+      "skill_name": "Cleave",
+      "description": "Attack hits all enemies in arc",
+      "node_type": "ATTACK",
+      "category": "RED",
+      "tier": 2,
+      "prerequisites": ["warrior_power_strike"],
+      "cost": 2,
+      "active_skill": "cleave"
+    },
+    {
+      "node_id": "warrior_shield_bash",
+      "skill_name": "Shield Bash",
+      "description": "Stun enemy and deal damage based on defense",
+      "node_type": "ATTACK",
+      "category": "RED",
+      "tier": 2,
+      "prerequisites": ["warrior_iron_skin"],
+      "cost": 2,
+      "active_skill": "shield_bash"
+    },
+    {
+      "node_id": "warrior_taunt",
+      "skill_name": "Taunt",
+      "description": "Force nearby enemies to attack you",
+      "node_type": "DEFENSE",
+      "category": "BLUE",
+      "tier": 2,
+      "prerequisites": ["warrior_iron_skin"],
+      "cost": 2,
+      "active_skill": "taunt"
+    },
+    {
+      "node_id": "warrior_second_wind",
+      "skill_name": "Second Wind",
+      "description": "When HP drops below 25%, heal 30% max HP (60s cooldown)",
+      "node_type": "UTILITY",
+      "category": "GREEN",
+      "tier": 2,
+      "prerequisites": ["warrior_endurance"],
+      "cost": 2,
+      "passive_effects": ["second_wind"]
+    },
+    {
+      "node_id": "warrior_execute",
+      "skill_name": "Execute",
+      "description": "Deal 300% damage to enemies below 30% HP",
+      "node_type": "ATTACK",
+      "category": "RED",
+      "tier": 3,
+      "prerequisites": ["warrior_cleave"],
+      "cost": 3,
+      "active_skill": "execute"
+    },
+    {
+      "node_id": "warrior_fortress",
+      "skill_name": "Fortress",
+      "description": "+10 Defense, immune to knockback",
+      "node_type": "DEFENSE",
+      "category": "BLUE",
+      "tier": 3,
+      "prerequisites": ["warrior_shield_bash", "warrior_taunt"],
+      "cost": 3,
+      "stat_bonuses": {"defense": 10},
+      "passive_effects": ["knockback_immunity"]
+    },
+    {
+      "node_id": "warrior_berserker_rage",
+      "skill_name": "Berserker Rage",
+      "description": "+50% Attack Speed, +30% Damage, -20% Defense for 10s",
+      "node_type": "ULTIMATE",
+      "category": "GOLD",
+      "tier": 4,
+      "prerequisites": ["warrior_execute", "warrior_fortress"],
+      "cost": 5,
+      "active_skill": "berserker_rage"
+    }
+  ],
+  "connections": [
+    [0, 1], [0, 2], [0, 3],
+    [1, 4], [2, 5], [2, 6], [3, 7],
+    [4, 8], [5, 9], [6, 9],
+    [8, 10], [9, 10]
+  ]
+}

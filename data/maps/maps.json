@@ -1,0 +1,101 @@
+{
+  "town": {
+    "scene": "res://scenes/maps/town.tscn",
+    "display_name": "Safe Haven Town",
+    "biome": "town",
+    "music": "res://assets/audio/music/town_theme.ogg",
+    "encounter_table": "town_safe",
+    "connections": [
+      {
+        "to": "fields",
+        "via": "exit_east",
+        "spawn_at": "entry_west"
+      }
+    ]
+  },
+  "fields": {
+    "scene": "res://scenes/maps/fields.tscn",
+    "display_name": "Eastern Fields",
+    "biome": "grassland",
+    "music": "res://assets/audio/music/field_theme.ogg",
+    "encounter_table": "fields_low",
+    "connections": [
+      {
+        "to": "town",
+        "via": "exit_west",
+        "spawn_at": "entry_east"
+      },
+      {
+        "to": "swamp",
+        "via": "exit_south",
+        "spawn_at": "entry_north"
+      },
+      {
+        "to": "cave",
+        "via": "exit_north",
+        "spawn_at": "entry_south"
+      }
+    ]
+  },
+  "swamp": {
+    "scene": "res://scenes/maps/swamp.tscn",
+    "display_name": "Murky Swamp",
+    "biome": "swamp",
+    "music": "res://assets/audio/music/swamp_theme.ogg",
+    "encounter_table": "swamp_mid",
+    "connections": [
+      {
+        "to": "fields",
+        "via": "exit_north",
+        "spawn_at": "entry_south"
+      }
+    ]
+  },
+  "cave": {
+    "scene": "res://scenes/maps/cave.tscn",
+    "display_name": "Dark Cave",
+    "biome": "cave",
+    "music": "res://assets/audio/music/cave_theme.ogg",
+    "encounter_table": "cave_mid",
+    "connections": [
+      {
+        "to": "fields",
+        "via": "exit_south",
+        "spawn_at": "entry_north"
+      },
+      {
+        "to": "dungeon",
+        "via": "exit_north",
+        "spawn_at": "entry_south"
+      }
+    ]
+  },
+  "dungeon": {
+    "scene": "res://scenes/maps/dungeon.tscn",
+    "display_name": "Ancient Dungeon",
+    "biome": "dungeon",
+    "music": "res://assets/audio/music/dungeon_theme.ogg",
+    "encounter_table": "dungeon_high",
+    "connections": [
+      {
+        "to": "cave",
+        "via": "exit_south",
+        "spawn_at": "entry_north"
+      }
+    ]
+  },
+  "test_map": {
+    "scene": "res://scenes/maps/test_map.tscn",
+    "display_name": "Test Map",
+    "biome": "test",
+    "music": "res://assets/audio/music/test_theme.ogg",
+    "encounter_table": "test_map_low",
+    "connections": [
+      {
+        "to": "fields",
+        "via": "exit_west",
+        "spawn_at": "entry_east"
+      }
+    ]
+  }
+}

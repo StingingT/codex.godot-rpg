@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+body {
+    background: #2d2d3d;
+    font-family: 'Courier New', monospace;
+    padding: 20px;
+}
+.hud-container {
+    width: 640px;
+    height: 360px;
+    background: linear-gradient(135deg, #4a7c59 0%, #2d5a3d 100%);
+    position: relative;
+    border: 4px solid #1a1a2e;
+    image-rendering: pixelated;
+}
+.hud-left {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+}
+.bar {
+    width: 120px;
+    height: 16px;
+    background: #333;
+    border: 2px solid #555;
+    margin-bottom: 4px;
+    position: relative;
+}
+.health-fill {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(180deg, #ff4444 0%, #cc2222 100%);
+}
+.mana-fill {
+    width: 80%;
+    height: 100%;
+    background: linear-gradient(180deg, #4488ff 0%, #2266cc 100%);
+}
+.xp-fill {
+    width: 35%;
+    height: 100%;
+    background: linear-gradient(180deg, #ffcc44 0%, #ccaa22 100%);
+}
+.bar-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 10px;
+    text-shadow: 1px 1px 0 #000;
+}
+.label {
+    color: white;
+    font-size: 12px;
+    text-shadow: 2px 2px 0 #000;
+    margin-top: 4px;
+}
+.hud-right {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: white;
+    font-size: 14px;
+    text-shadow: 2px 2px 0 #000;
+    text-align: right;
+}
+.player {
+    position: absolute;
+    left: 320px;
+    top: 180px;
+    width: 16px;
+    height: 24px;
+    background: #4488ff;
+    border: 1px solid #2266cc;
+}
+</style>
+</head>
+<body>
+<div class="hud-container">
+    <!-- Left side HUD -->
+    <div class="hud-left">
+        <!-- Health Bar -->
+        <div class="bar">
+            <div class="health-fill"></div>
+            <div class="bar-text">100/100</div>
+        </div>
+        
+        <!-- Mana Bar -->
+        <div class="bar" style="height: 10px;">
+            <div class="mana-fill"></div>
+        </div>
+        
+        <!-- XP Bar -->
+        <div class="bar" style="height: 6px;">
+            <div class="xp-fill"></div>
+        </div>
+        
+        <div class="label">Level 1</div>
+        <div class="label">Gold: 0</div>
+    </div>
+    
+    <!-- Right side HUD -->
+    <div class="hud-right">
+        Safe Haven Town
+    </div>
+    
+    <!-- Player placeholder -->
+    <div class="player"></div>
+</div>
+</body>
+</html>

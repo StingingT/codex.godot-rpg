@@ -1,0 +1,51 @@
+[gd_scene load_steps=4 format=3 uid="uid://c8m3g6g7h8i9j"]
+
+[ext_resource type="Script" path="res://scenes/items/gold_pickup.gd" id="1_gold"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_gold"]
+radius = 12.0
+
+[sub_resource type="CanvasTexture" id="CanvasTexture_dots"]
+
+[node name="GoldPickup" type="Area2D"]
+collision_layer = 0
+collision_mask = 2
+script = ExtResource("1_gold")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_gold")
+
+[node name="GoldSprite" type="Control" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -10.0
+offset_top = -5.0
+offset_right = 10.0
+offset_bottom = 5.0
+
+[node name="Dot1" type="ColorRect" parent="GoldSprite"]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 3.0
+offset_right = 5.0
+offset_bottom = 6.0
+color = Color(1, 0.84, 0, 1)
+
+[node name="Dot2" type="ColorRect" parent="GoldSprite"]
+layout_mode = 0
+offset_left = 7.0
+offset_top = 3.0
+offset_right = 10.0
+offset_bottom = 6.0
+color = Color(1, 0.84, 0, 1)
+
+[node name="Dot3" type="ColorRect" parent="GoldSprite"]
+layout_mode = 0
+offset_left = 12.0
+offset_top = 3.0
+offset_right = 15.0
+offset_bottom = 6.0
+color = Color(1, 0.84, 0, 1)

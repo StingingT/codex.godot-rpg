@@ -1,0 +1,10 @@
+{
+  "item_id": "mana_potion",
+  "item_name": "Mana Potion",
+  "description": "Restores 30 Mana when consumed.",
+  "item_type": 2,
+  "stackable": true,
+  "max_stack": 99,
+  "buy_price": 20,
+  "sell_price": 8
+}

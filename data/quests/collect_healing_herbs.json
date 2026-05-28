@@ -1,0 +1,16 @@
+{
+  "quest_id": "collect_healing_herbs",
+  "title": "Gather Healing Herbs",
+  "description": "The village healer needs supplies. Collect healing herbs from the meadow.",
+  "objectives": [
+    { "type": "collect", "target_id": "herb_healing", "required": 8 }
+  ],
+  "rewards": {
+    "xp": 75,
+    "gold": 15,
+    "items": []
+  },
+  "prerequisites": [
+    "clear_green_slimes"
+  ]
+}

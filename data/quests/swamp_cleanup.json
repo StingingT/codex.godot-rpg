@@ -1,0 +1,27 @@
+{
+  "quest_id": "swamp_cleanup",
+  "title": "Swamp Menace",
+  "description": "The swamp has become dangerous with mutated creatures. Clear them out before they reach the town.",
+  "objectives": [
+    {
+      "type": "kill",
+      "target": "bat",
+      "required": 8,
+      "description": "Defeat 8 bats"
+    },
+    {
+      "type": "kill",
+      "target": "swamp_monster",
+      "required": 5,
+      "description": "Defeat 5 swamp monsters"
+    }
+  ],
+  "rewards": [
+    {"type": "gold", "amount": 150},
+    {"type": "xp", "amount": 250},
+    {"type": "item", "target": "leather_armor"}
+  ],
+  "prerequisites": ["collect_herbs"],
+  "npc_giver": "guard_captain",
+  "npc_turnin": "guard_captain"
+}

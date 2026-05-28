@@ -1,0 +1,17 @@
+[gd_scene load_steps=2 format=3 uid="uid://xporb123456789"]
+
+[ext_resource type="Script" path="res://scenes/items/xp_orb.gd" id="1_xp"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_xp"]
+radius = 6.0
+
+[node name="XPOrb" type="Area2D" groups=["items"]]
+collision_layer = 16
+collision_mask = 2
+script = ExtResource("1_xp")
+xp_value = 10
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_xp")

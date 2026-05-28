@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3 uid="uid://questnpc123456"]
+
+[ext_resource type="PackedScene" uid="uid://npc123456789" path="res://scenes/npcs/npc_base.tscn" id="1_base_npc"]
+[ext_resource type="Script" path="res://scripts/npcs/quest_npc.gd" id="2_quest_npc"]
+
+[node name="QuestNPC" instance=ExtResource("1_base_npc")]
+script = ExtResource("2_quest_npc")
+npc_id = "quest_giver"
+npc_name = "Quest Giver"
+available_quests = ["kill_slimes", "collect_herbs"]
+completed_quests = ["kill_slimes"]
+
+[node name="AnimatedSprite2D" parent="." index="0"]
+modulate = Color(0.3, 0.8, 1, 1)

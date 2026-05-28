@@ -1,0 +1,152 @@
+{
+  "slime_splash": {
+    "name": "Slime Splash",
+    "description": "Splashes slime on the target and applies a short acidic damage-over-time effect.",
+    "mana_cost": 0,
+    "cooldown_seconds": 3.0,
+    "cast_time_seconds": 0.0,
+    "ability_type": "instant",
+    "effects": [
+      {"type": "damage", "amount": 5, "damage_type": "physical"},
+      {"type": "dot", "amount": 3, "duration_seconds": 3.0, "tick_interval": 1.0, "damage_type": "acid"}
+    ]
+  },
+  "mana_drain": {
+    "name": "Mana Drain",
+    "description": "Dark energy damages the target. Mana-drain behavior can be expanded later.",
+    "mana_cost": 0,
+    "cooldown_seconds": 5.0,
+    "cast_time_seconds": 0.1,
+    "ability_type": "instant",
+    "effects": [
+      {"type": "damage", "amount": 8, "damage_type": "arcane"}
+    ]
+  },
+  "bone_strike": {
+    "name": "Bone Strike",
+    "description": "A quick close-range strike with a sharp bone.",
+    "mana_cost": 0,
+    "cooldown_seconds": 2.0,
+    "cast_time_seconds": 0.0,
+    "ability_type": "hitbox",
+    "effects": [
+      {"type": "damage", "amount": 15, "damage_type": "physical", "knockback_force": 60.0}
+    ]
+  },
+  "poison_bite": {
+    "name": "Poison Bite",
+    "description": "A bite that damages immediately and poisons the target over time.",
+    "mana_cost": 0,
+    "cooldown_seconds": 4.0,
+    "cast_time_seconds": 0.0,
+    "ability_type": "hitbox",
+    "effects": [
+      {"type": "damage", "amount": 10, "damage_type": "physical"},
+      {"type": "dot", "amount": 5, "duration_seconds": 4.0, "tick_interval": 1.0, "damage_type": "poison"}
+    ]
+  },
+  "swamp_gas": {
+    "name": "Swamp Gas",
+    "description": "A toxic cloud that weakens the target's attack temporarily.",
+    "mana_cost": 0,
+    "cooldown_seconds": 5.0,
+    "cast_time_seconds": 0.2,
+    "ability_type": "area",
+    "effects": [
+      {"type": "debuff", "stat": "attack", "amount": 3, "duration_seconds": 3.0}
+    ]
+  },
+  "dark_slash": {
+    "name": "Dark Slash",
+    "description": "A heavy dark-energy slash.",
+    "mana_cost": 0,
+    "cooldown_seconds": 3.0,
+    "cast_time_seconds": 0.1,
+    "ability_type": "hitbox",
+    "effects": [
+      {"type": "damage", "amount": 40, "damage_type": "dark", "knockback_force": 100.0}
+    ]
+  },
+  "armor_break": {
+    "name": "Armor Break",
+    "description": "Damages the target and lowers defense for a few seconds.",
+    "mana_cost": 0,
+    "cooldown_seconds": 6.0,
+    "cast_time_seconds": 0.1,
+    "ability_type": "hitbox",
+    "effects": [
+      {"type": "damage", "amount": 20, "damage_type": "physical"},
+      {"type": "debuff", "stat": "defense", "amount": 5, "duration_seconds": 3.0}
+    ]
+  },
+  "life_drain": {
+    "name": "Life Drain",
+    "description": "Damages a target and heals the caster for part of the damage theme.",
+    "mana_cost": 0,
+    "cooldown_seconds": 4.0,
+    "cast_time_seconds": 0.2,
+    "ability_type": "instant",
+    "effects": [
+      {"type": "damage", "amount": 25, "damage_type": "dark"},
+      {"type": "lifesteal", "ratio": 0.5}
+    ]
+  },
+  "fireball": {
+    "name": "Fireball",
+    "description": "Launches a fire projectile that burns the target.",
+    "mana_cost": 15,
+    "cooldown_seconds": 3.0,
+    "cast_time_seconds": 0.2,
+    "ability_type": "projectile",
+    "scene": "res://scenes/effects/fireball_projectile.tscn",
+    "range": 160,
+    "effects": [
+      {"type": "damage", "amount": 30, "damage_type": "fire"},
+      {"type": "dot", "amount": 5, "duration_seconds": 2.0, "tick_interval": 1.0, "damage_type": "fire"}
+    ]
+  },
+  "heal": {
+    "name": "Heal",
+    "description": "Restores health to the caster.",
+    "mana_cost": 10,
+    "cooldown_seconds": 2.0,
+    "cast_time_seconds": 0.15,
+    "ability_type": "self",
+    "effects": [
+      {"type": "heal", "amount": 40}
+    ]
+  },
+  "power_attack": {
+    "name": "Power Attack",
+    "description": "A stronger melee attack with extra knockback.",
+    "mana_cost": 8,
+    "cooldown_seconds": 2.0,
+    "cast_time_seconds": 0.0,
+    "ability_type": "hitbox",
+    "effects": [
+      {"type": "damage", "amount": 25, "damage_type": "physical", "knockback_force": 120.0}
+    ]
+  },
+  "shield": {
+    "name": "Shield",
+    "description": "Creates a short-lived magical shield status. Absorption logic can be expanded in the damage receiver.",
+    "mana_cost": 12,
+    "cooldown_seconds": 4.0,
+    "cast_time_seconds": 0.1,
+    "ability_type": "self",
+    "effects": [
+      {"type": "shield", "amount": 30, "duration_seconds": 5.0}
+    ]
+  },
+  "battle_cry": {
+    "name": "Battle Cry",
+    "description": "Temporarily increases attack power.",
+    "mana_cost": 10,
+    "cooldown_seconds": 5.0,
+    "cast_time_seconds": 0.1,
+    "ability_type": "self",
+    "effects": [
+      {"type": "buff", "stat": "attack", "amount": 5, "duration_seconds": 3.0}
+    ]
+  }
+}

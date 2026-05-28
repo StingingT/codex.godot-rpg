@@ -1,0 +1,7 @@
+{
+  "dialogue_id": "elder_quest_complete",
+  "lines": [
+    {"speaker": "Village Elder", "text": "You've done it! The fields are safer now. Here's your reward.", "action": "complete_quest:kill_slimes", "next": 1},
+    {"speaker": "Village Elder", "text": "There's more work to be done if you're interested. The cave to the north holds a greater danger...", "next": -1}
+  ]
+}

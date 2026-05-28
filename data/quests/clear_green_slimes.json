@@ -1,0 +1,13 @@
+{
+  "quest_id": "clear_green_slimes",
+  "title": "Clear Green Slimes",
+  "description": "Green slimes have overrun the meadow near the village. Cull their numbers to protect travelers.",
+  "objectives": [
+    { "type": "kill", "target_id": "slime_green", "required": 5 }
+  ],
+  "rewards": {
+    "xp": 100,
+    "gold": 25,
+    "items": []
+  }
+}

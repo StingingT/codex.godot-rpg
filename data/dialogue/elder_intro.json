@@ -1,0 +1,16 @@
+{
+  "dialogue_id": "elder_intro",
+  "lines": [
+    {"speaker": "Village Elder", "text": "Welcome, traveler. Our village has seen better days.", "next": 1},
+    {"speaker": "Village Elder", "text": "Monsters have overrun the lands surrounding our town. The fields, swamp, cave, and dungeon are all dangerous now.", "next": 2},
+    {"speaker": "Village Elder", "text": "We need someone brave to clear out these creatures. Will you help us?", "next": 3},
+    {"speaker": "Village Elder", "text": "You can use the portals in the town square to travel to different areas. Defeat all monsters in an area to unlock the boss portal!", "choices": [
+      {"text": "I'll help! Tell me more.", "next": 4},
+      {"text": "What's in it for me?", "next": 5},
+      {"text": "Not right now.", "next": 6}
+    ]},
+    {"speaker": "Village Elder", "text": "Excellent! Start by clearing the slimes from the Eastern Fields. Return to me when you're done.", "action": "start_quest:kill_slimes", "next": -1},
+    {"speaker": "Village Elder", "text": "I can offer you gold, experience, and valuable equipment. The more dangerous the area, the better the rewards!", "next": 4},
+    {"speaker": "Village Elder", "text": "I understand. Come back if you change your mind. The town will always be safe for you.", "next": -1}
+  ]
+}

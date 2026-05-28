@@ -1,0 +1,10 @@
+{
+  "item_id": "slime_gel",
+  "item_name": "Slime Gel",
+  "description": "A gooey substance dropped by slimes. Used in crafting and alchemy.",
+  "item_type": 2,
+  "stackable": true,
+  "max_stack": 99,
+  "buy_price": 10,
+  "sell_price": 5
+}

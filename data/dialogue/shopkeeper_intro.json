@@ -1,0 +1,14 @@
+{
+  "dialogue_id": "shopkeeper_intro",
+  "lines": [
+    {"speaker": "Shopkeeper", "text": "Welcome to my shop! I buy and sell all kinds of goods.", "next": 1},
+    {"speaker": "Shopkeeper", "text": "Got any monster drops to sell? Or looking to buy some equipment?", "choices": [
+      {"text": "Show me what you have.", "next": 2},
+      {"text": "I want to sell items.", "next": 3},
+      {"text": "Just browsing.", "next": 4}
+    ]},
+    {"speaker": "Shopkeeper", "text": "Here's what I've got in stock!", "action": "open_shop:general_store", "next": -1},
+    {"speaker": "Shopkeeper", "text": "Let me see what you're carrying.", "action": "open_shop:general_store", "next": -1},
+    {"speaker": "Shopkeeper", "text": "Take your time! Come back if you need anything.", "next": -1}
+  ]
+}

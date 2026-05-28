@@ -1,0 +1,10 @@
+{
+  "item_id": "leather_bracelet",
+  "item_name": "Leather Bracelet",
+  "description": "A simple leather bracelet that boosts your strength.",
+  "item_type": 3,
+  "attack_bonus": 5,
+  "required_level": 1,
+  "buy_price": 80,
+  "sell_price": 40
+}
