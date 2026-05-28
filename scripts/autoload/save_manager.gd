@@ -47,6 +47,9 @@ func has_save(slot: int) -> bool:
 	var file_path = SAVE_DIR + "slot_%d.json" % slot
 	return FileAccess.file_exists(file_path)
 
+func stage_current_player_for_transition() -> void:
+	_pending_player_data = _gather_save_data().get("player", {})
+
 func _gather_save_data() -> Dictionary:
 	var player = get_tree().get_first_node_in_group("player")
 	var player_data = {}

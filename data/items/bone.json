@@ -1,0 +1,10 @@
+{
+  "item_id": "bone",
+  "item_name": "Bone",
+  "description": "A plain monster bone.",
+  "item_type": 3,
+  "stackable": true,
+  "max_stack": 99,
+  "buy_price": 1,
+  "sell_price": 1
+}

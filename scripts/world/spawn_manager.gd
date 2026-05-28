@@ -76,8 +76,15 @@ func _spawn_monster(monster_id: String, spawn_position: Vector2) -> bool:
 	if monster.has_node("StatsComponent"):
 		var stats := monster.get_node("StatsComponent") as StatsComponent
 		stats.max_hp = int(monster_data.get("max_hp", monster_data.get("hp", stats.max_hp)))
+		stats.current_hp = stats.max_hp
 		stats.attack = int(monster_data.get("attack", stats.attack))
 		stats.defense = int(monster_data.get("defense", stats.defense))
+	if "xp_reward" in monster:
+		monster.set("xp_reward", int(monster_data.get("xp_reward", monster.get("xp_reward"))))
+	if "gold_reward" in monster:
+		var gold_min := int(monster_data.get("gold_min", monster.get("gold_reward")))
+		var gold_max := int(monster_data.get("gold_max", gold_min))
+		monster.set("gold_reward", randi_range(gold_min, gold_max))
 	var map_root := _get_map_root()
 	if map_root == null:
 		monster.queue_free()

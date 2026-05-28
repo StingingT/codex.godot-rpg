@@ -37,7 +37,7 @@ func remove_gold(amount: int) -> bool:
 func add_item(item: ItemData, quantity: int = 1) -> bool:
 	# Try to stack with existing
 	for slot in items:
-		if slot.item == item and slot.quantity > 0:
+		if slot.item != null and slot.item.item_id == item.item_id and slot.quantity > 0:
 			if item.stackable:
 				slot.quantity += quantity
 				inventory_changed.emit()

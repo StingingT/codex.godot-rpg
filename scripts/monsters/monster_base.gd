@@ -17,6 +17,9 @@ enum State { IDLE, WANDER, CHASE, ATTACK, DEAD }
 @onready var hitbox: HitboxComponent = $HitboxComponent
 @onready var detection_zone: Area2D = $DetectionZone
 
+var health_bar: Control = null
+var health_fill: ColorRect = null
+
 var current_state: State = State.IDLE
 var player: Player = null
 var wander_direction: Vector2 = Vector2.ZERO
@@ -31,7 +34,10 @@ func _ready():
 	detection_zone.body_entered.connect(_on_detection_body_entered)
 	detection_zone.body_exited.connect(_on_detection_body_exited)
 	stats.died.connect(_on_died)
+	stats.hp_changed.connect(_on_hp_changed)
 	hurtbox.damage_taken.connect(_on_damage_taken)
+	_create_health_bar()
+	_update_health_bar()
 	
 	# Disable hitbox initially
 	hitbox.disable()
@@ -146,6 +152,10 @@ func _on_detection_body_exited(body: Node2D) -> void:
 		player = null
 
 func _on_damage_taken(amount: int, _attacker_position: Vector2) -> void:
+	_update_health_bar()
+	if health_bar:
+		health_bar.visible = true
+
 	# Flash red
 	var tween = create_tween()
 	tween.tween_property(animated_sprite, "modulate", Color.RED, 0.05)
@@ -185,16 +195,7 @@ func _drop_loot() -> void:
 func _spawn_gold() -> void:
 	var gold_pickup = preload("res://scenes/items/gold_pickup.tscn").instantiate()
 	gold_pickup.global_position = global_position + Vector2(randf_range(-15, 15), randf_range(-15, 15))
-	
-	# Gold amount based on monster type
-	match monster_type:
-		"slime": gold_pickup.gold_amount = randi_range(5, 15)
-		"bat": gold_pickup.gold_amount = randi_range(3, 10)
-		"skeleton": gold_pickup.gold_amount = randi_range(10, 25)
-		"swamp_monster": gold_pickup.gold_amount = randi_range(15, 30)
-		"dark_knight": gold_pickup.gold_amount = randi_range(50, 100)
-		_: gold_pickup.gold_amount = randi_range(5, 15)
-	
+	gold_pickup.gold_amount = max(gold_reward, 1)
 	get_tree().current_scene.add_child(gold_pickup)
 
 func _spawn_xp_orb() -> void:
@@ -206,5 +207,35 @@ func _spawn_xp_orb() -> void:
 func _spawn_item() -> void:
 	var item_pickup = preload("res://scenes/items/item_pickup.tscn").instantiate()
 	item_pickup.global_position = global_position + Vector2(randf_range(-10, 10), randf_range(-10, 10))
-	item_pickup.item_id = "slime_gel" if monster_type == "slime" else "bone"
+	item_pickup.item_id = "slime_gel" if monster_type.begins_with("slime") else "bone"
 	get_tree().current_scene.add_child(item_pickup)
+
+func _create_health_bar() -> void:
+	health_bar = Control.new()
+	health_bar.name = "HealthBar"
+	health_bar.position = Vector2(-14, -30)
+	health_bar.size = Vector2(28, 4)
+	health_bar.visible = false
+	add_child(health_bar)
+
+	var red_back := ColorRect.new()
+	red_back.name = "DamageBack"
+	red_back.color = Color(0.85, 0.1, 0.08, 1.0)
+	red_back.size = health_bar.size
+	health_bar.add_child(red_back)
+
+	health_fill = ColorRect.new()
+	health_fill.name = "HealthFill"
+	health_fill.color = Color(0.1, 0.8, 0.18, 1.0)
+	health_fill.size = health_bar.size
+	health_bar.add_child(health_fill)
+
+func _on_hp_changed(_new_hp: int, _max_hp: int) -> void:
+	_update_health_bar()
+
+func _update_health_bar() -> void:
+	if health_fill == null or stats == null:
+		return
+	var max_hp: int = max(stats.get_max_hp(), 1)
+	var health_ratio: float = clamp(float(stats.current_hp) / float(max_hp), 0.0, 1.0)
+	health_fill.size.x = health_bar.size.x * health_ratio

@@ -289,6 +289,7 @@ func _attack() -> void:
 	
 	# Set hitbox damage
 	hitbox.damage = damage
+	hitbox.disable()
 	
 	# Show attack indicator
 	_show_attack_indicator()
@@ -304,11 +305,15 @@ func _attack() -> void:
 	# Position hitbox based on direction
 	_update_hitbox_position()
 	
-	# Enable hitbox
+	# Align the hit frame with the visible weapon swing.
+	await get_tree().create_timer(0.05).timeout
+	if weapon_sprite and weapon_sprite.visible:
+		_animate_sword_swing(_get_direction_name())
+
 	hitbox.enable()
 	
 	# Wait for hitbox active duration
-	await get_tree().create_timer(0.15).timeout
+	await get_tree().create_timer(0.12).timeout
 	hitbox.disable()
 	
 	# Hide attack indicator
@@ -320,7 +325,7 @@ func _attack() -> void:
 		weapon_sprite.visible = false
 	
 	# Wait for animation to finish or timeout
-	var anim_timer = get_tree().create_timer(0.2)
+	var anim_timer = get_tree().create_timer(0.18)
 	await anim_timer.timeout
 	
 	is_attacking = false
@@ -356,9 +361,6 @@ func _show_weapon_sprite(weapon: WeaponData) -> void:
 			weapon_sprite.rotation = 0
 			weapon_sprite.flip_v = false
 	
-	# Animate sword swing
-	_animate_sword_swing(dir_name)
-
 func _show_attack_indicator() -> void:
 	if not attack_indicator:
 		return
@@ -422,13 +424,13 @@ func _update_hitbox_position() -> void:
 	var offset = Vector2.ZERO
 	match _get_direction_name():
 		"up":
-			offset = Vector2(0, -12)
+			offset = Vector2(0, -18)
 		"down":
-			offset = Vector2(0, 12)
+			offset = Vector2(0, 18)
 		"left":
-			offset = Vector2(-12, 0)
+			offset = Vector2(-18, 0)
 		"right":
-			offset = Vector2(12, 0)
+			offset = Vector2(18, 0)
 	
 	hitbox.position = offset
 

@@ -27,6 +27,7 @@ func _change_map_internal(map_id: String) -> void:
 		return
 	map_transition_started.emit()
 	SaveManager.save_game()
+	SaveManager.stage_current_player_for_transition()
 	await _fade_out()
 
 	current_map_id = map_id

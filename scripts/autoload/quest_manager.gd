@@ -115,15 +115,17 @@ func _grant_rewards(quest_data: Dictionary) -> void:
 		return
 	
 	var rewards = quest_data.rewards
+	var player = get_tree().get_first_node_in_group("player")
 	if typeof(rewards) == TYPE_ARRAY:
 		for reward in rewards:
 			if typeof(reward) != TYPE_DICTIONARY:
 				continue
 			match str(reward.get("type", "")):
 				"gold":
-					GameManager.player_gold_changed.emit(int(reward.get("amount", 0)))
+					if player and player.inventory:
+						player.inventory.add_gold(int(reward.get("amount", 0)))
+						GameManager.player_gold_changed.emit(player.inventory.gold)
 				"xp":
-					var player = get_tree().get_first_node_in_group("player")
 					if player and player.stats:
 						player.stats.add_xp(int(reward.get("amount", 0)))
 				"item":
@@ -133,16 +135,14 @@ func _grant_rewards(quest_data: Dictionary) -> void:
 	# Handle gold reward
 	if rewards.has("gold"):
 		var gold_amount = rewards.gold
-		GameManager.player_gold_changed.emit(gold_amount)
 		# Also give to player if available
-		var player = get_tree().get_first_node_in_group("player")
 		if player and player.inventory:
 			player.inventory.add_gold(gold_amount)
+			GameManager.player_gold_changed.emit(player.inventory.gold)
 	
 	# Handle XP reward
 	if rewards.has("xp"):
 		var xp_amount = rewards.xp
-		var player = get_tree().get_first_node_in_group("player")
 		if player and player.stats:
 			player.stats.add_xp(xp_amount)
 	
@@ -203,7 +203,7 @@ func _on_monster_killed(monster_type: String, _position: Vector2) -> void:
 		
 		for i in range(quest_data.objectives.size()):
 			var objective = quest_data.objectives[i]
-			if objective.get("type", "") == "kill" and objective.get("target", "") == monster_type:
+			if objective.get("type", "") == "kill" and _matches_target(str(objective.get("target", objective.get("target_id", ""))), monster_type):
 				update_objective(quest_id, i, 1)
 
 func _on_item_picked_up(item_id: String, quantity: int) -> void:
@@ -221,8 +221,15 @@ func _on_item_picked_up(item_id: String, quantity: int) -> void:
 		
 		for i in range(quest_data.objectives.size()):
 			var objective = quest_data.objectives[i]
-			if objective.get("type", "") == "collect" and objective.get("target", "") == item_id:
+			if objective.get("type", "") == "collect" and _matches_target(str(objective.get("target", objective.get("target_id", ""))), item_id):
 				update_objective(quest_id, i, quantity)
+
+func _matches_target(required_target: String, actual_id: String) -> bool:
+	if required_target == actual_id:
+		return true
+	if required_target == "":
+		return false
+	return actual_id.begins_with(required_target + "_")
 
 func get_quest_status(quest_id: String) -> int:
 	if turned_in_quests.has(quest_id):
