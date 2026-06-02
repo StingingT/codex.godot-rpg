@@ -7,7 +7,8 @@
 script = ExtResource("2_shop_npc")
 npc_id = "shopkeeper"
 npc_name = "Shopkeeper"
+idle_sprite_sheet_path = "res://assets/sprites/npcs/kingwinlu_idle.png"
 shop_id = "general_store"
 
 [node name="AnimatedSprite2D" parent="." index="0"]
-modulate = Color(1, 0.8, 0.3, 1)
+modulate = Color(1, 1, 1, 1)

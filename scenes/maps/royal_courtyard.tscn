@@ -1,0 +1,202 @@
+[gd_scene load_steps=18 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/maps/royal_courtyard_background.png" id="1_background"]
+[ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="2_player"]
+[ext_resource type="PackedScene" path="res://scenes/ui/portal.tscn" id="3_portal"]
+[ext_resource type="PackedScene" path="res://scenes/ui/hud.tscn" id="4_hud"]
+[ext_resource type="PackedScene" path="res://scenes/npcs/shop_npc.tscn" id="5_shop_npc"]
+[ext_resource type="PackedScene" path="res://scenes/npcs/quest_npc.tscn" id="6_quest_npc"]
+[ext_resource type="PackedScene" path="res://scenes/ui/dialogue_box.tscn" id="7_dialogue_box"]
+[ext_resource type="Script" path="res://scripts/world/spawn_manager.gd" id="8_spawn"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_top_wall"]
+size = Vector2(640, 24)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_side_wall"]
+size = Vector2(24, 360)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_bottom_wall"]
+size = Vector2(640, 24)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_building"]
+size = Vector2(236, 110)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_left_wall"]
+size = Vector2(116, 100)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_right_wall"]
+size = Vector2(116, 100)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_tree_large"]
+size = Vector2(78, 54)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_tree_small"]
+size = Vector2(58, 42)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_portal"]
+size = Vector2(60, 20)
+
+[node name="MapRoyalCourtyard" type="Node2D"]
+y_sort_enabled = true
+
+[node name="Background" type="Sprite2D" parent="."]
+z_index = -20
+position = Vector2(320, 180)
+texture = ExtResource("1_background")
+
+[node name="WorldCollision" type="StaticBody2D" parent="."]
+collision_layer = 2
+collision_mask = 0
+
+[node name="TopWall" type="CollisionShape2D" parent="WorldCollision"]
+position = Vector2(320, 12)
+shape = SubResource("RectangleShape2D_top_wall")
+
+[node name="BottomWall" type="CollisionShape2D" parent="WorldCollision"]
+position = Vector2(320, 348)
+shape = SubResource("RectangleShape2D_bottom_wall")
+
+[node name="LeftWall" type="CollisionShape2D" parent="WorldCollision"]
+position = Vector2(12, 180)
+shape = SubResource("RectangleShape2D_side_wall")
+
+[node name="RightWall" type="CollisionShape2D" parent="WorldCollision"]
+position = Vector2(628, 180)
+shape = SubResource("RectangleShape2D_side_wall")
+
+[node name="BuildingBlocker" type="CollisionShape2D" parent="WorldCollision"]
+position = Vector2(320, 86)
+shape = SubResource("RectangleShape2D_building")
+
+[node name="LeftRuinsBlocker" type="CollisionShape2D" parent="WorldCollision"]
+position = Vector2(118, 138)
+shape = SubResource("RectangleShape2D_left_wall")
+
+[node name="RightRuinsBlocker" type="CollisionShape2D" parent="WorldCollision"]
+position = Vector2(522, 138)
+shape = SubResource("RectangleShape2D_right_wall")
+
+[node name="LeftTreeBlocker" type="CollisionShape2D" parent="WorldCollision"]
+position = Vector2(83, 300)
+shape = SubResource("RectangleShape2D_tree_large")
+
+[node name="RightTreeBlocker" type="CollisionShape2D" parent="WorldCollision"]
+position = Vector2(557, 300)
+shape = SubResource("RectangleShape2D_tree_large")
+
+[node name="TopRightTreeBlocker" type="CollisionShape2D" parent="WorldCollision"]
+position = Vector2(512, 134)
+shape = SubResource("RectangleShape2D_tree_small")
+
+[node name="EntryPoints" type="Node2D" parent="."]
+
+[node name="entry_default" type="Marker2D" parent="EntryPoints"]
+position = Vector2(320, 260)
+
+[node name="entry_north" type="Marker2D" parent="EntryPoints"]
+position = Vector2(320, 176)
+
+[node name="entry_south" type="Marker2D" parent="EntryPoints"]
+position = Vector2(320, 300)
+
+[node name="entry_east" type="Marker2D" parent="EntryPoints"]
+position = Vector2(560, 240)
+
+[node name="entry_west" type="Marker2D" parent="EntryPoints"]
+position = Vector2(80, 240)
+
+[node name="ExitTriggers" type="Node2D" parent="."]
+
+[node name="SpawnPoints" type="Node2D" parent="."]
+
+[node name="spawn_01" type="Marker2D" parent="SpawnPoints"]
+position = Vector2(210, 245)
+
+[node name="spawn_02" type="Marker2D" parent="SpawnPoints"]
+position = Vector2(438, 245)
+
+[node name="spawn_03" type="Marker2D" parent="SpawnPoints"]
+position = Vector2(320, 205)
+
+[node name="BossSpawnPoint" type="Marker2D" parent="."]
+position = Vector2(320, 210)
+
+[node name="Items" type="Node2D" parent="."]
+
+[node name="CameraLimits" type="ReferenceRect" parent="."]
+visible = false
+offset_right = 640.0
+offset_bottom = 360.0
+
+[node name="Player" parent="." instance=ExtResource("2_player")]
+position = Vector2(320, 260)
+
+[node name="Portals" type="Node2D" parent="."]
+
+[node name="TownPortal" parent="Portals" instance=ExtResource("3_portal")]
+position = Vector2(320, 312)
+portal_name = "World Portal"
+available_maps = Array[Dictionary]([{
+"id": "town",
+"level_req": 1,
+"name": "Safe Haven Town"
+}, {
+"id": "fields",
+"level_req": 1,
+"name": "Eastern Fields"
+}, {
+"id": "mystic_forest",
+"level_req": 2,
+"name": "Mystic Forest"
+}, {
+"id": "river_crossing",
+"level_req": 3,
+"name": "River Crossing"
+}, {
+"id": "watchtower_ruins",
+"level_req": 4,
+"name": "Watchtower Ruins"
+}, {
+"id": "sunken_marsh",
+"level_req": 6,
+"name": "Sunken Marsh"
+}, {
+"id": "royal_courtyard",
+"level_req": 1,
+"name": "Royal Courtyard"
+}, {
+"id": "swamp",
+"level_req": 5,
+"name": "Murky Swamp"
+}, {
+"id": "cave",
+"level_req": 8,
+"name": "Dark Cave"
+}, {
+"id": "dungeon",
+"level_req": 12,
+"name": "Ancient Dungeon"
+}])
+
+[node name="PortalBlocker" type="CollisionShape2D" parent="WorldCollision"]
+position = Vector2(320, 335)
+shape = SubResource("RectangleShape2D_portal")
+disabled = true
+
+[node name="HUD" parent="." instance=ExtResource("4_hud")]
+
+[node name="NPCs" type="Node2D" parent="."]
+
+[node name="RoyalShopkeeper" parent="NPCs" instance=ExtResource("5_shop_npc")]
+position = Vector2(250, 205)
+
+[node name="RoyalQuestGiver" parent="NPCs" instance=ExtResource("6_quest_npc")]
+position = Vector2(390, 205)
+
+[node name="DialogueBox" parent="." instance=ExtResource("7_dialogue_box")]
+
+[node name="SpawnManager" type="Node" parent="."]
+script = ExtResource("8_spawn")
+map_id = "royal_courtyard"
+encounter_table_id = "royal_courtyard_safe"
+respawn_seconds = 12.0

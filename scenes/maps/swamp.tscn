@@ -81,20 +81,16 @@ script = ExtResource("3_jiv2f")
 speed = 80.0
 attack_cooldown = 0.4
 
-[node name="Camera2D" type="Camera2D" parent="Player"]
-zoom = Vector2(2, 2)
-position_smoothing_enabled = true
-
 [node name="Portals" type="Node2D" parent="."]
 
-[node name="ToFields" type="Area2D" parent="Portals" groups=["portals"] instance=ExtResource("3_portal")]
-position = Vector2(50, 300)
+[node name="ToSunkenMarsh" type="Area2D" parent="Portals" groups=["portals"] instance=ExtResource("3_portal")]
+position = Vector2(80, 300)
 collision_layer = 32
 script = ExtResource("5_f73ep")
-target_map = "fields"
+target_map = "sunken_marsh"
 target_position = Vector2(850, 300)
-target_entry = ""
-portal_name = "Portal"
+target_entry = "entry_east"
+portal_name = "Back"
 requires_all_monsters_dead = false
 available_maps = Array[Dictionary]([{
 "id": "town",
@@ -104,6 +100,26 @@ available_maps = Array[Dictionary]([{
 "id": "fields",
 "level_req": 1,
 "name": "Eastern Fields"
+}, {
+"id": "mystic_forest",
+"level_req": 2,
+"name": "Mystic Forest"
+}, {
+"id": "river_crossing",
+"level_req": 3,
+"name": "River Crossing"
+}, {
+"id": "watchtower_ruins",
+"level_req": 4,
+"name": "Watchtower Ruins"
+}, {
+"id": "sunken_marsh",
+"level_req": 6,
+"name": "Sunken Marsh"
+}, {
+"id": "royal_courtyard",
+"level_req": 1,
+"name": "Royal Courtyard"
 }, {
 "id": "swamp",
 "level_req": 5,
@@ -119,13 +135,13 @@ available_maps = Array[Dictionary]([{
 }])
 
 [node name="ToCave" type="Area2D" parent="Portals" groups=["portals"] instance=ExtResource("3_portal")]
-position = Vector2(900, 300)
+position = Vector2(560, 300)
 collision_layer = 32
 script = ExtResource("5_f73ep")
 target_map = "cave"
 target_position = Vector2(100, 300)
-target_entry = ""
-portal_name = "Portal"
+target_entry = "entry_south"
+portal_name = "Next"
 requires_all_monsters_dead = false
 available_maps = Array[Dictionary]([{
 "id": "town",
@@ -135,6 +151,26 @@ available_maps = Array[Dictionary]([{
 "id": "fields",
 "level_req": 1,
 "name": "Eastern Fields"
+}, {
+"id": "mystic_forest",
+"level_req": 2,
+"name": "Mystic Forest"
+}, {
+"id": "river_crossing",
+"level_req": 3,
+"name": "River Crossing"
+}, {
+"id": "watchtower_ruins",
+"level_req": 4,
+"name": "Watchtower Ruins"
+}, {
+"id": "sunken_marsh",
+"level_req": 6,
+"name": "Sunken Marsh"
+}, {
+"id": "royal_courtyard",
+"level_req": 1,
+"name": "Royal Courtyard"
 }, {
 "id": "swamp",
 "level_req": 5,

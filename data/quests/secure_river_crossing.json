@@ -1,0 +1,22 @@
+{
+  "quest_id": "secure_river_crossing",
+  "quest_name": "Secure the River Crossing",
+  "description": "Blue slimes are gathering near the old drawbridge. Defeat 4 blue slimes at the River Crossing and return to the Quest Giver.",
+  "level_requirement": 3,
+  "prerequisites": ["mystic_forest_patrol"],
+  "objectives": [
+    {
+      "type": "kill",
+      "target": "slime_blue",
+      "required": 4,
+      "current": 0
+    }
+  ],
+  "rewards": {
+    "xp": 320,
+    "gold": 160,
+    "items": []
+  },
+  "giver": "quest_giver",
+  "turn_in": "quest_giver"
+}

@@ -76,6 +76,8 @@ func show_notification(text: String, duration: float = 2.0):
 	var tween = create_tween()
 	tween.tween_interval(duration)
 	tween.tween_property(notification, "modulate:a", 0.0, 0.5)
-	tween.finished.connect(func():
+	tween.finished.connect(_free_notification_canvas.bind(canvas))
+
+func _free_notification_canvas(canvas: CanvasLayer) -> void:
+	if is_instance_valid(canvas):
 		canvas.queue_free()
-	)

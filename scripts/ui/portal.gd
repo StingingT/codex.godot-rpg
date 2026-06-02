@@ -9,6 +9,11 @@ class_name Portal
 @export var available_maps: Array[Dictionary] = [
 	{"id": "town", "name": "Safe Haven Town", "level_req": 1},
 	{"id": "fields", "name": "Eastern Fields", "level_req": 1},
+	{"id": "mystic_forest", "name": "Mystic Forest", "level_req": 2},
+	{"id": "river_crossing", "name": "River Crossing", "level_req": 3},
+	{"id": "watchtower_ruins", "name": "Watchtower Ruins", "level_req": 4},
+	{"id": "sunken_marsh", "name": "Sunken Marsh", "level_req": 6},
+	{"id": "royal_courtyard", "name": "Royal Courtyard", "level_req": 1},
 	{"id": "swamp", "name": "Murky Swamp", "level_req": 5},
 	{"id": "cave", "name": "Dark Cave", "level_req": 8},
 	{"id": "dungeon", "name": "Ancient Dungeon", "level_req": 12}
@@ -24,6 +29,7 @@ func _ready():
 	add_to_group("portal")
 	body_entered.connect(_on_body_entered)
 	body_exited.connect(_on_body_exited)
+	label.text = portal_name + "\n[Press E]"
 	label.hide()
 
 func _input(event):
@@ -47,15 +53,19 @@ func _on_body_exited(body: Node2D):
 		label.hide()
 
 func _use_portal():
-	if not available_maps.is_empty():
-		_open_map_selector()
-		return
-	if target_map == "":
-		return
 	if target_entry != "":
 		MapManager.change_map_to_entry(target_map, target_entry)
+		return
+	if target_map != "":
+		if target_position != Vector2.ZERO:
+			MapManager.change_map(target_map, target_position)
+		else:
+			MapManager.change_map(target_map)
+		return
+	if not available_maps.is_empty():
+		_open_map_selector()
 	else:
-		MapManager.change_map(target_map, target_position)
+		return
 
 func _check_unlock_condition():
 	var monsters = get_tree().get_nodes_in_group("monsters")

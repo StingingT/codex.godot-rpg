@@ -50,43 +50,47 @@ func play_bgm(track_name: String) -> void:
 		return
 	
 	current_bgm = track_name
-	print("[Audio] Playing BGM: " + track_name)
+	_debug_log("[Audio] Playing BGM: " + track_name)
 	# In full implementation: crossfade to new track
 
 func stop_bgm() -> void:
 	current_bgm = ""
-	print("[Audio] Stopping BGM")
+	_debug_log("[Audio] Stopping BGM")
 
 func play_sfx(sfx_name: String) -> void:
-	print("[Audio] Playing SFX: " + sfx_name)
+	_debug_log("[Audio] Playing SFX: " + sfx_name)
 	# In full implementation: play on available SFX channel
 
 func play_sfx_at_position(sfx_name: String, position: Vector2) -> void:
 	# For positional audio (3D sound)
-	print("[Audio] Playing SFX at position: " + sfx_name + " at " + str(position))
+	_debug_log("[Audio] Playing SFX at position: " + sfx_name + " at " + str(position))
 
 func set_ambient(ambient_name: String) -> void:
 	if ambient_name == current_ambient:
 		return
 	
 	current_ambient = ambient_name
-	print("[Audio] Setting ambient: " + ambient_name)
+	_debug_log("[Audio] Setting ambient: " + ambient_name)
 
 func stop_ambient() -> void:
 	current_ambient = ""
-	print("[Audio] Stopping ambient")
+	_debug_log("[Audio] Stopping ambient")
 
 func set_bgm_volume(volume: float) -> void:
 	bgm_volume = clamp(volume, 0.0, 1.0)
-	print("[Audio] BGM volume set to: " + str(bgm_volume))
+	_debug_log("[Audio] BGM volume set to: " + str(bgm_volume))
 
 func set_sfx_volume(volume: float) -> void:
 	sfx_volume = clamp(volume, 0.0, 1.0)
-	print("[Audio] SFX volume set to: " + str(sfx_volume))
+	_debug_log("[Audio] SFX volume set to: " + str(sfx_volume))
 
 func set_ambient_volume(volume: float) -> void:
 	ambient_volume = clamp(volume, 0.0, 1.0)
-	print("[Audio] Ambient volume set to: " + str(ambient_volume))
+	_debug_log("[Audio] Ambient volume set to: " + str(ambient_volume))
+
+func _debug_log(message: String) -> void:
+	if OS.is_debug_build():
+		print(message)
 
 # Event handlers
 func _on_game_paused() -> void:

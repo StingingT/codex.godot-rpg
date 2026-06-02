@@ -13,6 +13,20 @@
       }
     ]
   },
+  "royal_courtyard": {
+    "scene": "res://scenes/maps/royal_courtyard.tscn",
+    "display_name": "Royal Courtyard",
+    "biome": "town",
+    "music": "res://assets/audio/music/town_theme.ogg",
+    "encounter_table": "royal_courtyard_safe",
+    "connections": [
+      {
+        "to": "town",
+        "via": "exit_south",
+        "spawn_at": "entry_default"
+      }
+    ]
+  },
   "fields": {
     "scene": "res://scenes/maps/fields.tscn",
     "display_name": "Eastern Fields",
@@ -26,14 +40,85 @@
         "spawn_at": "entry_east"
       },
       {
-        "to": "swamp",
-        "via": "exit_south",
-        "spawn_at": "entry_north"
+        "to": "mystic_forest",
+        "via": "exit_east",
+        "spawn_at": "entry_south"
+      }
+    ]
+  },
+  "mystic_forest": {
+    "scene": "res://scenes/maps/mystic_forest.tscn",
+    "display_name": "Mystic Forest",
+    "biome": "forest",
+    "music": "res://assets/audio/music/field_theme.ogg",
+    "encounter_table": "mystic_forest_low",
+    "connections": [
+      {
+        "to": "fields",
+        "via": "exit_west",
+        "spawn_at": "entry_east"
       },
       {
-        "to": "cave",
-        "via": "exit_north",
-        "spawn_at": "entry_south"
+        "to": "river_crossing",
+        "via": "exit_east",
+        "spawn_at": "entry_west"
+      }
+    ]
+  },
+  "river_crossing": {
+    "scene": "res://scenes/maps/river_crossing.tscn",
+    "display_name": "River Crossing",
+    "biome": "grassland",
+    "music": "res://assets/audio/music/field_theme.ogg",
+    "encounter_table": "river_crossing_low",
+    "connections": [
+      {
+        "to": "mystic_forest",
+        "via": "exit_south",
+        "spawn_at": "entry_east"
+      },
+      {
+        "to": "watchtower_ruins",
+        "via": "exit_east",
+        "spawn_at": "entry_west"
+      }
+    ]
+  },
+  "watchtower_ruins": {
+    "scene": "res://scenes/maps/watchtower_ruins.tscn",
+    "display_name": "Watchtower Ruins",
+    "biome": "grassland",
+    "music": "res://assets/audio/music/field_theme.ogg",
+    "encounter_table": "watchtower_ruins_mid",
+    "connections": [
+      {
+        "to": "river_crossing",
+        "via": "exit_west",
+        "spawn_at": "entry_east"
+      },
+      {
+        "to": "sunken_marsh",
+        "via": "exit_east",
+        "spawn_at": "entry_west"
+      }
+    ]
+  },
+  "sunken_marsh": {
+    "scene": "res://scenes/maps/sunken_marsh.tscn",
+    "display_name": "Sunken Marsh",
+    "biome": "swamp",
+    "music": "res://assets/audio/music/swamp_theme.ogg",
+    "encounter_table": "sunken_marsh_mid",
+    "connections": [
+      {
+        "to": "fields",
+        "via": "exit_west",
+        "spawn_at": "entry_east"
+      },
+      {
+        "to": "swamp",
+        "via": "exit_east",
+        "spawn_at": "entry_west"
       }
     ]
   },
@@ -45,8 +130,13 @@
     "encounter_table": "swamp_mid",
     "connections": [
       {
-        "to": "fields",
-        "via": "exit_north",
+        "to": "sunken_marsh",
+        "via": "exit_west",
+        "spawn_at": "entry_east"
+      },
+      {
+        "to": "cave",
+        "via": "exit_east",
         "spawn_at": "entry_south"
       }
     ]
@@ -59,9 +149,9 @@
     "encounter_table": "cave_mid",
     "connections": [
       {
-        "to": "fields",
+        "to": "swamp",
         "via": "exit_south",
-        "spawn_at": "entry_north"
+        "spawn_at": "entry_east"
       },
       {
         "to": "dungeon",

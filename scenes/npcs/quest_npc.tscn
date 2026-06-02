@@ -7,9 +7,10 @@
 script = ExtResource("2_quest_npc")
 npc_id = "quest_giver"
 npc_name = "Quest Giver"
-quest_chain = ["kill_slimes", "hunt_skeletons"]
+idle_sprite_sheet_path = "res://assets/sprites/npcs/kingwinlu_idle.png"
+quest_chain = ["kill_slimes", "mystic_forest_patrol", "secure_river_crossing", "clear_watchtower_ruins", "cleanse_sunken_marsh", "hunt_skeletons"]
 available_quests = ["kill_slimes", "collect_herbs"]
 completed_quests = ["kill_slimes"]
 
 [node name="AnimatedSprite2D" parent="." index="0"]
-modulate = Color(0.3, 0.8, 1, 1)
+modulate = Color(1, 1, 1, 1)

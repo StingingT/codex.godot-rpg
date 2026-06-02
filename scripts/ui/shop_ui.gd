@@ -65,7 +65,7 @@ func _update_shop_items():
 		var item_id = item_data.get("item_id", "")
 		var buy_price = item_data.get("buy_price", 100)
 		
-		var item = _load_item_data(item_id)
+		var item := DataRegistry.get_item_data(item_id)
 		if not item:
 			continue
 		
@@ -141,7 +141,7 @@ func _do_buy():
 	if player_inventory.gold < buy_price:
 		return
 	
-	var item = _load_item_data(item_id)
+	var item := DataRegistry.get_item_data(item_id)
 	if not item:
 		return
 	
@@ -182,49 +182,3 @@ func _build_item_description(item: ItemData) -> String:
 	if item.get("mana_amount"):
 		desc += "Restores: %d Mana\n" % int(item.get("mana_amount"))
 	return desc.strip_edges()
-
-func _load_item_data(item_id: String) -> ItemData:
-	var file_path = "res://data/items/" + item_id + ".json"
-	if not FileAccess.file_exists(file_path):
-		return null
-	
-	var file = FileAccess.open(file_path, FileAccess.READ)
-	var json = JSON.new()
-	var error = json.parse(file.get_as_text())
-	if error != OK:
-		return null
-	
-	var data = json.data
-	var item_type = data.get("item_type", 0)
-	
-	var item: ItemData
-	
-	if item_type == 0 or data.has("weapon_type"):
-		var weapon = WeaponData.new()
-		weapon.weapon_type = data.get("weapon_type", 0)
-		weapon.damage = data.get("damage", 10)
-		weapon.attack_speed = data.get("attack_speed", 1.0)
-		item = weapon
-	elif item_type == 1 or data.has("armor_type"):
-		var armor = ArmorData.new()
-		armor.armor_type = data.get("armor_type", 0)
-		armor.defense = data.get("defense", 5)
-		armor.vitality_bonus = data.get("vitality_bonus", 0)
-		armor.hp_bonus = data.get("hp_bonus", 0)
-		item = armor
-	else:
-		item = ItemData.new()
-	
-	item.item_id = data.get("item_id", item_id)
-	item.item_name = data.get("item_name", "Unknown")
-	item.description = data.get("description", "")
-	item.item_type = item_type
-	item.buy_price = data.get("buy_price", 100)
-	item.sell_price = data.get("sell_price", 50)
-	item.stackable = data.get("stackable", false)
-	item.max_stack = data.get("max_stack", 1)
-	item.attack_bonus = data.get("attack_bonus", 0)
-	item.heal_amount = data.get("heal_amount", 0)
-	item.mana_amount = data.get("mana_amount", 0)
-	
-	return item

@@ -5,3 +5,7 @@ export_presets.cfg
 android/
 ios/
 *.tmp
+.agents/
+.codex/
+assets/maps/generated_maps_*.png
+assets/maps/tileset_contact_sheet.png

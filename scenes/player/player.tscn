@@ -267,7 +267,7 @@ default_color = Color(0, 0, 0, 1)
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(0, -8)
-zoom = Vector2(3, 3)
+zoom = Vector2(1, 1)
 limit_smoothed = true
 position_smoothing_enabled = true
 position_smoothing_speed = 10.0

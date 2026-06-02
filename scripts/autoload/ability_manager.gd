@@ -4,12 +4,26 @@ signal ability_cast(caster: Node, ability_id: String)
 signal ability_failed(caster: Node, ability_id: String, reason: String)
 
 var cooldowns: Dictionary = {} # caster instance id -> ability id -> seconds remaining
+var caster_refs: Dictionary = {}
+var effect_scene_cache: Dictionary = {}
 
 func _process(delta: float) -> void:
-	for caster_id in cooldowns.keys():
+	for caster_id in cooldowns.keys().duplicate():
+		var caster_ref := caster_refs.get(caster_id) as WeakRef
+		if caster_ref == null or caster_ref.get_ref() == null:
+			cooldowns.erase(caster_id)
+			caster_refs.erase(caster_id)
+			continue
 		var caster_cooldowns: Dictionary = cooldowns[caster_id]
-		for ability_id in caster_cooldowns.keys():
-			caster_cooldowns[ability_id] = max(float(caster_cooldowns[ability_id]) - delta, 0.0)
+		for ability_id in caster_cooldowns.keys().duplicate():
+			var remaining := float(caster_cooldowns[ability_id]) - delta
+			if remaining <= 0.0:
+				caster_cooldowns.erase(ability_id)
+			else:
+				caster_cooldowns[ability_id] = remaining
+		if caster_cooldowns.is_empty():
+			cooldowns.erase(caster_id)
+			caster_refs.erase(caster_id)
 
 func can_cast(caster: Node, ability_id: String) -> bool:
 	var ability := DataRegistry.get_ability(ability_id)
@@ -57,7 +71,10 @@ func _commit_ability(caster: Node, target: Node, direction: Vector2, ability: Di
 		"projectile", "area", "hitbox":
 			var scene_path := str(ability.get("scene", ""))
 			if scene_path != "" and ResourceLoader.exists(scene_path):
-				var effect_scene: Node2D = load(scene_path).instantiate()
+				var packed_scene := _get_effect_scene(scene_path)
+				if packed_scene == null:
+					return
+				var effect_scene := packed_scene.instantiate() as Node2D
 				effect_scene.global_position = caster.global_position
 				if effect_scene.has_method("setup"):
 					effect_scene.setup(caster, ability, direction)
@@ -69,9 +86,12 @@ func _commit_ability(caster: Node, target: Node, direction: Vector2, ability: Di
 				EffectRouter.apply_effects(ability.get("effects", []), caster, target)
 
 func _start_cooldown(caster: Node, ability_id: String, seconds: float) -> void:
+	if caster == null or seconds <= 0.0:
+		return
 	var caster_id := caster.get_instance_id()
 	if not cooldowns.has(caster_id):
 		cooldowns[caster_id] = {}
+		caster_refs[caster_id] = weakref(caster)
 	cooldowns[caster_id][ability_id] = seconds
 
 func get_cooldown_remaining(caster: Node, ability_id: String) -> float:
@@ -100,3 +120,8 @@ func _get_stats(node: Node) -> StatsComponent:
 	if direct_stats is StatsComponent:
 		return direct_stats
 	return node.get_node_or_null("StatsComponent") as StatsComponent
+
+func _get_effect_scene(scene_path: String) -> PackedScene:
+	if not effect_scene_cache.has(scene_path):
+		effect_scene_cache[scene_path] = load(scene_path) as PackedScene
+	return effect_scene_cache[scene_path]

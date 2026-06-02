@@ -1,6 +1,8 @@
 extends CharacterBody2D
 class_name Player
 
+const CharacterSpriteFactory := preload("res://scripts/visuals/character_sprite_factory.gd")
+
 @export var speed: float = 80.0
 @export var attack_cooldown: float = 0.4
 
@@ -22,6 +24,16 @@ var player_class: PlayerClass
 var skill_points: int = 0
 var unlocked_skills: Array[String] = []
 var ability_slots: Array[String] = ["fireball", "heal", "power_attack", "battle_cry"]
+var _equipment_max_hp_bonus: int = 0
+var _equipment_defense_bonus: int = 0
+var _equipment_attack_bonus: int = 0
+const CLASS_SPRITE_OFFSET := Vector2(0, -20)
+const WEAPON_HAND_OFFSETS := {
+	"right": Vector2(12, -18),
+	"left": Vector2(-12, -18),
+	"down": Vector2(0, -15),
+	"up": Vector2(0, -24)
+}
 
 func _ready():
 	add_to_group("player")
@@ -33,17 +45,11 @@ func _ready():
 	if SaveManager._pending_player_data.size() > 0:
 		SaveManager.apply_pending_player_data(self)
 	else:
-		# Add starting weapon (bronze sword)
-		var bronze_sword = _load_weapon_data("bronze_sword")
-		if bronze_sword:
-			inventory.add_item(bronze_sword, 1)
-			inventory.equip_item(bronze_sword, "weapon")
-		
-		# Add starting armor (bronze armor)
-		var bronze_armor = _load_armor_data("bronze_armor")
-		if bronze_armor:
-			inventory.add_item(bronze_armor, 1)
-			inventory.equip_item(bronze_armor, "armor")
+		var selected_class := GameManager.player_class as PlayerClass
+		if selected_class == null:
+			selected_class = DataRegistry.create_player_class(PlayerClass.ClassType.WARRIOR)
+		set_class(selected_class)
+		_add_starting_equipment()
 	
 	# Connect inventory signals
 	inventory.equipment_changed.connect(_on_equipment_changed)
@@ -61,69 +67,25 @@ func _ready():
 	if weapon_sprite:
 		weapon_sprite.visible = false
 
-func _load_weapon_data(weapon_id: String) -> WeaponData:
-	var file_path = "res://data/items/" + weapon_id + ".json"
-	if FileAccess.file_exists(file_path):
-		var file = FileAccess.open(file_path, FileAccess.READ)
-		var json = JSON.new()
-		var error = json.parse(file.get_as_text())
-		if error == OK:
-			var data = json.data
-			var weapon = WeaponData.new()
-			weapon.item_id = data.get("item_id", weapon_id)
-			weapon.item_name = data.get("item_name", "Unknown Weapon")
-			weapon.description = data.get("description", "")
-			weapon.weapon_type = data.get("weapon_type", 0)
-			weapon.damage = data.get("damage", 10)
-			weapon.attack_speed = data.get("attack_speed", 1.0)
-			weapon.knockback = data.get("knockback", 100.0)
-			weapon.required_level = data.get("required_level", 1)
-			weapon.buy_price = data.get("buy_price", 100)
-			weapon.sell_price = data.get("sell_price", 50)
-			# Load sprite
-			var sprite_path = "res://assets/sprites/weapons/" + weapon_id + ".png"
-			if ResourceLoader.exists(sprite_path):
-				weapon.sprite = load(sprite_path)
-			return weapon
-	return null
-
-func _load_armor_data(armor_id: String) -> ArmorData:
-	var file_path = "res://data/items/" + armor_id + ".json"
-	if FileAccess.file_exists(file_path):
-		var file = FileAccess.open(file_path, FileAccess.READ)
-		var json = JSON.new()
-		var error = json.parse(file.get_as_text())
-		if error == OK:
-			var data = json.data
-			var armor = ArmorData.new()
-			armor.item_id = data.get("item_id", armor_id)
-			armor.item_name = data.get("item_name", "Unknown Armor")
-			armor.description = data.get("description", "")
-			armor.armor_type = data.get("armor_type", 0)
-			armor.defense = data.get("defense", 5)
-			armor.vitality_bonus = data.get("vitality_bonus", 0)
-			armor.hp_bonus = data.get("hp_bonus", 0)
-			armor.required_level = data.get("required_level", 1)
-			armor.buy_price = data.get("buy_price", 100)
-			armor.sell_price = data.get("sell_price", 50)
-			return armor
-	return null
-
 func _on_equipment_changed(_slot: String, _item: ItemData) -> void:
 	# Recalculate stats based on equipment
 	_recalculate_equipment_stats()
 
-func _recalculate_equipment_stats() -> void:
-	# Calculate base stats
-	var vit_ap = stats.distributed_ap.get("vit", 0) if stats.distributed_ap.has("vit") else 0
-	var base_max_hp = 100 + (vit_ap * 5)
-	var base_defense = 5 + (vit_ap / 2)
-	var base_attack = stats.attack
-	
-	# Apply equipment bonuses
-	var bonus_hp = 0
-	var bonus_defense = 0
-	var bonus_attack = 0
+func refresh_equipment_stats(adjust_current_hp: bool = true) -> void:
+	_recalculate_equipment_stats(adjust_current_hp)
+
+func _recalculate_equipment_stats(adjust_current_hp: bool = true) -> void:
+	if stats == null or inventory == null:
+		return
+
+	var old_max_hp := stats.get_max_hp()
+	stats.max_hp -= _equipment_max_hp_bonus
+	stats.defense -= _equipment_defense_bonus
+	stats.attack -= _equipment_attack_bonus
+
+	var bonus_hp := 0
+	var bonus_defense := 0
+	var bonus_attack := 0
 	
 	# Armor slot
 	if inventory.equipment.has("armor") and inventory.equipment.armor != null:
@@ -146,28 +108,26 @@ func _recalculate_equipment_stats() -> void:
 		if accessory.get("attack_bonus"):
 			bonus_attack += accessory.attack_bonus
 	
-	# Calculate new stats
-	var new_max_hp = base_max_hp + bonus_hp
-	var new_defense = base_defense + bonus_defense
-	var new_attack = base_attack + bonus_attack
-	
-	# Apply HP changes
-	var hp_diff = new_max_hp - stats.max_hp
-	stats.max_hp = new_max_hp
-	stats.defense = new_defense
-	stats.attack = new_attack
-	
-	# Increase current HP by the same amount as max HP increase
-	if hp_diff > 0:
+	_equipment_max_hp_bonus = bonus_hp
+	_equipment_defense_bonus = bonus_defense
+	_equipment_attack_bonus = bonus_attack
+	stats.max_hp += _equipment_max_hp_bonus
+	stats.defense += _equipment_defense_bonus
+	stats.attack += _equipment_attack_bonus
+
+	var hp_diff := stats.get_max_hp() - old_max_hp
+	if adjust_current_hp and hp_diff > 0:
 		stats.current_hp += hp_diff
-	else:
-		# Clamp current HP to new max if max decreased
-		stats.current_hp = min(stats.current_hp, stats.max_hp)
+	stats.current_hp = min(stats.current_hp, stats.get_max_hp())
 	
-	stats.hp_changed.emit(stats.current_hp, stats.max_hp)
+	stats.hp_changed.emit(stats.current_hp, stats.get_max_hp())
 
 func set_class(new_class: PlayerClass):
+	_equipment_max_hp_bonus = 0
+	_equipment_defense_bonus = 0
+	_equipment_attack_bonus = 0
 	player_class = new_class
+	_apply_class_sprite()
 	
 	# Apply base stats
 	stats.max_hp = new_class.base_stats.get("max_hp", 100)
@@ -184,6 +144,63 @@ func set_class(new_class: PlayerClass):
 	# Unlock starting skills
 	for skill_id in new_class.starting_skills:
 		_unlock_skill(skill_id)
+
+func _apply_class_sprite() -> void:
+	if animated_sprite == null or player_class == null:
+		return
+	var sprite_paths := _get_class_sprite_paths()
+	if sprite_paths.is_empty():
+		return
+	var frames := CharacterSpriteFactory.build_directional_frames(
+		str(sprite_paths.get("idle", "")),
+		str(sprite_paths.get("walk", "")),
+		str(sprite_paths.get("attack", ""))
+	)
+	if frames == null:
+		return
+	animated_sprite.sprite_frames = frames
+	animated_sprite.position = CLASS_SPRITE_OFFSET
+	animated_sprite.play("idle_" + _get_direction_name())
+	animated_sprite.set_frame_and_progress(0, 0.0)
+
+func _get_class_sprite_paths() -> Dictionary:
+	match player_class.class_type:
+		PlayerClass.ClassType.RANGER:
+			return {
+				"idle": "res://assets/sprites/player/classes/archertheresa_idle.png",
+				"walk": "res://assets/sprites/player/classes/archertheresa_walk.png",
+				"attack": "res://assets/sprites/player/classes/archertheresa_attack.png"
+			}
+		PlayerClass.ClassType.MAGE:
+			return {
+				"idle": "res://assets/sprites/player/classes/mageted_idle.png",
+				"walk": "res://assets/sprites/player/classes/mageted_walk.png",
+				"attack": "res://assets/sprites/player/classes/mageted_attack.png"
+			}
+		_:
+			return {
+				"idle": "res://assets/sprites/player/classes/knightlow_idle.png",
+				"walk": "res://assets/sprites/player/classes/knightlow_walk.png",
+				"attack": "res://assets/sprites/player/classes/knightlow_attack.png"
+			}
+
+func _add_starting_equipment() -> void:
+	var item_ids := ["bronze_sword", "bronze_armor"]
+	if player_class:
+		var configured_ids := player_class.get_starting_equipment()
+		if not configured_ids.is_empty() and DataRegistry.get_item_data(configured_ids[0]) != null:
+			item_ids = configured_ids
+	for item_id in item_ids:
+		var item := DataRegistry.get_item_data(item_id)
+		if item == null:
+			continue
+		inventory.add_item(item, 1)
+		if item is WeaponData:
+			inventory.equip_item(item, "weapon")
+		elif item is ArmorData:
+			var armor := item as ArmorData
+			var slot := "helmet" if armor.armor_type == ArmorData.ArmorType.HELMET else "armor"
+			inventory.equip_item(item, slot)
 
 func add_skill_points(points: int):
 	skill_points += points
@@ -343,21 +360,18 @@ func _show_weapon_sprite(weapon: WeaponData) -> void:
 	
 	# Position and rotate based on direction
 	var dir_name = _get_direction_name()
+	weapon_sprite.position = WEAPON_HAND_OFFSETS.get(dir_name, Vector2.ZERO)
 	match dir_name:
 		"right":
-			weapon_sprite.position = Vector2(20, 5)
 			weapon_sprite.rotation = PI / 2
 			weapon_sprite.flip_v = false
 		"left":
-			weapon_sprite.position = Vector2(-20, 5)
 			weapon_sprite.rotation = -PI / 2
 			weapon_sprite.flip_v = false
 		"down":
-			weapon_sprite.position = Vector2(0, 20)
 			weapon_sprite.rotation = PI
 			weapon_sprite.flip_v = false
 		"up":
-			weapon_sprite.position = Vector2(0, -15)
 			weapon_sprite.rotation = 0
 			weapon_sprite.flip_v = false
 	
@@ -406,18 +420,15 @@ func _animate_sword_swing(dir_name: String) -> void:
 	weapon_sprite.visible = true
 	
 	# Position based on direction
-	match _get_direction_name():
+	weapon_sprite.position = WEAPON_HAND_OFFSETS.get(dir_name, Vector2.ZERO)
+	match dir_name:
 		"up":
-			weapon_sprite.position = Vector2(0, -16)
 			weapon_sprite.rotation = -PI / 2
 		"down":
-			weapon_sprite.position = Vector2(0, 16)
 			weapon_sprite.rotation = PI / 2
 		"left":
-			weapon_sprite.position = Vector2(-16, 0)
 			weapon_sprite.rotation = PI
 		"right":
-			weapon_sprite.position = Vector2(16, 0)
 			weapon_sprite.rotation = 0
 
 func _update_hitbox_position() -> void:
@@ -449,12 +460,19 @@ func _on_died() -> void:
 
 func get_save_data() -> Dictionary:
 	return {
-		"stats": stats.get_save_data(),
+		"stats": get_base_stats_save_data(),
 		"class_type": player_class.class_type if player_class else 0,
 		"skill_points": skill_points,
 		"unlocked_skills": unlocked_skills,
 		"ability_slots": ability_slots
 	}
+
+func get_base_stats_save_data() -> Dictionary:
+	var data := stats.get_save_data()
+	data["max_hp"] = int(data.get("max_hp", stats.max_hp)) - _equipment_max_hp_bonus
+	data["defense"] = int(data.get("defense", stats.defense)) - _equipment_defense_bonus
+	data["attack"] = int(data.get("attack", stats.attack)) - _equipment_attack_bonus
+	return data
 
 func load_save_data(data: Dictionary) -> void:
 	if data.has("stats"):

@@ -57,7 +57,7 @@ func _gather_save_data() -> Dictionary:
 	if player:
 		player_data = {
 			"position": {"x": player.global_position.x, "y": player.global_position.y},
-			"stats": player.stats.get_save_data(),
+			"stats": player.get_base_stats_save_data(),
 			"inventory": player.inventory.get_save_data() if player.inventory else {},
 			"class_type": player.player_class.class_type if player.player_class else 0,
 			"skill_points": player.skill_points,
@@ -108,21 +108,18 @@ func apply_pending_player_data(player: Player) -> void:
 	if _pending_player_data.is_empty():
 		return
 	
+	if _pending_player_data.has("class_type"):
+		var class_type := int(_pending_player_data.class_type)
+		var player_class := DataRegistry.create_player_class(class_type)
+		player.set_class(player_class)
+		GameManager.player_class = player_class
+	
 	if _pending_player_data.has("stats"):
 		player.stats.load_save_data(_pending_player_data.stats)
 	
 	if _pending_player_data.has("inventory"):
 		player.inventory.load_save_data(_pending_player_data.inventory)
-	
-	if _pending_player_data.has("class_type"):
-		# Re-apply class
-		var class_type = _pending_player_data.class_type
-		var _class_data = load("res://data/classes/warrior_skill_tree.json") # Default
-		match class_type:
-			0: _class_data = load("res://data/classes/warrior_skill_tree.json")
-			1: _class_data = load("res://data/classes/ranger_skill_tree.json")
-			2: _class_data = load("res://data/classes/mage_skill_tree.json")
-		# Apply class...
+		player.refresh_equipment_stats(false)
 	
 	if _pending_player_data.has("skill_points"):
 		player.skill_points = _pending_player_data.skill_points

@@ -1,0 +1,22 @@
+{
+  "quest_id": "cleanse_sunken_marsh",
+  "quest_name": "Cleanse the Sunken Marsh",
+  "description": "Swamp monsters are spreading from the sunken marsh. Defeat 3 swamp monsters there and return to the Quest Giver.",
+  "level_requirement": 6,
+  "prerequisites": ["clear_watchtower_ruins"],
+  "objectives": [
+    {
+      "type": "kill",
+      "target": "swamp_monster",
+      "required": 3,
+      "current": 0
+    }
+  ],
+  "rewards": {
+    "xp": 520,
+    "gold": 260,
+    "items": []
+  },
+  "giver": "quest_giver",
+  "turn_in": "quest_giver"
+}

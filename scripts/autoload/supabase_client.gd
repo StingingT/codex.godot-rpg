@@ -27,14 +27,14 @@ func _ready():
 func sign_up_anonymous() -> void:
 	# In production: POST to /auth/v1/signup with anonymous credentials
 	# For now, simulate success
-	print("[Supabase] Anonymous sign-up (placeholder)")
+	_debug_log("[Supabase] Anonymous sign-up (placeholder)")
 	player_id = "player_" + str(randi())
 	auth_token = "dummy_token_" + str(randi())
 	is_authenticated = true
 	authenticated.emit(player_id)
 
 func sign_in_email(email: String, _password: String) -> void:
-	print("[Supabase] Email sign-in (placeholder)")
+	_debug_log("[Supabase] Email sign-in (placeholder)")
 	# In production: POST to /auth/v1/token?grant_type=password
 	player_id = "player_" + email.md5_text().substr(0, 8)
 	auth_token = "dummy_token_" + str(randi())
@@ -45,29 +45,29 @@ func sign_out() -> void:
 	auth_token = ""
 	player_id = ""
 	is_authenticated = false
-	print("[Supabase] Signed out")
+	_debug_log("[Supabase] Signed out")
 
 # Cloud Saves
 func upload_save(slot: int, _save_data: Dictionary) -> void:
 	if not is_authenticated:
-		print("[Supabase] Not authenticated")
+		_debug_log("[Supabase] Not authenticated")
 		return
 	
-	print("[Supabase] Uploading save to slot %d" % slot)
+	_debug_log("[Supabase] Uploading save to slot %d" % slot)
 	# In production: POST to /rest/v1/cloud_saves
 	# with headers: Authorization: Bearer {auth_token}
 	
 	# Simulate API call
 	await get_tree().create_timer(0.5).timeout
 	save_uploaded.emit(slot)
-	print("[Supabase] Save uploaded successfully")
+	_debug_log("[Supabase] Save uploaded successfully")
 
 func download_save(slot: int) -> void:
 	if not is_authenticated:
-		print("[Supabase] Not authenticated")
+		_debug_log("[Supabase] Not authenticated")
 		return
 	
-	print("[Supabase] Downloading save from slot %d" % slot)
+	_debug_log("[Supabase] Downloading save from slot %d" % slot)
 	# In production: GET to /rest/v1/cloud_saves?slot=eq.{slot}
 	
 	# Simulate API call with placeholder data
@@ -82,7 +82,7 @@ func download_save(slot: int) -> void:
 		}
 	}
 	save_downloaded.emit(slot, placeholder_save)
-	print("[Supabase] Save downloaded successfully")
+	_debug_log("[Supabase] Save downloaded successfully")
 
 func list_cloud_saves() -> Array:
 	if not is_authenticated:
@@ -100,7 +100,7 @@ func submit_score(level: int, play_time: int, monsters_killed: int, quests_compl
 	if not is_authenticated:
 		return
 	
-	print("[Supabase] Submitting score to leaderboard")
+	_debug_log("[Supabase] Submitting score to leaderboard")
 	# In production: POST to /rest/v1/leaderboard
 	
 	var score_data = {
@@ -112,10 +112,10 @@ func submit_score(level: int, play_time: int, monsters_killed: int, quests_compl
 		"quests_completed": quests_completed
 	}
 	
-	print("[Supabase] Score submitted: " + str(score_data))
+	_debug_log("[Supabase] Score submitted: " + str(score_data))
 
 func get_leaderboard(_limit: int = 50) -> void:
-	print("[Supabase] Fetching leaderboard")
+	_debug_log("[Supabase] Fetching leaderboard")
 	# In production: GET to /rest/v1/leaderboard?order=level.desc&limit={limit}
 	
 	# Simulate API call
@@ -130,6 +130,10 @@ func get_leaderboard(_limit: int = 50) -> void:
 	]
 	
 	leaderboard_loaded.emit(placeholder_entries)
+
+func _debug_log(message: String) -> void:
+	if OS.is_debug_build():
+		print(message)
 
 # HTTP request helper
 func _make_request(_method: String, _endpoint: String, _body: Dictionary = {}) -> Dictionary:

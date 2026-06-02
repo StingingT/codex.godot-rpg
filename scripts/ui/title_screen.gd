@@ -35,44 +35,20 @@ func _on_class_selected(class_type: int):
 	selected_class = class_type
 	
 	# Create player class data
-	var player_class = _create_player_class(class_type)
+	var player_class := DataRegistry.create_player_class(class_type)
 	
 	# Start game with selected class
 	GameManager.player_class = player_class
 	MapManager.change_map("town", Vector2(320, 180))
-
-func _create_player_class(class_type: int) -> PlayerClass:
-	var pc = PlayerClass.new()
-	pc.class_type = class_type
-	
-	match class_type:
-		0:  # WARRIOR
-			pc.player_class_name = "Warrior"
-			pc.description = "Master of melee combat"
-			pc.base_stats = {"max_hp": 120, "max_mana": 30, "attack": 15, "defense": 8, "speed": 75.0}
-			pc.starting_skills = ["warrior_start"]
-			
-		1:  # RANGER
-			pc.player_class_name = "Ranger"
-			pc.description = "Master of ranged combat"
-			pc.base_stats = {"max_hp": 90, "max_mana": 50, "attack": 12, "defense": 5, "speed": 90.0}
-			pc.starting_skills = ["ranger_start"]
-			
-		2:  # MAGE
-			pc.player_class_name = "Mage"
-			pc.description = "Master of elemental magic"
-			pc.base_stats = {"max_hp": 70, "max_mana": 100, "attack": 20, "defense": 3, "speed": 80.0}
-			pc.starting_skills = ["mage_start"]
-	
-	return pc
 
 func _on_back():
 	class_selection.hide()
 	$CenterContainer.show()
 
 func _on_continue():
-	if SaveManager.has_save(1):
-		SaveManager.load_game(1)
+	if SaveManager.has_save(1) and SaveManager.load_game(1):
+		var map_id := GameManager.current_map_id if GameManager.current_map_id != "" else "town"
+		MapManager.change_map(map_id)
 
 func _on_quit():
 	get_tree().quit()

@@ -2,6 +2,7 @@ extends Area2D
 class_name GoldPickup
 
 @export var gold_amount: int = 1
+const PICKUP_TEXT_LIFETIME: float = 5.0
 
 @onready var collision_shape: CollisionShape2D = $CollisionShape2D
 
@@ -51,17 +52,12 @@ func _show_pickup_text():
 	label.position = global_position
 	_get_pickup_text_parent().add_child(label)
 	
-	# Auto-remove after 1 second
-	var timer = get_tree().create_timer(1.0)
-	timer.timeout.connect(func():
-		if is_instance_valid(label):
-			label.queue_free()
-	)
-	
 	# Animate while visible
-	var tween = create_tween()
+	var tween = label.create_tween()
+	tween.tween_interval(max(PICKUP_TEXT_LIFETIME - 1.0, 0.0))
 	tween.tween_property(label, "position:y", label.position.y - 30, 1.0)
 	tween.parallel().tween_property(label, "modulate:a", 0.0, 1.0)
+	tween.finished.connect(label.queue_free)
 
 func _get_pickup_text_parent() -> Node:
 	return get_tree().current_scene if get_tree().current_scene != null else get_tree().root

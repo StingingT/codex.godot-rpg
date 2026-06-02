@@ -47,40 +47,47 @@ func _load_shop(shop_id: String) -> Dictionary:
 	return {}
 
 func buy_item(item_id: String, quantity: int = 1) -> bool:
-	if not is_shop_open:
+	if not is_shop_open or player_inventory == null:
 		return false
 	
 	# Find item in shop
-	var shop_item = null
-	for item in current_shop.inventory:
-		if item.item_id == item_id:
+	var shop_item: Dictionary = {}
+	for item in current_shop.get("items", current_shop.get("inventory", [])):
+		if str(item.get("item_id", "")) == item_id:
 			shop_item = item
 			break
 	
-	if not shop_item:
+	if shop_item.is_empty():
 		return false
 	
 	# Check stock
-	if shop_item.stock != -1 and shop_item.stock < quantity:
+	var stock := int(shop_item.get("quantity", shop_item.get("stock", -1)))
+	if stock != -1 and stock < quantity:
 		return false
 	
 	# Calculate price
-	var total_price = shop_item.price * quantity
+	var unit_price := int(shop_item.get("buy_price", shop_item.get("price", 0)))
+	if unit_price <= 0:
+		var item_for_price = player_inventory.get_item_by_id(item_id)
+		unit_price = item_for_price.buy_price if item_for_price else 0
+	var total_price := unit_price * quantity
 	
 	# Check player gold
 	if player_inventory.gold < total_price:
 		return false
+
+	var item_data = player_inventory.load_item_data(item_id)
+	if item_data == null:
+		return false
 	
 	# Deduct gold
+	if not player_inventory.add_item(item_data, quantity):
+		return false
 	player_inventory.remove_gold(total_price)
 	
-	# Add item to player inventory
-	# TODO: Load actual item data and add to inventory
-	# For now, just emit signal
-	
 	# Reduce shop stock
-	if shop_item.stock != -1:
-		shop_item.stock -= quantity
+	if stock != -1:
+		shop_item["quantity"] = stock - quantity
 	
 	item_bought.emit(item_id, quantity, total_price)
 	AudioManager.play_sfx("item_pickup")
@@ -88,19 +95,23 @@ func buy_item(item_id: String, quantity: int = 1) -> bool:
 	return true
 
 func sell_item(item_id: String, quantity: int = 1) -> bool:
-	if not is_shop_open:
+	if not is_shop_open or player_inventory == null:
 		return false
 	
 	# Check if player has item
-	# TODO: Check actual inventory
+	if not player_inventory.has_item_id(item_id, quantity):
+		return false
 	
 	# Calculate sell price
 	var buy_rate = current_shop.get("buy_rate", 0.5)
-	# TODO: Get item value and calculate sell price
-	var sell_price = int(100 * buy_rate) * quantity  # Placeholder
+	var item_data = player_inventory.get_item_by_id(item_id)
+	if item_data == null:
+		return false
+	var sell_price = int(item_data.sell_price if item_data.sell_price > 0 else item_data.buy_price * buy_rate) * quantity
 	
 	# Remove item from player inventory
-	# TODO: Remove from actual inventory
+	if not player_inventory.remove_item_by_id(item_id, quantity):
+		return false
 	
 	# Add gold
 	player_inventory.add_gold(sell_price)
@@ -113,9 +124,9 @@ func sell_item(item_id: String, quantity: int = 1) -> bool:
 func get_shop_items() -> Array:
 	if not is_shop_open:
 		return []
-	return current_shop.get("inventory", [])
+	return current_shop.get("items", current_shop.get("inventory", []))
 
 func get_shop_name() -> String:
 	if not is_shop_open:
 		return ""
-	return current_shop.get("name", "Shop")
+	return current_shop.get("shop_name", current_shop.get("name", "Shop"))

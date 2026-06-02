@@ -168,7 +168,8 @@ func _shoot_arrow() -> void:
 		return
 	
 	# Create arrow projectile
-	print("[GoblinArcher] Shooting arrow!")
+	if OS.is_debug_build():
+		print("[GoblinArcher] Shooting arrow!")
 	# In full implementation: spawn arrow projectile toward player
 	AudioManager.play_sfx("bow_shoot")
 

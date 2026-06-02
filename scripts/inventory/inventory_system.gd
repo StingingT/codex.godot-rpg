@@ -66,11 +66,46 @@ func remove_item(item: ItemData, quantity: int = 1) -> bool:
 			return true
 	return false
 
+func remove_item_by_id(item_id: String, quantity: int = 1) -> bool:
+	if not has_item_id(item_id, quantity):
+		return false
+	var remaining := quantity
+	var removed_item: ItemData = null
+	for slot in items:
+		if slot.item == null or slot.item.item_id != item_id or slot.quantity <= 0:
+			continue
+		removed_item = slot.item
+		var amount: int = min(int(slot.quantity), remaining)
+		slot.quantity -= amount
+		remaining -= amount
+		if slot.quantity == 0:
+			slot.item = null
+		if remaining == 0:
+			inventory_changed.emit()
+			item_removed.emit(removed_item, quantity)
+			return true
+	return false
+
 func has_item(item: ItemData, quantity: int = 1) -> bool:
 	for slot in items:
 		if slot.item == item and slot.quantity >= quantity:
 			return true
 	return false
+
+func has_item_id(item_id: String, quantity: int = 1) -> bool:
+	var total := 0
+	for slot in items:
+		if slot.item != null and slot.item.item_id == item_id:
+			total += int(slot.quantity)
+			if total >= quantity:
+				return true
+	return false
+
+func get_item_by_id(item_id: String) -> ItemData:
+	for slot in items:
+		if slot.item != null and slot.item.item_id == item_id:
+			return slot.item
+	return _load_item_from_json(item_id)
 
 func equip_item(item: ItemData, slot_type: String) -> bool:
 	if not equipment.has(slot_type):
@@ -157,73 +192,15 @@ func load_save_data(data: Dictionary) -> void:
 	gold_changed.emit(gold)
 
 func _load_item_database() -> Dictionary:
-	# Load all items from data folder
-	var item_db = {}
-	var dir = DirAccess.open("res://data/items/")
-	if dir:
-		dir.list_dir_begin()
-		var file_name = dir.get_next()
-		while file_name != "":
-			if file_name.ends_with(".json"):
-				var item_id = file_name.replace(".json", "")
-				var item = _load_item_from_json(item_id)
-				if item:
-					item_db[item_id] = item
-			file_name = dir.get_next()
+	var item_db := {}
+	for item_id in DataRegistry.items.keys():
+		var item := DataRegistry.get_item_data(str(item_id))
+		if item:
+			item_db[item.item_id] = item
 	return item_db
 
+func load_item_data(item_id: String) -> ItemData:
+	return DataRegistry.get_item_data(item_id)
+
 func _load_item_from_json(item_id: String) -> ItemData:
-	var file_path = "res://data/items/" + item_id + ".json"
-	if not FileAccess.file_exists(file_path):
-		return null
-	
-	var file = FileAccess.open(file_path, FileAccess.READ)
-	var json = JSON.new()
-	var error = json.parse(file.get_as_text())
-	if error != OK:
-		return null
-	
-	var data = json.data
-	var item_type = data.get("item_type", 0)
-	
-	var item: ItemData
-	
-	# Check if it's a weapon (item_type 0 or has weapon_type)
-	if item_type == 0 or data.has("weapon_type"):
-		var weapon = WeaponData.new()
-		weapon.weapon_type = data.get("weapon_type", 0)
-		weapon.damage = data.get("damage", 10)
-		weapon.attack_speed = data.get("attack_speed", 1.0)
-		weapon.knockback = data.get("knockback", 100.0)
-		item = weapon
-	# Check if it's armor (item_type 1 or has armor_type)
-	elif item_type == 1 or data.has("armor_type"):
-		var armor = ArmorData.new()
-		armor.armor_type = data.get("armor_type", 0)
-		armor.defense = data.get("defense", 5)
-		armor.vitality_bonus = data.get("vitality_bonus", 0)
-		armor.hp_bonus = data.get("hp_bonus", 0)
-		item = armor
-	else:
-		item = ItemData.new()
-	
-	# Common properties
-	item.item_id = data.get("item_id", item_id)
-	item.item_name = data.get("item_name", "Unknown")
-	item.description = data.get("description", "")
-	item.item_type = item_type
-	item.required_level = data.get("required_level", 1)
-	item.buy_price = data.get("buy_price", 100)
-	item.sell_price = data.get("sell_price", 50)
-	item.stackable = data.get("stackable", false)
-	item.max_stack = data.get("max_stack", 1)
-	item.attack_bonus = data.get("attack_bonus", 0)
-	item.heal_amount = data.get("heal_amount", 0)
-	item.mana_amount = data.get("mana_amount", 0)
-	
-	# Try to load sprite
-	var sprite_path = "res://assets/sprites/weapons/" + item_id + ".png"
-	if ResourceLoader.exists(sprite_path):
-		item.sprite = load(sprite_path)
-	
-	return item
+	return DataRegistry.get_item_data(item_id)

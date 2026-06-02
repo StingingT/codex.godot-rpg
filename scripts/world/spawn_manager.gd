@@ -7,6 +7,7 @@ class_name SpawnManager
 
 var alive_by_monster: Dictionary = {}
 var respawn_timer := 0.0
+var monster_scene_cache: Dictionary = {}
 
 func _ready() -> void:
 	if map_id == "":
@@ -64,7 +65,7 @@ func _spawn_monster(monster_id: String, spawn_position: Vector2) -> bool:
 	if monster_data.is_empty():
 		return false
 	var scene_path := str(monster_data.get("scene", "res://scenes/monsters/monster_base.tscn"))
-	var scene := load(scene_path) as PackedScene
+	var scene := _get_monster_scene(scene_path)
 	if scene == null:
 		return false
 	var monster := scene.instantiate()
@@ -120,3 +121,8 @@ func _get_map_root() -> Node:
 	if get_tree().current_scene != null:
 		return get_tree().current_scene
 	return get_parent()
+
+func _get_monster_scene(scene_path: String) -> PackedScene:
+	if not monster_scene_cache.has(scene_path):
+		monster_scene_cache[scene_path] = load(scene_path) as PackedScene
+	return monster_scene_cache[scene_path]

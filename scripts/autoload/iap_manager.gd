@@ -65,7 +65,7 @@ func _ready():
 	process_mode = Node.PROCESS_MODE_ALWAYS
 
 func initialize() -> void:
-	print("[IAP] Initializing RevenueCat (placeholder)")
+	_debug_log("[IAP] Initializing RevenueCat (placeholder)")
 	# In production: Initialize RevenueCat SDK
 	# RevenueCat.configure(REVENUECAT_API_KEY)
 	
@@ -78,7 +78,7 @@ func purchase(product_id: String) -> void:
 		purchase_failed.emit(product_id, "Product not found")
 		return
 	
-	print("[IAP] Starting purchase: " + product_id)
+	_debug_log("[IAP] Starting purchase: " + product_id)
 	purchase_started.emit(product_id)
 	
 	# In production: RevenueCat.purchaseProduct(products[product_id])
@@ -100,7 +100,7 @@ func _complete_purchase(product_id: String) -> void:
 		purchased_products.append(product_id)
 	
 	purchase_completed.emit(product_id)
-	print("[IAP] Purchase completed: " + product_id)
+	_debug_log("[IAP] Purchase completed: " + product_id)
 
 func _grant_rewards(rewards: Dictionary) -> void:
 	var player = get_tree().get_first_node_in_group("player")
@@ -110,28 +110,28 @@ func _grant_rewards(rewards: Dictionary) -> void:
 	# Grant gold
 	if rewards.has("gold"):
 		# Add gold to player inventory
-		print("[IAP] Granted gold: " + str(rewards.gold))
+		_debug_log("[IAP] Granted gold: " + str(rewards.gold))
 	
 	# Grant items
 	if rewards.has("items"):
 		for item_id in rewards.items:
-			print("[IAP] Granted item: " + item_id)
+			_debug_log("[IAP] Granted item: " + item_id)
 	
 	# Grant inventory slots
 	if rewards.has("inventory_slots"):
-		print("[IAP] Granted inventory slots: " + str(rewards.inventory_slots))
+		_debug_log("[IAP] Granted inventory slots: " + str(rewards.inventory_slots))
 	
 	# Unlock maps
 	if rewards.has("maps"):
 		for map_id in rewards.maps:
-			print("[IAP] Unlocked map: " + map_id)
+			_debug_log("[IAP] Unlocked map: " + map_id)
 	
 	# Remove ads
 	if rewards.has("remove_ads"):
-		print("[IAP] Ads removed")
+		_debug_log("[IAP] Ads removed")
 
 func restore_purchases() -> void:
-	print("[IAP] Restoring purchases")
+	_debug_log("[IAP] Restoring purchases")
 	# In production: RevenueCat.restorePurchases()
 	
 	# Simulate restoring
@@ -139,7 +139,11 @@ func restore_purchases() -> void:
 	
 	for product_id in purchased_products:
 		purchase_restored.emit(product_id)
-		print("[IAP] Restored: " + product_id)
+		_debug_log("[IAP] Restored: " + product_id)
+
+func _debug_log(message: String) -> void:
+	if OS.is_debug_build():
+		print(message)
 
 func has_purchased(product_id: String) -> bool:
 	return product_id in purchased_products

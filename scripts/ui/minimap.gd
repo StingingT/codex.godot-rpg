@@ -22,6 +22,7 @@ const REFRESH_INTERVAL: float = 1.0  # Refresh entity list every second
 func _ready() -> void:
 	custom_minimum_size = map_size_px
 	size = map_size_px
+	set_process(visible)
 	
 	# Create player dot (centered)
 	_player_dot = _create_dot(COLOR_PLAYER, 6)
@@ -132,5 +133,6 @@ func _update_entities() -> void:
 
 func toggle():
 	visible = not visible
+	set_process(visible)
 	if visible:
 		refresh_targets()

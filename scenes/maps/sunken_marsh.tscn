@@ -1,0 +1,249 @@
+[gd_scene load_steps=21 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/maps/sunken_marsh_background.png" id="1_background"]
+[ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="2_player"]
+[ext_resource type="PackedScene" path="res://scenes/ui/portal.tscn" id="3_portal"]
+[ext_resource type="PackedScene" path="res://scenes/ui/hud.tscn" id="4_hud"]
+[ext_resource type="PackedScene" path="res://scenes/ui/dialogue_box.tscn" id="5_dialogue_box"]
+[ext_resource type="Script" path="res://scripts/world/spawn_manager.gd" id="6_spawn"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_top_wall"]
+size = Vector2(640, 24)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_side_wall"]
+size = Vector2(24, 360)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_bottom_wall"]
+size = Vector2(640, 24)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_water_wide"]
+size = Vector2(640, 76)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_water_patch"]
+size = Vector2(70, 246)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_water_top_gap"]
+size = Vector2(38, 100)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_water_right"]
+size = Vector2(82, 150)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_water_lower_left"]
+size = Vector2(202, 100)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_water_lower_gap"]
+size = Vector2(60, 96)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_water_right_lower"]
+size = Vector2(26, 96)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_water_mid_gap"]
+size = Vector2(60, 20)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_tree"]
+size = Vector2(72, 54)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_bush"]
+size = Vector2(86, 34)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_relic"]
+size = Vector2(46, 36)
+
+[node name="MapSunkenMarsh" type="Node2D"]
+y_sort_enabled = true
+
+[node name="Background" type="Sprite2D" parent="."]
+z_index = -20
+position = Vector2(320, 180)
+texture = ExtResource("1_background")
+
+[node name="WorldCollision" type="StaticBody2D" parent="."]
+collision_layer = 2
+collision_mask = 0
+
+[node name="TopWall" type="CollisionShape2D" parent="WorldCollision"]
+position = Vector2(320, 12)
+shape = SubResource("RectangleShape2D_top_wall")
+
+[node name="BottomWall" type="CollisionShape2D" parent="WorldCollision"]
+position = Vector2(320, 348)
+shape = SubResource("RectangleShape2D_bottom_wall")
+
+[node name="LeftWall" type="CollisionShape2D" parent="WorldCollision"]
+position = Vector2(12, 180)
+shape = SubResource("RectangleShape2D_side_wall")
+
+[node name="RightWall" type="CollisionShape2D" parent="WorldCollision"]
+position = Vector2(628, 180)
+shape = SubResource("RectangleShape2D_side_wall")
+
+[node name="NorthWaterBlocker" type="CollisionShape2D" parent="WorldCollision"]
+position = Vector2(320, 38)
+shape = SubResource("RectangleShape2D_water_wide")
+
+[node name="SouthWaterBlocker" type="CollisionShape2D" parent="WorldCollision"]
+position = Vector2(320, 341)
+shape = SubResource("RectangleShape2D_water_wide")
+
+[node name="WestWaterBlocker" type="CollisionShape2D" parent="WorldCollision"]
+position = Vector2(35, 199)
+shape = SubResource("RectangleShape2D_water_patch")
+
+[node name="EastWaterBlocker" type="CollisionShape2D" parent="WorldCollision"]
+position = Vector2(599, 151)
+shape = SubResource("RectangleShape2D_water_right")
+
+[node name="TopMiddleWestWaterBlocker" type="CollisionShape2D" parent="WorldCollision"]
+position = Vector2(273, 126)
+shape = SubResource("RectangleShape2D_water_top_gap")
+
+[node name="TopMiddleEastWaterBlocker" type="CollisionShape2D" parent="WorldCollision"]
+position = Vector2(369, 126)
+shape = SubResource("RectangleShape2D_water_top_gap")
+
+[node name="LowerLeftWaterBlocker" type="CollisionShape2D" parent="WorldCollision"]
+position = Vector2(101, 272)
+shape = SubResource("RectangleShape2D_water_lower_left")
+
+[node name="LowerGapWaterBlocker" type="CollisionShape2D" parent="WorldCollision"]
+position = Vector2(478, 274)
+shape = SubResource("RectangleShape2D_water_lower_gap")
+
+[node name="MidGapWaterBlocker" type="CollisionShape2D" parent="WorldCollision"]
+position = Vector2(478, 218)
+shape = SubResource("RectangleShape2D_water_mid_gap")
+
+[node name="RightLowerWaterBlocker" type="CollisionShape2D" parent="WorldCollision"]
+position = Vector2(627, 274)
+shape = SubResource("RectangleShape2D_water_right_lower")
+
+[node name="NorthWestTreeBlocker" type="CollisionShape2D" parent="WorldCollision"]
+position = Vector2(129, 123)
+shape = SubResource("RectangleShape2D_tree")
+
+[node name="NorthEastTreeBlocker" type="CollisionShape2D" parent="WorldCollision"]
+position = Vector2(509, 123)
+shape = SubResource("RectangleShape2D_tree")
+
+[node name="SouthWestBushBlocker" type="CollisionShape2D" parent="WorldCollision"]
+position = Vector2(164, 255)
+shape = SubResource("RectangleShape2D_bush")
+
+[node name="SouthEastBushBlocker" type="CollisionShape2D" parent="WorldCollision"]
+position = Vector2(279, 313)
+shape = SubResource("RectangleShape2D_bush")
+
+[node name="RelicBlocker" type="CollisionShape2D" parent="WorldCollision"]
+position = Vector2(333, 119)
+shape = SubResource("RectangleShape2D_relic")
+
+[node name="EntryPoints" type="Node2D" parent="."]
+
+[node name="entry_default" type="Marker2D" parent="EntryPoints"]
+position = Vector2(320, 246)
+
+[node name="entry_west" type="Marker2D" parent="EntryPoints"]
+position = Vector2(120, 198)
+
+[node name="entry_east" type="Marker2D" parent="EntryPoints"]
+position = Vector2(524, 196)
+
+[node name="entry_north" type="Marker2D" parent="EntryPoints"]
+position = Vector2(320, 150)
+
+[node name="entry_south" type="Marker2D" parent="EntryPoints"]
+position = Vector2(320, 286)
+
+[node name="ExitTriggers" type="Node2D" parent="."]
+
+[node name="SpawnPoints" type="Node2D" parent="."]
+
+[node name="spawn_01" type="Marker2D" parent="SpawnPoints"]
+position = Vector2(192, 224)
+
+[node name="spawn_02" type="Marker2D" parent="SpawnPoints"]
+position = Vector2(322, 196)
+
+[node name="spawn_03" type="Marker2D" parent="SpawnPoints"]
+position = Vector2(492, 246)
+
+[node name="spawn_04" type="Marker2D" parent="SpawnPoints"]
+position = Vector2(356, 286)
+
+[node name="BossSpawnPoint" type="Marker2D" parent="."]
+position = Vector2(500, 236)
+
+[node name="Items" type="Node2D" parent="."]
+
+[node name="CameraLimits" type="ReferenceRect" parent="."]
+visible = false
+offset_right = 640.0
+offset_bottom = 360.0
+
+[node name="Player" parent="." instance=ExtResource("2_player")]
+position = Vector2(320, 246)
+
+[node name="Portals" type="Node2D" parent="."]
+
+[node name="BackPortal" parent="Portals" instance=ExtResource("3_portal")]
+position = Vector2(120, 198)
+target_map = "watchtower_ruins"
+target_entry = "entry_east"
+portal_name = "Back"
+available_maps = Array[Dictionary]([{
+"id": "town",
+"level_req": 1,
+"name": "Safe Haven Town"
+}, {
+"id": "fields",
+"level_req": 1,
+"name": "Eastern Fields"
+}, {
+"id": "mystic_forest",
+"level_req": 2,
+"name": "Mystic Forest"
+}, {
+"id": "river_crossing",
+"level_req": 3,
+"name": "River Crossing"
+}, {
+"id": "watchtower_ruins",
+"level_req": 4,
+"name": "Watchtower Ruins"
+}, {
+"id": "sunken_marsh",
+"level_req": 6,
+"name": "Sunken Marsh"
+}, {
+"id": "royal_courtyard",
+"level_req": 1,
+"name": "Royal Courtyard"
+}, {
+"id": "swamp",
+"level_req": 5,
+"name": "Murky Swamp"
+}, {
+"id": "cave",
+"level_req": 8,
+"name": "Dark Cave"
+}, {
+"id": "dungeon",
+"level_req": 12,
+"name": "Ancient Dungeon"
+}])
+
+[node name="NextPortal" parent="Portals" instance=ExtResource("3_portal")]
+position = Vector2(524, 196)
+target_map = "swamp"
+target_entry = "entry_west"
+portal_name = "Next"
+
+[node name="HUD" parent="." instance=ExtResource("4_hud")]
+
+[node name="DialogueBox" parent="." instance=ExtResource("5_dialogue_box")]
+
+[node name="SpawnManager" type="Node" parent="."]
+script = ExtResource("6_spawn")
+map_id = "sunken_marsh"
+encounter_table_id = "sunken_marsh_mid"
+respawn_seconds = 13.0

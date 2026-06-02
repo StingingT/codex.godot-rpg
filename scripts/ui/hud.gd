@@ -14,7 +14,6 @@ signal pause_pressed
 @onready var xp_bar: ProgressBar = $XPBar
 @onready var xp_flash: Panel = $XPBar/XPFlash
 @onready var level_label: Label = $LevelLabel
-@onready var gold_label: Label = $GoldLabel
 @onready var map_label: Label = $MapLabel
 @onready var ap_label: Label = $APLabel
 @onready var sp_label: Label = $SPLabel
@@ -41,7 +40,6 @@ func _ready():
     GameManager.player_mana_changed.connect(_on_mana_changed)
     GameManager.player_xp_changed.connect(_on_xp_changed)
     GameManager.player_level_up.connect(_on_level_up)
-    GameManager.player_gold_changed.connect(_on_gold_changed)
     MapManager.map_changed.connect(_on_map_changed)
 
     # Connect to map transition to reconnect player signals
@@ -216,7 +214,7 @@ func _show_level_up_notification() -> void:
     var tween = create_tween()
     tween.tween_interval(2.0)
     tween.tween_property(level_up_notification, "modulate:a", 0.0, 0.5)
-    tween.finished.connect(func(): level_up_notification.visible = false)
+    tween.finished.connect(_hide_level_up_notification)
 
 # Points display
 func _on_ap_changed(_new_ap: int):
@@ -237,10 +235,6 @@ func _update_points_display() -> void:
     ap_label.modulate = Color(0.3, 1.0, 0.3) if stats.attribute_points > 0 else Color(0.3, 0.8, 0.3)
     sp_label.modulate = Color(0.3, 0.8, 1.0) if stats.skill_points > 0 else Color(0.3, 0.6, 0.9)
 
-# Gold updates
-func _on_gold_changed(amount: int):
-    gold_label.text = "Gold: %d" % amount
-
 # Map name updates
 func _on_map_changed(_map_id: String, map_name: String):
     map_label.text = map_name
@@ -252,7 +246,14 @@ func _flash_bar(overlay: Panel, color: Color = Color(1, 1, 1, 0.5), duration: fl
 
     var tween = create_tween()
     tween.tween_property(overlay, "modulate:a", 0.0, duration)
-    tween.finished.connect(func(): overlay.visible = false)
+    tween.finished.connect(_hide_overlay.bind(overlay))
+
+func _hide_level_up_notification() -> void:
+    level_up_notification.visible = false
+
+func _hide_overlay(overlay: Panel) -> void:
+    if is_instance_valid(overlay):
+        overlay.visible = false
 
 # New handler functions for mobile controls
 func _on_attack_button_pressed() -> void:

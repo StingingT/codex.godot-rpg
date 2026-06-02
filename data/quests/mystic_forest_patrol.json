@@ -1,0 +1,22 @@
+{
+  "quest_id": "mystic_forest_patrol",
+  "quest_name": "Mystic Forest Patrol",
+  "description": "Bats are nesting around the Mystic Forest path. Defeat 6 bats and return to the Quest Giver.",
+  "level_requirement": 2,
+  "prerequisites": ["kill_slimes"],
+  "objectives": [
+    {
+      "type": "kill",
+      "target": "bat",
+      "required": 6,
+      "current": 0
+    }
+  ],
+  "rewards": {
+    "xp": 260,
+    "gold": 120,
+    "items": []
+  },
+  "giver": "quest_giver",
+  "turn_in": "quest_giver"
+}
