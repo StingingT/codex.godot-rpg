@@ -23,8 +23,12 @@ func _ready():
 	_load_all_quests()
 	
 	# Connect to game events
-	GameManager.monster_killed.connect(_on_monster_killed)
-	GameManager.item_picked_up.connect(_on_item_picked_up)
+	var game_manager := _get_game_manager()
+	if game_manager:
+		if game_manager.has_signal("monster_killed"):
+			game_manager.monster_killed.connect(_on_monster_killed)
+		if game_manager.has_signal("item_picked_up"):
+			game_manager.item_picked_up.connect(_on_item_picked_up)
 
 func _load_all_quests() -> void:
 	var dir = DirAccess.open(QUESTS_PATH)
@@ -64,9 +68,7 @@ func _normalize_quest(quest_data: Variant) -> Dictionary:
 	return quest_data
 
 func start_quest(quest_id: String) -> bool:
-	if not all_quests.has(quest_id):
-		return false
-	if active_quests.has(quest_id) or turned_in_quests.has(quest_id):
+	if not is_quest_available(quest_id):
 		return false
 	
 	var quest_data = all_quests[quest_id].duplicate(true)
@@ -115,7 +117,10 @@ func _grant_rewards(quest_data: Dictionary) -> void:
 		return
 	
 	var rewards = quest_data.rewards
-	var player = get_tree().get_first_node_in_group("player")
+	var player = null
+	if is_inside_tree():
+		player = get_tree().get_first_node_in_group("player")
+	var game_manager := _get_game_manager()
 	if typeof(rewards) == TYPE_ARRAY:
 		for reward in rewards:
 			if typeof(reward) != TYPE_DICTIONARY:
@@ -124,12 +129,14 @@ func _grant_rewards(quest_data: Dictionary) -> void:
 				"gold":
 					if player and player.inventory:
 						player.inventory.add_gold(int(reward.get("amount", 0)))
-						GameManager.player_gold_changed.emit(player.inventory.gold)
+						if game_manager and game_manager.has_signal("player_gold_changed"):
+							game_manager.player_gold_changed.emit(player.inventory.gold)
 				"xp":
 					if player and player.stats:
 						player.stats.add_xp(int(reward.get("amount", 0)))
 				"item":
-					GameManager.item_picked_up.emit(str(reward.get("target", reward.get("item_id", ""))), int(reward.get("quantity", 1)))
+					if game_manager and game_manager.has_signal("item_picked_up"):
+						game_manager.item_picked_up.emit(str(reward.get("target", reward.get("item_id", ""))), int(reward.get("quantity", 1)))
 		return
 	
 	# Handle gold reward
@@ -138,7 +145,8 @@ func _grant_rewards(quest_data: Dictionary) -> void:
 		# Also give to player if available
 		if player and player.inventory:
 			player.inventory.add_gold(gold_amount)
-			GameManager.player_gold_changed.emit(player.inventory.gold)
+			if game_manager and game_manager.has_signal("player_gold_changed"):
+				game_manager.player_gold_changed.emit(player.inventory.gold)
 	
 	# Handle XP reward
 	if rewards.has("xp"):
@@ -153,7 +161,8 @@ func _grant_rewards(quest_data: Dictionary) -> void:
 			var item_id = item_reward.get("item_id", "")
 			var quantity = item_reward.get("quantity", 1)
 			# Add to inventory via GameManager signal
-			GameManager.item_picked_up.emit(item_id, quantity)
+			if game_manager and game_manager.has_signal("item_picked_up"):
+				game_manager.item_picked_up.emit(item_id, quantity)
 
 func update_objective(quest_id: String, objective_index: int, amount: int = 1) -> void:
 	if not active_quests.has(quest_id):
@@ -251,7 +260,7 @@ func can_turn_in_quest(quest_id: String) -> bool:
 func is_quest_available(quest_id: String) -> bool:
 	if not all_quests.has(quest_id):
 		return false
-	if active_quests.has(quest_id) or turned_in_quests.has(quest_id):
+	if active_quests.has(quest_id) or completed_quests.has(quest_id) or turned_in_quests.has(quest_id):
 		return false
 	
 	var quest_data = all_quests[quest_id]
@@ -260,3 +269,8 @@ func is_quest_available(quest_id: String) -> bool:
 			if not turned_in_quests.has(prereq):
 				return false
 	return true
+
+func _get_game_manager() -> Node:
+	if not is_inside_tree():
+		return null
+	return get_node_or_null("/root/GameManager")

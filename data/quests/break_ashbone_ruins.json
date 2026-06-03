@@ -1,0 +1,22 @@
+{
+  "quest_id": "break_ashbone_ruins",
+  "quest_name": "Break the Ashbone Ruins",
+  "description": "The ruined walls beyond the field are crawling with restless bones. Defeat 4 skeletons in Ashbone Ruins and return to the Quest Giver.",
+  "level_requirement": 2,
+  "prerequisites": ["purge_corrupted_field"],
+  "objectives": [
+    {
+      "type": "kill",
+      "target": "skeleton",
+      "required": 4,
+      "current": 0
+    }
+  ],
+  "rewards": {
+    "xp": 380,
+    "gold": 190,
+    "items": []
+  },
+  "giver": "quest_giver",
+  "turn_in": "quest_giver"
+}

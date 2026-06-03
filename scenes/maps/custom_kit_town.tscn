@@ -1,0 +1,162 @@
+[gd_scene load_steps=18 format=3]
+
+[ext_resource type="TileSet" path="res://assets/tilesets/custom/rpg_tileset.tres" id="1_tileset"]
+[ext_resource type="Script" path="res://scripts/world/custom_kit_test_map_builder.gd" id="2_builder"]
+[ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="3_player"]
+[ext_resource type="PackedScene" path="res://scenes/ui/hud.tscn" id="4_hud"]
+[ext_resource type="PackedScene" path="res://scenes/npcs/shop_npc.tscn" id="5_shop_npc"]
+[ext_resource type="PackedScene" path="res://scenes/npcs/quest_npc.tscn" id="6_quest_npc"]
+[ext_resource type="PackedScene" path="res://scenes/ui/dialogue_box.tscn" id="7_dialogue_box"]
+[ext_resource type="Script" path="res://scripts/world/spawn_manager.gd" id="8_spawn"]
+[ext_resource type="PackedScene" path="res://assets/objects/buildings/hub_house_small.tscn" id="9_house"]
+[ext_resource type="PackedScene" path="res://assets/objects/buildings/vendor_stall.tscn" id="10_vendor"]
+[ext_resource type="PackedScene" path="res://assets/objects/trees/corrupted_oak.tscn" id="11_oak"]
+[ext_resource type="PackedScene" path="res://assets/objects/portals/back_portal.tscn" id="12_back_portal"]
+[ext_resource type="PackedScene" path="res://assets/objects/portals/next_portal.tscn" id="13_next_portal"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_top_wall"]
+size = Vector2(960, 32)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_bottom_wall"]
+size = Vector2(960, 32)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_side_wall"]
+size = Vector2(32, 576)
+
+[node name="MapCustomKitTown" type="Node2D"]
+y_sort_enabled = true
+script = ExtResource("2_builder")
+map_type = "town"
+
+[node name="GroundLayer" type="TileMapLayer" parent="."]
+z_index = -20
+tile_set = ExtResource("1_tileset")
+
+[node name="DecorLayer" type="TileMapLayer" parent="."]
+z_index = -10
+tile_set = ExtResource("1_tileset")
+
+[node name="CollisionLayer" type="TileMapLayer" parent="."]
+visible = false
+tile_set = ExtResource("1_tileset")
+
+[node name="OverlayLayer" type="TileMapLayer" parent="."]
+z_index = 20
+tile_set = ExtResource("1_tileset")
+
+[node name="WorldCollision" type="StaticBody2D" parent="."]
+collision_layer = 2
+collision_mask = 0
+
+[node name="TopWall" type="CollisionShape2D" parent="WorldCollision"]
+position = Vector2(480, 16)
+shape = SubResource("RectangleShape2D_top_wall")
+
+[node name="BottomWall" type="CollisionShape2D" parent="WorldCollision"]
+position = Vector2(480, 560)
+shape = SubResource("RectangleShape2D_bottom_wall")
+
+[node name="LeftWall" type="CollisionShape2D" parent="WorldCollision"]
+position = Vector2(16, 288)
+shape = SubResource("RectangleShape2D_side_wall")
+
+[node name="RightWall" type="CollisionShape2D" parent="WorldCollision"]
+position = Vector2(944, 288)
+shape = SubResource("RectangleShape2D_side_wall")
+
+[node name="YSortedObjects" type="Node2D" parent="."]
+y_sort_enabled = true
+
+[node name="WestHouse" parent="YSortedObjects" instance=ExtResource("9_house")]
+position = Vector2(240, 180)
+
+[node name="EastHouse" parent="YSortedObjects" instance=ExtResource("9_house")]
+position = Vector2(720, 180)
+
+[node name="VendorStall" parent="YSortedObjects" instance=ExtResource("10_vendor")]
+position = Vector2(480, 408)
+
+[node name="NorthOak" parent="YSortedObjects" instance=ExtResource("11_oak")]
+position = Vector2(130, 460)
+
+[node name="SouthOak" parent="YSortedObjects" instance=ExtResource("11_oak")]
+position = Vector2(825, 456)
+
+[node name="EntryPoints" type="Node2D" parent="."]
+
+[node name="entry_default" type="Marker2D" parent="EntryPoints"]
+position = Vector2(480, 320)
+
+[node name="entry_west" type="Marker2D" parent="EntryPoints"]
+position = Vector2(112, 288)
+
+[node name="entry_east" type="Marker2D" parent="EntryPoints"]
+position = Vector2(832, 288)
+
+[node name="entry_north" type="Marker2D" parent="EntryPoints"]
+position = Vector2(480, 116)
+
+[node name="entry_south" type="Marker2D" parent="EntryPoints"]
+position = Vector2(480, 500)
+
+[node name="ExitTriggers" type="Node2D" parent="."]
+
+[node name="SpawnPoints" type="Node2D" parent="."]
+
+[node name="spawn_01" type="Marker2D" parent="SpawnPoints"]
+position = Vector2(276, 318)
+
+[node name="spawn_02" type="Marker2D" parent="SpawnPoints"]
+position = Vector2(648, 322)
+
+[node name="spawn_03" type="Marker2D" parent="SpawnPoints"]
+position = Vector2(600, 474)
+
+[node name="BossSpawnPoint" type="Marker2D" parent="."]
+position = Vector2(480, 250)
+
+[node name="Items" type="Node2D" parent="."]
+
+[node name="CameraLimits" type="ReferenceRect" parent="."]
+visible = false
+offset_right = 960.0
+offset_bottom = 576.0
+
+[node name="Player" parent="." instance=ExtResource("3_player")]
+position = Vector2(480, 320)
+
+[node name="Portals" type="Node2D" parent="."]
+
+[node name="BackPortal" parent="Portals" instance=ExtResource("12_back_portal")]
+position = Vector2(412, 318)
+target_map = "town"
+target_entry = "entry_east"
+
+[node name="NextPortal" parent="Portals" instance=ExtResource("13_next_portal")]
+position = Vector2(548, 318)
+target_map = "custom_kit_field"
+target_entry = "entry_west"
+
+[node name="HUD" parent="." instance=ExtResource("4_hud")]
+
+[node name="NPCs" type="Node2D" parent="."]
+
+[node name="Shopkeeper" parent="NPCs" instance=ExtResource("5_shop_npc")]
+position = Vector2(240, 246)
+shop_id = "general_store"
+shop_name = "General Store"
+npc_id = "shopkeeper"
+npc_name = "Shopkeeper"
+dialogue_id = ""
+
+[node name="QuestGiver" parent="NPCs" instance=ExtResource("6_quest_npc")]
+position = Vector2(720, 246)
+quest_chain = ["purge_corrupted_field", "break_ashbone_ruins", "drown_marsh_rot", "seal_blackwater_catacombs", "break_the_dark_keep"]
+
+[node name="DialogueBox" parent="." instance=ExtResource("7_dialogue_box")]
+
+[node name="SpawnManager" type="Node" parent="."]
+script = ExtResource("8_spawn")
+map_id = "custom_kit_town"
+encounter_table_id = "town_safe"
+respawn_seconds = 12.0

@@ -30,6 +30,131 @@
       "spawn_point": "BossSpawnPoint"
     }
   },
+  "custom_kit_field_low": {
+    "ambient_spawns": [
+      {
+        "monster_id": "slime_green",
+        "weight": 55,
+        "max_alive": 3
+      },
+      {
+        "monster_id": "bat",
+        "weight": 30,
+        "max_alive": 2
+      },
+      {
+        "monster_id": "slime_blue",
+        "weight": 15,
+        "max_alive": 1
+      }
+    ],
+    "boss": {
+      "monster_id": "slime_blue",
+      "spawn_point": "BossSpawnPoint"
+    }
+  },
+  "custom_kit_ruins_mid": {
+    "ambient_spawns": [
+      {
+        "monster_id": "skeleton",
+        "weight": 55,
+        "max_alive": 4
+      },
+      {
+        "monster_id": "bat",
+        "weight": 30,
+        "max_alive": 3
+      },
+      {
+        "monster_id": "slime_blue",
+        "weight": 15,
+        "max_alive": 2
+      }
+    ],
+    "boss": {
+      "monster_id": "skeleton",
+      "spawn_point": "BossSpawnPoint"
+    }
+  },
+  "custom_kit_marsh_mid": {
+    "ambient_spawns": [
+      {
+        "monster_id": "swamp_monster",
+        "weight": 45,
+        "max_alive": 3
+      },
+      {
+        "monster_id": "bat",
+        "weight": 30,
+        "max_alive": 3
+      },
+      {
+        "monster_id": "slime_blue",
+        "weight": 25,
+        "max_alive": 2
+      }
+    ],
+    "boss": {
+      "monster_id": "swamp_monster",
+      "spawn_point": "BossSpawnPoint"
+    }
+  },
+  "custom_kit_catacombs_high": {
+    "ambient_spawns": [
+      {
+        "monster_id": "skeleton",
+        "weight": 50,
+        "max_alive": 4
+      },
+      {
+        "monster_id": "bat",
+        "weight": 25,
+        "max_alive": 3
+      },
+      {
+        "monster_id": "swamp_monster",
+        "weight": 15,
+        "max_alive": 2
+      },
+      {
+        "monster_id": "slime_blue",
+        "weight": 10,
+        "max_alive": 1
+      }
+    ],
+    "boss": {
+      "monster_id": "skeleton",
+      "spawn_point": "BossSpawnPoint"
+    }
+  },
+  "custom_kit_dark_keep_final": {
+    "ambient_spawns": [
+      {
+        "monster_id": "skeleton",
+        "weight": 45,
+        "max_alive": 4
+      },
+      {
+        "monster_id": "swamp_monster",
+        "weight": 25,
+        "max_alive": 2
+      },
+      {
+        "monster_id": "bat",
+        "weight": 20,
+        "max_alive": 2
+      },
+      {
+        "monster_id": "slime_blue",
+        "weight": 10,
+        "max_alive": 1
+      }
+    ],
+    "boss": {
+      "monster_id": "dark_knight",
+      "spawn_point": "BossSpawnPoint"
+    }
+  },
   "mystic_forest_low": {
     "ambient_spawns": [
       {

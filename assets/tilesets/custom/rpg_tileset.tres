@@ -1,0 +1,77 @@
+[gd_resource type="TileSet" load_steps=11 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/tilesets/custom/poe_ground_tiles.png" id="1_ground"]
+[ext_resource type="Texture2D" path="res://assets/tilesets/custom/poe_environment_tiles.png" id="2_environment"]
+[ext_resource type="Texture2D" path="res://assets/tilesets/custom/poe_building_tiles.png" id="3_building"]
+[ext_resource type="Texture2D" path="res://assets/tilesets/custom/poe_object_tiles.png" id="4_object"]
+[ext_resource type="Texture2D" path="res://assets/tilesets/custom/poe_route_tiles.png" id="5_route"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_ground"]
+texture = ExtResource("1_ground")
+texture_region_size = Vector2i(32, 32)
+0:0/0 = 0
+1:0/0 = 0
+2:0/0 = 0
+3:0/0 = 0
+4:0/0 = 0
+5:0/0 = 0
+6:0/0 = 0
+7:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_environment"]
+texture = ExtResource("2_environment")
+texture_region_size = Vector2i(32, 32)
+0:0/0 = 0
+1:0/0 = 0
+2:0/0 = 0
+3:0/0 = 0
+4:0/0 = 0
+5:0/0 = 0
+6:0/0 = 0
+7:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_building"]
+texture = ExtResource("3_building")
+texture_region_size = Vector2i(32, 32)
+0:0/0 = 0
+1:0/0 = 0
+2:0/0 = 0
+3:0/0 = 0
+4:0/0 = 0
+5:0/0 = 0
+6:0/0 = 0
+7:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_object"]
+texture = ExtResource("4_object")
+texture_region_size = Vector2i(32, 32)
+0:0/0 = 0
+1:0/0 = 0
+2:0/0 = 0
+3:0/0 = 0
+4:0/0 = 0
+5:0/0 = 0
+6:0/0 = 0
+7:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_route"]
+texture = ExtResource("5_route")
+texture_region_size = Vector2i(32, 32)
+0:0/0 = 0
+1:0/0 = 0
+2:0/0 = 0
+3:0/0 = 0
+4:0/0 = 0
+5:0/0 = 0
+6:0/0 = 0
+7:0/0 = 0
+
+[resource]
+tile_size = Vector2i(32, 32)
+physics_layer_0/collision_layer = 2
+physics_layer_0/collision_mask = 0
+sources/0 = SubResource("TileSetAtlasSource_ground")
+sources/1 = SubResource("TileSetAtlasSource_environment")
+sources/2 = SubResource("TileSetAtlasSource_building")
+sources/3 = SubResource("TileSetAtlasSource_object")
+sources/4 = SubResource("TileSetAtlasSource_route")

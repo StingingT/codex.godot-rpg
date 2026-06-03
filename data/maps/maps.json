@@ -10,6 +10,142 @@
         "to": "fields",
         "via": "exit_east",
         "spawn_at": "entry_west"
+      },
+      {
+        "to": "custom_kit_town",
+        "via": "custom_kit",
+        "spawn_at": "entry_default"
+      }
+    ]
+  },
+  "custom_kit_town": {
+    "scene": "res://scenes/maps/custom_kit_town.tscn",
+    "display_name": "Custom Kit Town",
+    "biome": "town",
+    "zone_tier": 0,
+    "route_order": 0,
+    "music": "res://assets/audio/music/town_theme.ogg",
+    "encounter_table": "town_safe",
+    "connections": [
+      {
+        "to": "town",
+        "via": "exit_west",
+        "spawn_at": "entry_east"
+      },
+      {
+        "to": "custom_kit_field",
+        "via": "exit_east",
+        "spawn_at": "entry_west"
+      }
+    ]
+  },
+  "custom_kit_field": {
+    "scene": "res://scenes/maps/custom_kit_field.tscn",
+    "display_name": "Corrupted Test Field",
+    "biome": "grassland",
+    "zone_tier": 1,
+    "route_order": 1,
+    "quest_id": "purge_corrupted_field",
+    "music": "res://assets/audio/music/field_theme.ogg",
+    "encounter_table": "custom_kit_field_low",
+    "connections": [
+      {
+        "to": "custom_kit_town",
+        "via": "exit_west",
+        "spawn_at": "entry_east"
+      },
+      {
+        "to": "custom_kit_ruins",
+        "via": "exit_east",
+        "spawn_at": "entry_west"
+      }
+    ]
+  },
+  "custom_kit_ruins": {
+    "scene": "res://scenes/maps/custom_kit_ruins.tscn",
+    "display_name": "Ashbone Ruins",
+    "biome": "ruins",
+    "zone_tier": 2,
+    "route_order": 2,
+    "quest_id": "break_ashbone_ruins",
+    "music": "res://assets/audio/music/field_theme.ogg",
+    "encounter_table": "custom_kit_ruins_mid",
+    "connections": [
+      {
+        "to": "custom_kit_field",
+        "via": "exit_west",
+        "spawn_at": "entry_east"
+      },
+      {
+        "to": "custom_kit_marsh",
+        "via": "exit_east",
+        "spawn_at": "entry_west"
+      }
+    ]
+  },
+  "custom_kit_marsh": {
+    "scene": "res://scenes/maps/custom_kit_marsh.tscn",
+    "display_name": "Blackwater Marsh",
+    "biome": "swamp",
+    "zone_tier": 3,
+    "route_order": 3,
+    "quest_id": "drown_marsh_rot",
+    "music": "res://assets/audio/music/swamp_theme.ogg",
+    "encounter_table": "custom_kit_marsh_mid",
+    "connections": [
+      {
+        "to": "custom_kit_ruins",
+        "via": "exit_west",
+        "spawn_at": "entry_east"
+      },
+      {
+        "to": "custom_kit_catacombs",
+        "via": "exit_east",
+        "spawn_at": "entry_west"
+      }
+    ]
+  },
+  "custom_kit_catacombs": {
+    "scene": "res://scenes/maps/custom_kit_catacombs.tscn",
+    "display_name": "Blackwater Catacombs",
+    "biome": "cave",
+    "zone_tier": 4,
+    "route_order": 4,
+    "quest_id": "seal_blackwater_catacombs",
+    "music": "res://assets/audio/music/cave_theme.ogg",
+    "encounter_table": "custom_kit_catacombs_high",
+    "connections": [
+      {
+        "to": "custom_kit_marsh",
+        "via": "exit_west",
+        "spawn_at": "entry_east"
+      },
+      {
+        "to": "custom_kit_dark_keep",
+        "via": "exit_east",
+        "spawn_at": "entry_west"
+      }
+    ]
+  },
+  "custom_kit_dark_keep": {
+    "scene": "res://scenes/maps/custom_kit_dark_keep.tscn",
+    "display_name": "The Dark Keep",
+    "biome": "dungeon",
+    "zone_tier": 5,
+    "route_order": 5,
+    "quest_id": "break_the_dark_keep",
+    "music": "res://assets/audio/music/dungeon_theme.ogg",
+    "encounter_table": "custom_kit_dark_keep_final",
+    "connections": [
+      {
+        "to": "custom_kit_catacombs",
+        "via": "exit_west",
+        "spawn_at": "entry_east"
+      },
+      {
+        "to": "custom_kit_town",
+        "via": "town_portal",
+        "spawn_at": "entry_default"
       }
     ]
   },

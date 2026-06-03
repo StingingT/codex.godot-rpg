@@ -1,0 +1,22 @@
+{
+  "quest_id": "seal_blackwater_catacombs",
+  "quest_name": "Seal the Blackwater Catacombs",
+  "description": "The catacombs under the marsh are breathing bone dust into the water. Defeat 5 skeletons in the Blackwater Catacombs and return to the Quest Giver.",
+  "level_requirement": 4,
+  "prerequisites": ["drown_marsh_rot"],
+  "objectives": [
+    {
+      "type": "kill",
+      "target": "skeleton",
+      "required": 5,
+      "current": 0
+    }
+  ],
+  "rewards": {
+    "xp": 680,
+    "gold": 340,
+    "items": []
+  },
+  "giver": "quest_giver",
+  "turn_in": "quest_giver"
+}

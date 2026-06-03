@@ -1,0 +1,22 @@
+{
+  "quest_id": "drown_marsh_rot",
+  "quest_name": "Drown the Marsh Rot",
+  "description": "The black water past the ruins is feeding a deeper corruption. Defeat 3 swamp monsters in Blackwater Marsh and return to the Quest Giver.",
+  "level_requirement": 3,
+  "prerequisites": ["break_ashbone_ruins"],
+  "objectives": [
+    {
+      "type": "kill",
+      "target": "swamp_monster",
+      "required": 3,
+      "current": 0
+    }
+  ],
+  "rewards": {
+    "xp": 520,
+    "gold": 260,
+    "items": []
+  },
+  "giver": "quest_giver",
+  "turn_in": "quest_giver"
+}

@@ -1,0 +1,195 @@
+[gd_scene load_steps=24 format=3]
+
+[ext_resource type="TileSet" path="res://assets/tilesets/custom/rpg_tileset.tres" id="1_tileset"]
+[ext_resource type="Script" path="res://scripts/world/custom_kit_test_map_builder.gd" id="2_builder"]
+[ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="3_player"]
+[ext_resource type="PackedScene" path="res://scenes/ui/hud.tscn" id="4_hud"]
+[ext_resource type="PackedScene" path="res://scenes/ui/dialogue_box.tscn" id="5_dialogue_box"]
+[ext_resource type="Script" path="res://scripts/world/spawn_manager.gd" id="6_spawn"]
+[ext_resource type="PackedScene" path="res://assets/objects/interactables/chest_closed.tscn" id="7_chest"]
+[ext_resource type="PackedScene" path="res://assets/objects/portals/back_portal.tscn" id="8_back_portal"]
+[ext_resource type="PackedScene" path="res://assets/objects/portals/next_portal.tscn" id="9_next_portal"]
+[ext_resource type="PackedScene" path="res://assets/objects/props/ruined_wall.tscn" id="10_ruined_wall"]
+[ext_resource type="PackedScene" path="res://assets/objects/props/ritual_circle.tscn" id="11_ritual"]
+[ext_resource type="PackedScene" path="res://assets/objects/props/barrel.tscn" id="12_barrel"]
+[ext_resource type="PackedScene" path="res://assets/objects/props/shattered_pillar.tscn" id="13_pillar"]
+[ext_resource type="PackedScene" path="res://assets/objects/interactables/dungeon_door.tscn" id="14_door"]
+[ext_resource type="PackedScene" path="res://assets/objects/interactables/barrier_gate.tscn" id="15_gate"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_top_wall"]
+size = Vector2(960, 32)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_bottom_wall"]
+size = Vector2(960, 32)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_side_wall"]
+size = Vector2(32, 576)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_cliff_column"]
+size = Vector2(64, 416)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_north_rubble"]
+size = Vector2(160, 96)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_south_rubble"]
+size = Vector2(128, 96)
+
+[node name="MapCustomKitCatacombs" type="Node2D"]
+y_sort_enabled = true
+script = ExtResource("2_builder")
+map_type = "catacombs"
+
+[node name="GroundLayer" type="TileMapLayer" parent="."]
+z_index = -20
+tile_set = ExtResource("1_tileset")
+
+[node name="DecorLayer" type="TileMapLayer" parent="."]
+z_index = -10
+tile_set = ExtResource("1_tileset")
+
+[node name="CollisionLayer" type="TileMapLayer" parent="."]
+visible = false
+tile_set = ExtResource("1_tileset")
+
+[node name="OverlayLayer" type="TileMapLayer" parent="."]
+z_index = 20
+tile_set = ExtResource("1_tileset")
+
+[node name="WorldCollision" type="StaticBody2D" parent="."]
+collision_layer = 2
+collision_mask = 0
+
+[node name="TopWall" type="CollisionShape2D" parent="WorldCollision"]
+position = Vector2(480, 16)
+shape = SubResource("RectangleShape2D_top_wall")
+
+[node name="BottomWall" type="CollisionShape2D" parent="WorldCollision"]
+position = Vector2(480, 560)
+shape = SubResource("RectangleShape2D_bottom_wall")
+
+[node name="LeftWall" type="CollisionShape2D" parent="WorldCollision"]
+position = Vector2(16, 288)
+shape = SubResource("RectangleShape2D_side_wall")
+
+[node name="RightWall" type="CollisionShape2D" parent="WorldCollision"]
+position = Vector2(944, 288)
+shape = SubResource("RectangleShape2D_side_wall")
+
+[node name="WestCliffColumn" type="CollisionShape2D" parent="WorldCollision"]
+position = Vector2(128, 272)
+shape = SubResource("RectangleShape2D_cliff_column")
+
+[node name="EastCliffColumn" type="CollisionShape2D" parent="WorldCollision"]
+position = Vector2(832, 272)
+shape = SubResource("RectangleShape2D_cliff_column")
+
+[node name="NorthRubbleBlocker" type="CollisionShape2D" parent="WorldCollision"]
+position = Vector2(448, 100)
+shape = SubResource("RectangleShape2D_north_rubble")
+
+[node name="SouthRubbleBlocker" type="CollisionShape2D" parent="WorldCollision"]
+position = Vector2(360, 472)
+shape = SubResource("RectangleShape2D_south_rubble")
+
+[node name="YSortedObjects" type="Node2D" parent="."]
+y_sort_enabled = true
+
+[node name="RitualCircle" parent="YSortedObjects" instance=ExtResource("11_ritual")]
+z_index = -1
+position = Vector2(736, 424)
+
+[node name="RuinedWallWest" parent="YSortedObjects" instance=ExtResource("10_ruined_wall")]
+position = Vector2(352, 182)
+
+[node name="RuinedWallEast" parent="YSortedObjects" instance=ExtResource("10_ruined_wall")]
+position = Vector2(610, 180)
+
+[node name="ShatteredPillarNorth" parent="YSortedObjects" instance=ExtResource("13_pillar")]
+position = Vector2(540, 264)
+
+[node name="ShatteredPillarSouth" parent="YSortedObjects" instance=ExtResource("13_pillar")]
+position = Vector2(620, 418)
+
+[node name="DungeonDoor" parent="YSortedObjects" instance=ExtResource("14_door")]
+position = Vector2(736, 154)
+
+[node name="BarrierGate" parent="YSortedObjects" instance=ExtResource("15_gate")]
+position = Vector2(444, 420)
+
+[node name="BarrelNorth" parent="YSortedObjects" instance=ExtResource("12_barrel")]
+position = Vector2(414, 238)
+
+[node name="BarrelSouth" parent="YSortedObjects" instance=ExtResource("12_barrel")]
+position = Vector2(710, 336)
+
+[node name="EntryPoints" type="Node2D" parent="."]
+
+[node name="entry_default" type="Marker2D" parent="EntryPoints"]
+position = Vector2(256, 272)
+
+[node name="entry_west" type="Marker2D" parent="EntryPoints"]
+position = Vector2(256, 272)
+
+[node name="entry_east" type="Marker2D" parent="EntryPoints"]
+position = Vector2(720, 448)
+
+[node name="entry_north" type="Marker2D" parent="EntryPoints"]
+position = Vector2(480, 180)
+
+[node name="entry_south" type="Marker2D" parent="EntryPoints"]
+position = Vector2(480, 504)
+
+[node name="ExitTriggers" type="Node2D" parent="."]
+
+[node name="SpawnPoints" type="Node2D" parent="."]
+
+[node name="spawn_01" type="Marker2D" parent="SpawnPoints"]
+position = Vector2(330, 238)
+
+[node name="spawn_02" type="Marker2D" parent="SpawnPoints"]
+position = Vector2(594, 252)
+
+[node name="spawn_03" type="Marker2D" parent="SpawnPoints"]
+position = Vector2(560, 430)
+
+[node name="BossSpawnPoint" type="Marker2D" parent="."]
+position = Vector2(724, 424)
+
+[node name="Items" type="Node2D" parent="."]
+
+[node name="ChestClosed" parent="Items" instance=ExtResource("7_chest")]
+position = Vector2(396, 144)
+
+[node name="CameraLimits" type="ReferenceRect" parent="."]
+visible = false
+offset_right = 960.0
+offset_bottom = 576.0
+
+[node name="Player" parent="." instance=ExtResource("3_player")]
+position = Vector2(256, 272)
+
+[node name="Portals" type="Node2D" parent="."]
+
+[node name="BackPortal" parent="Portals" instance=ExtResource("8_back_portal")]
+position = Vector2(202, 272)
+target_map = "custom_kit_marsh"
+target_entry = "entry_east"
+
+[node name="NextPortal" parent="Portals" instance=ExtResource("9_next_portal")]
+position = Vector2(760, 448)
+target_map = "custom_kit_dark_keep"
+target_entry = "entry_west"
+required_quest_id = "seal_blackwater_catacombs"
+required_quest_turned_in = true
+
+[node name="HUD" parent="." instance=ExtResource("4_hud")]
+
+[node name="NPCs" type="Node2D" parent="."]
+
+[node name="DialogueBox" parent="." instance=ExtResource("5_dialogue_box")]
+
+[node name="SpawnManager" type="Node" parent="."]
+script = ExtResource("6_spawn")
+map_id = "custom_kit_catacombs"
+encounter_table_id = "custom_kit_catacombs_high"
+respawn_seconds = 12.0

@@ -1,13 +1,24 @@
 extends Area2D
 class_name Portal
 
+const QUEST_STATUS_COMPLETE := 3
+const QUEST_STATUS_TURNED_IN := 4
+
 @export var target_map: String = ""
 @export var target_position: Vector2 = Vector2.ZERO
 @export var target_entry: String = ""
 @export var portal_name: String = "Portal"
 @export var requires_all_monsters_dead: bool = false
+@export var required_quest_id: String = ""
+@export var required_quest_turned_in: bool = false
 @export var available_maps: Array[Dictionary] = [
 	{"id": "town", "name": "Safe Haven Town", "level_req": 1},
+	{"id": "custom_kit_town", "name": "Custom Kit Town", "level_req": 1},
+	{"id": "custom_kit_field", "name": "Corrupted Test Field", "level_req": 1},
+	{"id": "custom_kit_ruins", "name": "Ashbone Ruins", "level_req": 2},
+	{"id": "custom_kit_marsh", "name": "Blackwater Marsh", "level_req": 3},
+	{"id": "custom_kit_catacombs", "name": "Blackwater Catacombs", "level_req": 4},
+	{"id": "custom_kit_dark_keep", "name": "The Dark Keep", "level_req": 5},
 	{"id": "fields", "name": "Eastern Fields", "level_req": 1},
 	{"id": "mystic_forest", "name": "Mystic Forest", "level_req": 2},
 	{"id": "river_crossing", "name": "River Crossing", "level_req": 3},
@@ -29,12 +40,12 @@ func _ready():
 	add_to_group("portal")
 	body_entered.connect(_on_body_entered)
 	body_exited.connect(_on_body_exited)
-	label.text = portal_name + "\n[Press E]"
+	_refresh_label()
 	label.hide()
 
 func _input(event):
 	if player_in_range and event.is_action_pressed("interact") and not (event is InputEventKey and event.is_echo()):
-		if is_unlocked:
+		if _requirements_met():
 			_use_portal()
 		else:
 			_show_locked_message()
@@ -43,9 +54,7 @@ func _on_body_entered(body: Node2D):
 	if body is Player:
 		player_in_range = true
 		label.show()
-		
-		if requires_all_monsters_dead:
-			_check_unlock_condition()
+		_refresh_label()
 
 func _on_body_exited(body: Node2D):
 	if body is Player:
@@ -67,21 +76,45 @@ func _use_portal():
 	else:
 		return
 
-func _check_unlock_condition():
-	var monsters = get_tree().get_nodes_in_group("monsters")
-	if monsters.size() > 0:
+func _requirements_met() -> bool:
+	if requires_all_monsters_dead and get_tree().get_nodes_in_group("monsters").size() > 0:
 		is_unlocked = false
-		label.text = "Locked!\nDefeat all monsters"
-	else:
-		is_unlocked = true
+		return false
+	if required_quest_id != "" and not _quest_requirement_met():
+		is_unlocked = false
+		return false
+	is_unlocked = true
+	return true
+
+func _quest_requirement_met() -> bool:
+	var quest_manager := get_node_or_null("/root/QuestManager")
+	if quest_manager == null:
+		return false
+	var status := int(quest_manager.get_quest_status(required_quest_id))
+	if required_quest_turned_in:
+		return status == QUEST_STATUS_TURNED_IN
+	return status == QUEST_STATUS_COMPLETE or status == QUEST_STATUS_TURNED_IN
+
+func _refresh_label() -> void:
+	if _requirements_met():
 		label.text = portal_name + "\n[Press E]"
+	else:
+		label.text = _get_locked_label_text()
 
 func _show_locked_message():
-	# Show a temporary message
-	label.text = "Defeat all monsters first!"
+	label.text = _get_locked_label_text()
 	await get_tree().create_timer(2.0).timeout
 	if player_in_range:
-		label.text = portal_name + "\n[Locked]"
+		_refresh_label()
+
+func _get_locked_label_text() -> String:
+	if requires_all_monsters_dead and get_tree().get_nodes_in_group("monsters").size() > 0:
+		return "Locked!\nDefeat all monsters"
+	if required_quest_id != "":
+		if required_quest_turned_in:
+			return "Locked!\nTurn in quest"
+		return "Locked!\nComplete quest"
+	return portal_name + "\n[Locked]"
 
 func _open_map_selector() -> void:
 	if map_selector and map_selector.control.visible:

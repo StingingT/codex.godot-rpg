@@ -1,0 +1,22 @@
+{
+  "quest_id": "break_the_dark_keep",
+  "quest_name": "Break the Dark Keep",
+  "description": "A dark knight guards the keep beyond the catacombs. Defeat the dark knight and return to the Quest Giver before the route collapses into shadow.",
+  "level_requirement": 5,
+  "prerequisites": ["seal_blackwater_catacombs"],
+  "objectives": [
+    {
+      "type": "kill",
+      "target": "dark_knight",
+      "required": 1,
+      "current": 0
+    }
+  ],
+  "rewards": {
+    "xp": 900,
+    "gold": 500,
+    "items": []
+  },
+  "giver": "quest_giver",
+  "turn_in": "quest_giver"
+}

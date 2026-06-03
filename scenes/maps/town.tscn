@@ -152,6 +152,30 @@ available_maps = Array[Dictionary]([{
 "level_req": 1,
 "name": "Safe Haven Town"
 }, {
+"id": "custom_kit_town",
+"level_req": 1,
+"name": "Custom Kit Town"
+}, {
+"id": "custom_kit_field",
+"level_req": 1,
+"name": "Corrupted Test Field"
+}, {
+"id": "custom_kit_ruins",
+"level_req": 2,
+"name": "Ashbone Ruins"
+}, {
+"id": "custom_kit_marsh",
+"level_req": 3,
+"name": "Blackwater Marsh"
+}, {
+"id": "custom_kit_catacombs",
+"level_req": 4,
+"name": "Blackwater Catacombs"
+}, {
+"id": "custom_kit_dark_keep",
+"level_req": 5,
+"name": "The Dark Keep"
+}, {
 "id": "fields",
 "level_req": 1,
 "name": "Eastern Fields"

@@ -1,0 +1,29 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/portal.gd" id="1_portal_script"]
+[ext_resource type="Texture2D" path="res://assets/objects/portals/waypoint_portal.png" id="2_texture"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_portal"]
+radius = 22.0
+
+[node name="NextPortal" type="Area2D" groups=["portals"]]
+collision_layer = 32
+collision_mask = 1
+script = ExtResource("1_portal_script")
+portal_name = "Next"
+requires_all_monsters_dead = false
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_texture")
+position = Vector2(0, -18)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_portal")
+
+[node name="Label" type="Label" parent="."]
+offset_left = -44.0
+offset_top = -72.0
+offset_right = 44.0
+offset_bottom = -42.0
+text = "Next\n[Press E]"
+horizontal_alignment = 1
