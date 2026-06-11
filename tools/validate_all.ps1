@@ -1,5 +1,6 @@
 param(
-    [string]$GodotBin = $env:GODOT_BIN
+    [string]$GodotBin = $env:GODOT_BIN,
+    [switch]$StrictItemData
 )
 
 $ErrorActionPreference = "Stop"
@@ -34,7 +35,41 @@ if ($LASTEXITCODE -ne 0) {
     exit $LASTEXITCODE
 }
 
+& $GodotBin --headless --path $projectRoot --script "res://tools/validate_architecture.gd"
+if ($LASTEXITCODE -ne 0) {
+    exit $LASTEXITCODE
+}
+
+& $GodotBin --headless --path $projectRoot --script "res://tools/validate_content_lifecycle.gd"
+if ($LASTEXITCODE -ne 0) {
+    exit $LASTEXITCODE
+}
+
+if ($StrictItemData) {
+    & $GodotBin --headless --path $projectRoot --script "res://tools/validate_item_data.gd" -- --strict
+} else {
+    & $GodotBin --headless --path $projectRoot --script "res://tools/validate_item_data.gd"
+}
+if ($LASTEXITCODE -ne 0) {
+    exit $LASTEXITCODE
+}
+
+& $GodotBin --headless --path $projectRoot --script "res://tools/validate_inventory_phase_b.gd"
+if ($LASTEXITCODE -ne 0) {
+    exit $LASTEXITCODE
+}
+
+& $GodotBin --headless --path $projectRoot --script "res://tools/validate_monster_sprite_delivery.gd"
+if ($LASTEXITCODE -ne 0) {
+    exit $LASTEXITCODE
+}
+
 & $GodotBin --headless --path $projectRoot --script "res://tools/validate_scenes.gd"
+if ($LASTEXITCODE -ne 0) {
+    exit $LASTEXITCODE
+}
+
+& $GodotBin --headless --path $projectRoot --script "res://tools/validate_ui_layout.gd"
 if ($LASTEXITCODE -ne 0) {
     exit $LASTEXITCODE
 }

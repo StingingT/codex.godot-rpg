@@ -1,5 +1,7 @@
 extends Control
 
+const RPGUIStyle := preload("res://scripts/ui/rpg_ui_style.gd")
+
 @onready var dialogue_panel: Panel = $DialoguePanel
 @onready var portrait: TextureRect = $DialoguePanel/Portrait
 @onready var speaker_label: Label = $DialoguePanel/SpeakerLabel
@@ -13,11 +15,19 @@ var current_text: String = ""
 var current_choices: Array = []
 
 func _ready():
+	_apply_style()
 	hide()
 	DialogueManager.dialogue_started.connect(_on_dialogue_started)
 	DialogueManager.dialogue_line_shown.connect(_on_dialogue_line_shown)
 	DialogueManager.dialogue_choice_presented.connect(_on_dialogue_choice_presented)
 	DialogueManager.dialogue_ended.connect(_on_dialogue_ended)
+
+func _apply_style() -> void:
+	RPGUIStyle.apply_screen(self)
+	RPGUIStyle.apply_panel(dialogue_panel, true)
+	RPGUIStyle.apply_title(speaker_label, 16)
+	RPGUIStyle.apply_label(text_label)
+	RPGUIStyle.apply_title(continue_indicator, 14)
 
 func _input(event):
 	if not visible:
@@ -86,6 +96,7 @@ func _create_choice_buttons(choices: Array):
 	for i in range(choices.size()):
 		var button = Button.new()
 		button.text = choices[i].text
+		RPGUIStyle.apply_button(button, RPGUIStyle.GOLD)
 		button.pressed.connect(_on_choice_selected.bind(i))
 		choices_container.add_child(button)
 

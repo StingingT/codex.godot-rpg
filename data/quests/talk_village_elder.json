@@ -1,5 +1,6 @@
 {
   "quest_id": "talk_village_elder",
+  "content_state": "legacy",
   "title": "Audience with the Elder",
   "description": "Speak to the village elder to learn more about your next steps.",
   "objectives": [

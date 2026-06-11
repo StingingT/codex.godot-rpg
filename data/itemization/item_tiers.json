@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "tiers": {
+    "bronze": {
+      "display_name": "Bronze",
+      "required_level": 1,
+      "color": "#B87333"
+    },
+    "steel": {
+      "display_name": "Steel",
+      "required_level": 5,
+      "color": "#A7B0B8"
+    },
+    "adamant": {
+      "display_name": "Adamant",
+      "required_level": 10,
+      "color": "#3E8F5A"
+    },
+    "mythril": {
+      "display_name": "Mythril",
+      "required_level": 15,
+      "color": "#48C7E8"
+    },
+    "orichalcum": {
+      "display_name": "Orichalcum",
+      "required_level": 20,
+      "color": "#D76832"
+    }
+  }
+}

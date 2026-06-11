@@ -1,5 +1,6 @@
 {
   "quest_id": "clear_watchtower_ruins",
+  "content_state": "legacy",
   "quest_name": "Clear the Watchtower Ruins",
   "description": "Skeletons have taken over the ruined watchtower near the fields. Defeat 4 skeletons there and return to the Quest Giver.",
   "level_requirement": 4,

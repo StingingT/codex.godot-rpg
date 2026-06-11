@@ -1,5 +1,6 @@
 {
   "quest_id": "collect_herbs",
+  "content_state": "legacy",
   "title": "Herbalist's Request",
   "description": "The village healer needs herbs for her potions. Find them growing in the fields.",
   "objectives": [

@@ -1,5 +1,6 @@
 {
   "quest_id": "explore_mystic_forest",
+  "content_state": "legacy",
   "title": "Explore the Mystic Forest",
   "description": "Scout the Mystic Forest and map the surrounding area.",
   "objectives": [

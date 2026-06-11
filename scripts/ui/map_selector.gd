@@ -1,9 +1,12 @@
 extends CanvasLayer
 class_name MapSelector
 
+const RPGUIStyle := preload("res://scripts/ui/rpg_ui_style.gd")
+
 signal map_selected(map_id: String)
 
 @onready var control: Control = $Control
+@onready var panel: Panel = $Control/Panel
 @onready var title_label: Label = $Control/Panel/TitleLabel
 @onready var map_list: ItemList = $Control/Panel/MapList
 @onready var close_button: Button = $Control/Panel/CloseButton
@@ -13,9 +16,18 @@ var player_level: int = 1
 var maps_data: Array[Dictionary] = []
 
 func _ready():
+	_apply_style()
 	control.hide()
 	close_button.pressed.connect(_on_close_pressed)
 	map_list.item_selected.connect(_on_map_selected)
+
+func _apply_style() -> void:
+	RPGUIStyle.apply_screen(control)
+	RPGUIStyle.apply_panel(panel, true)
+	RPGUIStyle.apply_title(title_label, 20)
+	RPGUIStyle.apply_item_list(map_list)
+	RPGUIStyle.apply_label(info_label, true)
+	RPGUIStyle.apply_button(close_button)
 
 func open(level: int, available_maps: Array[Dictionary]):
 	player_level = level

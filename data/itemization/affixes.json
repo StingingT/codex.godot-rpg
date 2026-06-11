@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "pools": {
+    "weapon_basic": {
+      "affixes": [
+        {
+          "affix_id": "power_1",
+          "stat": "attack",
+          "operation": "add",
+          "min": 1,
+          "max": 5
+        }
+      ]
+    },
+    "armor_basic": {
+      "affixes": [
+        {
+          "affix_id": "guarding_1",
+          "stat": "defense",
+          "operation": "add",
+          "min": 1,
+          "max": 4
+        },
+        {
+          "affix_id": "vitality_1",
+          "stat": "max_hp",
+          "operation": "add",
+          "min": 5,
+          "max": 20
+        }
+      ]
+    },
+    "accessory_basic": {
+      "affixes": [
+        {
+          "affix_id": "strength_1",
+          "stat": "attack",
+          "operation": "add",
+          "min": 1,
+          "max": 4
+        },
+        {
+          "affix_id": "life_1",
+          "stat": "max_hp",
+          "operation": "add",
+          "min": 5,
+          "max": 15
+        }
+      ]
+    }
+  }
+}

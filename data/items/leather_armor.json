@@ -1,0 +1,29 @@
+{
+  "schema_version": 2,
+  "item_id": "leather_armor",
+  "item_name": "Leather Armor",
+  "description": "Flexible starter armor that offers modest protection.",
+  "item_type": 1,
+  "category": "equipment",
+  "slot": "overall",
+  "armor_type": 0,
+  "material_tier": "bronze",
+  "required_level": 1,
+  "allowed_classes": [],
+  "stackable": false,
+  "max_stack": 1,
+  "base_stats": {
+    "defense": 6,
+    "max_hp": 25
+  },
+  "standard_roll": {
+    "defense": {
+      "min": 1,
+      "max": 2
+    }
+  },
+  "affix_pool": "armor_basic",
+  "fixed_rarity": "common",
+  "buy_price": 90,
+  "sell_price": 31
+}

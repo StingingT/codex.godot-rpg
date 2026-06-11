@@ -57,9 +57,9 @@ func _enter_state(new_state: State) -> void:
 			wander_timer = randf_range(1.0, 3.0)
 		State.WANDER:
 			wander_timer = randf_range(1.0, 2.0)
-			animated_sprite.play("walk")
+			animated_sprite.play("move")
 		State.CHASE:
-			animated_sprite.play("walk")
+			animated_sprite.play("move")
 		State.FLEE:
 			animated_sprite.play("run")
 		State.ATTACK:

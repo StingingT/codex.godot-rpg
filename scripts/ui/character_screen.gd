@@ -1,6 +1,11 @@
 extends Control
 
+const RPGUIStyle := preload("res://scripts/ui/rpg_ui_style.gd")
+
 @onready var tab_container: TabContainer = $Panel/TabContainer
+@onready var portrait_panel: Panel = $Panel/TabContainer/Stats/PortraitPanel
+@onready var class_portrait: TextureRect = $Panel/TabContainer/Stats/PortraitPanel/ClassPortrait
+@onready var class_name_label: Label = $Panel/TabContainer/Stats/PortraitPanel/ClassNameLabel
 @onready var level_label: Label = $Panel/TabContainer/Stats/LevelLabel
 @onready var xp_label: Label = $Panel/TabContainer/Stats/XPLabel
 @onready var ap_label: Label = $Panel/TabContainer/Stats/APLabel
@@ -90,6 +95,7 @@ var skills = {
 }
 
 func _ready():
+	_apply_style()
 	hide()
 	context_menu.id_pressed.connect(_on_context_menu_selected)
 	tab_container.tab_changed.connect(_on_tab_changed)
@@ -119,6 +125,37 @@ func _ready():
 	# Build skill list
 	_build_skill_list()
 
+func _apply_style() -> void:
+	RPGUIStyle.apply_screen(self)
+	RPGUIStyle.apply_panel($Panel, true)
+	RPGUIStyle.apply_title($Panel/TitleLabel, 20)
+	RPGUIStyle.apply_tab_container(tab_container)
+	RPGUIStyle.apply_dark_panel(portrait_panel)
+	RPGUIStyle.apply_title(class_name_label, 13)
+	RPGUIStyle.apply_label(level_label)
+	RPGUIStyle.apply_label(xp_label)
+	RPGUIStyle.apply_label(ap_label)
+	RPGUIStyle.apply_label(sp_label)
+	RPGUIStyle.apply_label(stats_label)
+	RPGUIStyle.apply_label(attributes_label)
+	RPGUIStyle.apply_label(equipment_stats_label)
+	RPGUIStyle.apply_label(gold_label)
+	RPGUIStyle.apply_label(skills_sp_label)
+	RPGUIStyle.apply_dark_panel(item_info_panel)
+	RPGUIStyle.apply_dark_panel(skill_info_panel)
+	RPGUIStyle.apply_title(item_name_label, 15)
+	RPGUIStyle.apply_label(item_desc_label)
+	RPGUIStyle.apply_title(skill_name_label, 15)
+	RPGUIStyle.apply_label(skill_desc_label)
+	RPGUIStyle.apply_button(close_button)
+	RPGUIStyle.apply_button(equip_button, RPGUIStyle.GOLD)
+	RPGUIStyle.apply_button(skill_unlock_button, RPGUIStyle.BLUE)
+	for button in [weapon_slot, armor_slot, helmet_slot, accessory_slot]:
+		RPGUIStyle.apply_slot_button(button, RPGUIStyle.GOLD)
+	for child in ap_buttons_container.get_children():
+		if child is Button:
+			RPGUIStyle.apply_button(child, RPGUIStyle.GREEN)
+
 func _build_skill_list():
 	for child in skill_list.get_children():
 		child.queue_free()
@@ -127,8 +164,8 @@ func _build_skill_list():
 		var skill = skills[skill_id]
 		var button = Button.new()
 		button.custom_minimum_size = Vector2(0, 28)
-		button.add_theme_font_size_override("font_size", 14)
 		button.text = skill.name
+		RPGUIStyle.apply_slot_button(button, RPGUIStyle.BLUE)
 		button.pressed.connect(_on_skill_selected.bind(skill_id))
 		skill_list.add_child(button)
 
@@ -142,6 +179,7 @@ func open(p_player: Player):
 	_update_inventory()
 	_update_points()
 	_update_ap_buttons()
+	_update_class_portrait()
 	item_info_panel.hide()
 	show()
 
@@ -173,6 +211,36 @@ func _update_stats():
 		stats.get_distributed_ap("int"),
 		stats.get_distributed_ap("lck")
 	]
+	_update_class_portrait()
+
+func _update_class_portrait() -> void:
+	if not player:
+		return
+	var display_name := "Warrior"
+	if player.player_class:
+		display_name = player.player_class.player_class_name
+	class_name_label.text = display_name
+	class_portrait.texture = _make_class_portrait(_get_class_idle_sprite_path())
+
+func _get_class_idle_sprite_path() -> String:
+	if not player or not player.player_class:
+		return "res://assets/sprites/player/classes/knightlow_idle.png"
+	match player.player_class.class_type:
+		PlayerClass.ClassType.RANGER:
+			return "res://assets/sprites/player/classes/archertheresa_idle.png"
+		PlayerClass.ClassType.MAGE:
+			return "res://assets/sprites/player/classes/mageted_idle.png"
+		_:
+			return "res://assets/sprites/player/classes/knightlow_idle.png"
+
+func _make_class_portrait(sprite_path: String) -> Texture2D:
+	var sheet := load(sprite_path) as Texture2D
+	if sheet == null:
+		return null
+	var portrait := AtlasTexture.new()
+	portrait.atlas = sheet
+	portrait.region = Rect2(96, 0, 48, 48)
+	return portrait
 
 func _update_ap_buttons():
 	if not player:
@@ -248,29 +316,28 @@ func _update_inventory():
 	for slot in player.inventory.items:
 		var button = Button.new()
 		button.custom_minimum_size = Vector2(40, 40)
-		button.add_theme_font_size_override("font_size", 13)
+		var accent := RPGUIStyle.BORDER_DARK
 		
 		if slot.item:
 			button.text = slot.item.item_name.substr(0, 4)
 			button.tooltip_text = "%s (x%d)" % [slot.item.item_name, slot.quantity]
 			_add_stack_badge(button, int(slot.quantity))
 			
-			# Style based on item type
 			match slot.item.item_type:
 				ItemData.ItemType.WEAPON:
-					button.modulate = Color(1.0, 0.8, 0.4)  # Gold
+					accent = RPGUIStyle.GOLD
 				ItemData.ItemType.ARMOR:
-					button.modulate = Color(0.6, 0.8, 1.0)  # Blue
+					accent = RPGUIStyle.BLUE
 				ItemData.ItemType.CONSUMABLE:
-					button.modulate = Color(0.4, 1.0, 0.4)  # Green
+					accent = RPGUIStyle.GREEN
 				_:
-					button.modulate = Color.WHITE
+					accent = RPGUIStyle.BORDER
 			
 			button.pressed.connect(_on_inventory_item_selected.bind(slot.item))
 			button.gui_input.connect(_on_item_gui_input.bind(slot.item))
 		else:
 			button.disabled = true
-			button.modulate = Color(0.3, 0.3, 0.3)
+		RPGUIStyle.apply_slot_button(button, accent)
 		
 		item_grid.add_child(button)
 
@@ -307,9 +374,9 @@ func _update_skills():
 		if i < skill_list.get_child_count():
 			var button = skill_list.get_child(i)
 			if player.unlocked_skills.has(skill_id):
-				button.modulate = Color(0.3, 0.9, 0.3)  # Green
+				RPGUIStyle.apply_slot_button(button, RPGUIStyle.GREEN)
 			else:
-				button.modulate = Color(1, 1, 1)  # White
+				RPGUIStyle.apply_slot_button(button, RPGUIStyle.BLUE)
 			i += 1
 
 func _on_skill_selected(skill_id: String):

@@ -1,0 +1,30 @@
+{
+  "schema_version": 2,
+  "item_id": "steel_sword",
+  "item_name": "Steel Sword",
+  "description": "A dependable steel blade for experienced adventurers.",
+  "item_type": 0,
+  "category": "equipment",
+  "slot": "weapon",
+  "weapon_type": 0,
+  "material_tier": "steel",
+  "required_level": 5,
+  "allowed_classes": [],
+  "stackable": false,
+  "max_stack": 1,
+  "icon": "res://assets/sprites/weapons/sword_steel.png",
+  "base_stats": {
+    "attack": 20,
+    "attack_speed": 1.0
+  },
+  "standard_roll": {
+    "attack": {
+      "min": 2,
+      "max": 6
+    }
+  },
+  "affix_pool": "weapon_basic",
+  "fixed_rarity": "common",
+  "buy_price": 500,
+  "sell_price": 175
+}

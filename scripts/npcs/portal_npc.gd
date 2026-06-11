@@ -1,12 +1,8 @@
 extends NPC
 class_name PortalNPC
 
-@export var available_maps: Array[Dictionary] = [
-	{"id": "fields", "name": "Eastern Fields", "level_req": 1},
-	{"id": "swamp", "name": "Murky Swamp", "level_req": 5},
-	{"id": "cave", "name": "Dark Cave", "level_req": 8},
-	{"id": "dungeon", "name": "Ancient Dungeon", "level_req": 12}
-]
+@export var use_custom_map_list: bool = false
+@export var available_maps: Array[Dictionary] = []
 
 var map_selector: MapSelector = null
 
@@ -32,7 +28,10 @@ func _open_map_selector():
 	
 	var player = get_tree().get_first_node_in_group("player")
 	if player:
-		map_selector.open(player.stats.level, available_maps)
+		var travel_maps := DataRegistry.get_travel_maps()
+		if use_custom_map_list and not available_maps.is_empty():
+			travel_maps = available_maps
+		map_selector.open(player.stats.level, travel_maps)
 
 func _on_map_selected(map_id: String):
 	map_selector.control.hide()

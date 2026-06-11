@@ -1,10 +1,15 @@
 extends Control
 
+const RPGUIStyle := preload("res://scripts/ui/rpg_ui_style.gd")
+
 signal item_selected(item: ItemData)
 signal item_equipped(item: ItemData)
 
 @onready var item_grid: GridContainer = $Panel/ItemGrid
 @onready var equipment_slots: HBoxContainer = $Panel/EquipmentSlots
+@onready var equipment_tab: Button = $Panel/InventoryTabs/EquipmentTab
+@onready var consumables_tab: Button = $Panel/InventoryTabs/ConsumablesTab
+@onready var materials_tab: Button = $Panel/InventoryTabs/MaterialsTab
 @onready var close_button: Button = $Panel/CloseButton
 @onready var item_info: Panel = $ItemInfoPanel
 @onready var info_name: Label = $ItemInfoPanel/ItemName
@@ -14,12 +19,29 @@ signal item_equipped(item: ItemData)
 var player: Player = null
 var selected_item: ItemData = null
 var slot_buttons: Array = []
+var current_tab: String = Inventory.TAB_EQUIPMENT
 
 func _ready():
+	_apply_style()
 	hide()
 	item_info.hide()
 	close_button.pressed.connect(_on_close_pressed)
 	equip_button.pressed.connect(_on_equip_pressed)
+	equipment_tab.pressed.connect(_select_tab.bind(Inventory.TAB_EQUIPMENT))
+	consumables_tab.pressed.connect(_select_tab.bind(Inventory.TAB_CONSUMABLES))
+	materials_tab.pressed.connect(_select_tab.bind(Inventory.TAB_MATERIALS))
+
+func _apply_style() -> void:
+	RPGUIStyle.apply_screen(self)
+	RPGUIStyle.apply_panel($Panel, true)
+	RPGUIStyle.apply_dark_panel(item_info)
+	RPGUIStyle.apply_title($Panel/TitleLabel, 20)
+	RPGUIStyle.apply_title(info_name, 16)
+	RPGUIStyle.apply_label(info_desc)
+	RPGUIStyle.apply_button(close_button)
+	RPGUIStyle.apply_button(equip_button, RPGUIStyle.GOLD)
+	for button in [equipment_tab, consumables_tab, materials_tab]:
+		RPGUIStyle.apply_button(button)
 
 func open(player_ref: Player) -> void:
 	player = player_ref
@@ -52,11 +74,11 @@ func _update_inventory() -> void:
 	if not player:
 		return
 	
-	# Create slot buttons
-	for i in range(player.inventory.items.size()):
-		var slot_data = player.inventory.items[i]
+	# Create the 24 slots for the selected category.
+	for slot_data in player.inventory.get_tab_slots(current_tab):
 		var button = Button.new()
-		button.custom_minimum_size = Vector2(50, 50)
+		button.custom_minimum_size = Vector2(44, 44)
+		RPGUIStyle.apply_slot_button(button)
 		
 		if slot_data.item != null:
 			button.text = slot_data.item.item_name.substr(0, 2)
@@ -68,6 +90,14 @@ func _update_inventory() -> void:
 		
 		item_grid.add_child(button)
 		slot_buttons.append(button)
+
+func _select_tab(tab_id: String) -> void:
+	if current_tab == tab_id:
+		return
+	current_tab = tab_id
+	selected_item = null
+	item_info.hide()
+	_update_inventory()
 
 func _update_equipment() -> void:
 	# Clear existing
@@ -83,6 +113,7 @@ func _update_equipment() -> void:
 		var button = Button.new()
 		button.custom_minimum_size = Vector2(60, 60)
 		button.text = slot_name.capitalize()
+		RPGUIStyle.apply_slot_button(button, RPGUIStyle.GOLD)
 		
 		if item != null:
 			button.text = item.item_name

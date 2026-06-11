@@ -1,5 +1,7 @@
 extends Control
 
+const RPGUIStyle := preload("res://scripts/ui/rpg_ui_style.gd")
+
 @onready var tree_container: Control = $TreeContainer
 @onready var points_label: Label = $SkillPointsLabel
 @onready var info_panel: Panel = $SkillInfoPanel
@@ -64,9 +66,22 @@ var skills = {
 }
 
 func _ready():
+	_apply_style()
 	hide()
 	unlock_button.pressed.connect(_on_unlock_pressed)
 	_build_ui()
+
+func _apply_style() -> void:
+	RPGUIStyle.apply_screen(self)
+	RPGUIStyle.apply_dark_panel($Background)
+	RPGUIStyle.apply_title($Title, 24)
+	RPGUIStyle.apply_label(points_label)
+	RPGUIStyle.apply_label($CloseHint, true)
+	RPGUIStyle.apply_dark_panel(info_panel)
+	RPGUIStyle.apply_title(info_name, 16)
+	RPGUIStyle.apply_label(info_desc)
+	RPGUIStyle.apply_label(info_cost)
+	RPGUIStyle.apply_button(unlock_button, RPGUIStyle.BLUE)
 
 func open(p_player: Player):
 	player = p_player
@@ -91,6 +106,7 @@ func _build_ui():
 		button.size = Vector2(200, 40)
 		button.position = Vector2(0, y_pos)
 		button.text = skill.name
+		RPGUIStyle.apply_slot_button(button, RPGUIStyle.BLUE)
 		button.pressed.connect(_on_skill_selected.bind(skill_id))
 		tree_container.add_child(button)
 		y_pos += 50
@@ -172,10 +188,10 @@ func _update_display():
 					break
 			
 			if skill_id != "" and player and player.unlocked_skills.has(skill_id):
-				child.modulate = Color(0.3, 0.9, 0.3)  # Green for unlocked
+				RPGUIStyle.apply_slot_button(child, RPGUIStyle.GREEN)
 			else:
-				child.modulate = Color(1, 1, 1)  # White for locked
+				RPGUIStyle.apply_slot_button(child, RPGUIStyle.BLUE)
 
 func _input(event):
-	if visible and event.is_action_pressed("skill_tree"):
+	if visible and event.is_action_pressed("open_skill_tree"):
 		close()

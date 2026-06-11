@@ -4,7 +4,7 @@ signal game_saved(slot: int)
 signal game_loaded(slot: int)
 
 const SAVE_DIR = "user://saves/"
-const SAVE_VERSION = 1
+const SAVE_VERSION = 2
 
 # Current save slot
 var current_slot: int = 1
@@ -38,7 +38,11 @@ func load_game(slot: int = current_slot) -> bool:
 	if error != OK:
 		return false
 	
-	var save_data = json.data
+	if typeof(json.data) != TYPE_DICTIONARY:
+		return false
+	var save_data := migrate_save_data(json.data)
+	if save_data.is_empty():
+		return false
 	_apply_save_data(save_data)
 	game_loaded.emit(slot)
 	return true
@@ -46,6 +50,42 @@ func load_game(slot: int = current_slot) -> bool:
 func has_save(slot: int) -> bool:
 	var file_path = SAVE_DIR + "slot_%d.json" % slot
 	return FileAccess.file_exists(file_path)
+
+func migrate_save_data(source: Dictionary) -> Dictionary:
+	var migrated := source.duplicate(true)
+	var version := int(migrated.get("version", 1))
+	if version < 1 or version > SAVE_VERSION:
+		push_error("Unsupported save version: %d" % version)
+		return {}
+
+	while version < SAVE_VERSION:
+		match version:
+			1:
+				migrated = _migrate_v1_to_v2(migrated)
+			_:
+				push_error("No migration path from save version %d." % version)
+				return {}
+		if migrated.is_empty():
+			return {}
+		version = int(migrated.get("version", version + 1))
+
+	return migrated
+
+func _migrate_v1_to_v2(source: Dictionary) -> Dictionary:
+	var migrated := source.duplicate(true)
+	var player_data: Dictionary = migrated.get("player", {}).duplicate(true)
+	if player_data.has("inventory"):
+		if typeof(player_data.get("inventory")) != TYPE_DICTIONARY:
+			push_error("Version 1 save has an invalid inventory payload.")
+			return {}
+		var staged_inventory := Inventory.new()
+		if not staged_inventory.load_save_data(player_data.get("inventory", {})):
+			push_error("Version 1 inventory migration failed: %s" % staged_inventory.last_load_error)
+			return {}
+		player_data["inventory"] = staged_inventory.get_save_data()
+		migrated["player"] = player_data
+	migrated["version"] = 2
+	return migrated
 
 func stage_current_player_for_transition() -> void:
 	_pending_player_data = _gather_save_data().get("player", {})

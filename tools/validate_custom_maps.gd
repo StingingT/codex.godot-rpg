@@ -4,13 +4,31 @@ const MAPS_PATH := "res://data/maps/maps.json"
 const ENCOUNTERS_PATH := "res://data/encounters/encounters.json"
 const MONSTERS_PATH := "res://data/monsters/monsters.json"
 const QUESTS_PATH := "res://data/quests"
+const CUSTOM_TILESET_PATH := "res://assets/tilesets/custom/rpg_tileset.tres"
 
+const SOURCE_GROUND := 0
 const SOURCE_ENVIRONMENT := 1
+const SOURCE_BUILDING := 2
+const SOURCE_OBJECT := 3
+const SOURCE_ROUTE := 4
 
+const GRASS := Vector2i(0, 0)
 const VOID_WATER := Vector2i(0, 0)
 const CLIFF := Vector2i(2, 0)
 const MARSH_WATER := Vector2i(3, 0)
 const BRIDGE_PLANK := Vector2i(4, 0)
+const RIVER_BANK_WEST := Vector2i(0, 1)
+const MARSH_BANK_WEST := Vector2i(4, 1)
+const BRIDGE_APPROACH_WEST := Vector2i(6, 1)
+const VOID_BANK_NORTH := Vector2i(2, 2)
+const VOID_CORNER_NORTH_WEST := Vector2i(4, 2)
+const ENCOUNTER_BRUSH := Vector2i(0, 0)
+const ASH_GRASS_NORTH := Vector2i(0, 1)
+const ASH_MUD_NORTH_WEST := Vector2i(4, 2)
+const COBBLE_GRASS_EAST := Vector2i(3, 3)
+const PLASTER_DOOR_TILE := Vector2i(3, 2)
+const BLACKSMITH_FRONT_TILE := Vector2i(2, 3)
+const STONE_THRESHOLD_TILE := Vector2i(6, 3)
 
 const CUSTOM_ROUTE: Array[String] = [
 	"custom_kit_town",
@@ -69,6 +87,20 @@ const MAPS_WITH_PASSABLE_BRIDGES: Array[String] = [
 	"custom_kit_marsh"
 ]
 
+const REQUIRED_CUSTOM_DATA_LAYERS := {
+	"terrain_type": TYPE_STRING,
+	"biome": TYPE_STRING,
+	"zone_tier": TYPE_INT,
+	"is_walkable": TYPE_BOOL,
+	"is_water": TYPE_BOOL,
+	"is_damage_tile": TYPE_BOOL,
+	"encounter_weight": TYPE_FLOAT,
+	"is_interactable": TYPE_BOOL,
+	"interaction_id": TYPE_STRING,
+	"footstep_sound": TYPE_STRING,
+	"movement_modifier": TYPE_FLOAT
+}
+
 var maps: Dictionary = {}
 var encounters: Dictionary = {}
 var monsters: Dictionary = {}
@@ -89,6 +121,7 @@ func _run_validation() -> void:
 		quit(1)
 		return
 
+	failed = await _validate_custom_tileset_metadata() or failed
 	failed = _validate_route_quest_chain() or failed
 
 	for index in range(CUSTOM_ROUTE.size()):
@@ -108,6 +141,336 @@ func _run_validation() -> void:
 		await process_frame
 
 	quit(1 if failed else 0)
+
+func _validate_custom_tileset_metadata() -> bool:
+	var failed := false
+	var tile_set := load(CUSTOM_TILESET_PATH) as TileSet
+	if tile_set == null:
+		push_error("Missing custom TileSet: %s" % CUSTOM_TILESET_PATH)
+		return true
+
+	if tile_set.tile_size != Vector2i(32, 32):
+		push_error("Custom TileSet tile size must be 32x32, found %s." % tile_set.tile_size)
+		failed = true
+	if tile_set.get_physics_layers_count() < 1:
+		push_error("Custom TileSet needs a world collision physics layer.")
+		failed = true
+	elif tile_set.get_physics_layer_collision_layer(0) != 2:
+		push_error("Custom TileSet physics layer must use World collision layer 2.")
+		failed = true
+
+	var layer_indices := {}
+	for index in range(tile_set.get_custom_data_layers_count()):
+		layer_indices[str(tile_set.get_custom_data_layer_name(index))] = index
+	for layer_name in REQUIRED_CUSTOM_DATA_LAYERS.keys():
+		if not layer_indices.has(layer_name):
+			push_error("Custom TileSet missing custom data layer: %s" % layer_name)
+			failed = true
+			continue
+		var layer_index := int(layer_indices[layer_name])
+		var actual_type := tile_set.get_custom_data_layer_type(layer_index)
+		if actual_type != int(REQUIRED_CUSTOM_DATA_LAYERS[layer_name]):
+			push_error("Custom TileSet custom data layer %s has the wrong type." % layer_name)
+			failed = true
+
+	var object_source := tile_set.get_source(SOURCE_OBJECT) as TileSetAtlasSource
+	if object_source == null or object_source.texture == null:
+		push_error("Custom TileSet object atlas is missing its texture")
+		failed = true
+	elif object_source.texture.get_size() != Vector2(256, 96):
+		push_error(
+			"Custom object atlas must be 256x96 for legacy props, biome decor, and structural ruin pieces; got %s"
+			% object_source.texture.get_size()
+		)
+		failed = true
+
+	var building_source := tile_set.get_source(SOURCE_BUILDING) as TileSetAtlasSource
+	if building_source == null or building_source.texture == null:
+		push_error("Custom TileSet building atlas is missing its texture")
+		failed = true
+	elif building_source.texture.get_size() != Vector2(256, 128):
+		push_error(
+			"Custom building atlas must be 256x128 for legacy samples plus modular roof, facade, and service rows; got %s"
+			% building_source.texture.get_size()
+		)
+		failed = true
+
+	var environment_source := tile_set.get_source(SOURCE_ENVIRONMENT) as TileSetAtlasSource
+	if environment_source == null or environment_source.texture == null:
+		push_error("Custom TileSet environment atlas is missing its texture")
+		failed = true
+	elif environment_source.texture.get_size() != Vector2(256, 96):
+		push_error(
+			"Custom environment atlas must be 256x96 for base terrain plus directional transitions and pond corners; got %s"
+			% environment_source.texture.get_size()
+		)
+		failed = true
+
+	var route_source := tile_set.get_source(SOURCE_ROUTE) as TileSetAtlasSource
+	if route_source == null or route_source.texture == null:
+		push_error("Custom TileSet route atlas is missing its texture")
+		failed = true
+	elif route_source.texture.get_size() != Vector2(256, 128):
+		push_error(
+			"Custom route atlas must be 256x128 for markers plus three transition families; got %s"
+			% route_source.texture.get_size()
+		)
+		failed = true
+
+	failed = _expect_tile_metadata(tile_set, SOURCE_GROUND, GRASS, {
+		"terrain_type": "corrupted_grass",
+		"is_walkable": true,
+		"is_water": false
+	}) or failed
+	failed = _expect_tile_metadata(tile_set, SOURCE_ROUTE, ENCOUNTER_BRUSH, {
+		"terrain_type": "encounter_brush",
+		"is_walkable": true
+	}) or failed
+	failed = _expect_float_min(tile_set, SOURCE_ROUTE, ENCOUNTER_BRUSH, "encounter_weight", 1.0) or failed
+	failed = _expect_tile_metadata(tile_set, SOURCE_ROUTE, ASH_GRASS_NORTH, {
+		"terrain_type": "ash_grass_north",
+		"is_walkable": true,
+		"footstep_sound": "dirt"
+	}) or failed
+	failed = _expect_tile_metadata(tile_set, SOURCE_ROUTE, ASH_MUD_NORTH_WEST, {
+		"terrain_type": "ash_mud_north_west",
+		"is_walkable": true,
+		"biome": "marsh"
+	}) or failed
+	failed = _expect_tile_metadata(tile_set, SOURCE_ROUTE, COBBLE_GRASS_EAST, {
+		"terrain_type": "cobble_grass_east",
+		"is_walkable": true,
+		"footstep_sound": "stone"
+	}) or failed
+	failed = _expect_tile_metadata(tile_set, SOURCE_ENVIRONMENT, VOID_WATER, {
+		"terrain_type": "void_water",
+		"is_walkable": false,
+		"is_water": true
+	}) or failed
+	failed = _expect_tile_metadata(tile_set, SOURCE_ENVIRONMENT, MARSH_WATER, {
+		"terrain_type": "marsh_water",
+		"is_walkable": false,
+		"is_water": true
+	}) or failed
+	failed = _expect_tile_metadata(tile_set, SOURCE_ENVIRONMENT, BRIDGE_PLANK, {
+		"terrain_type": "bridge_plank",
+		"is_walkable": true,
+		"is_water": false
+	}) or failed
+	failed = _expect_tile_metadata(tile_set, SOURCE_ENVIRONMENT, RIVER_BANK_WEST, {
+		"terrain_type": "river_bank_west",
+		"is_walkable": true,
+		"is_water": false
+	}) or failed
+	failed = _expect_tile_metadata(tile_set, SOURCE_ENVIRONMENT, MARSH_BANK_WEST, {
+		"terrain_type": "marsh_bank_west",
+		"is_walkable": true,
+		"is_water": false,
+		"footstep_sound": "mud"
+	}) or failed
+	failed = _expect_tile_metadata(tile_set, SOURCE_ENVIRONMENT, BRIDGE_APPROACH_WEST, {
+		"terrain_type": "bridge_approach_west",
+		"is_walkable": true,
+		"is_water": false,
+		"footstep_sound": "wood"
+	}) or failed
+	failed = _expect_tile_metadata(tile_set, SOURCE_ENVIRONMENT, VOID_BANK_NORTH, {
+		"terrain_type": "void_bank_north",
+		"is_walkable": true,
+		"is_water": false,
+		"footstep_sound": "mud"
+	}) or failed
+	failed = _expect_tile_metadata(tile_set, SOURCE_ENVIRONMENT, VOID_CORNER_NORTH_WEST, {
+		"terrain_type": "void_corner_north_west",
+		"is_walkable": true,
+		"is_water": false
+	}) or failed
+	failed = _expect_tile_metadata(tile_set, SOURCE_BUILDING, Vector2i(5, 0), {
+		"terrain_type": "closed_wooden_door",
+		"is_walkable": false,
+		"is_interactable": true,
+		"interaction_id": "building_door"
+	}) or failed
+	failed = _expect_tile_metadata(tile_set, SOURCE_BUILDING, PLASTER_DOOR_TILE, {
+		"terrain_type": "plaster_door",
+		"is_walkable": false,
+		"is_interactable": true,
+		"interaction_id": "building_door",
+		"footstep_sound": "wood"
+	}) or failed
+	failed = _expect_tile_metadata(tile_set, SOURCE_BUILDING, BLACKSMITH_FRONT_TILE, {
+		"terrain_type": "blacksmith_forge_front",
+		"is_walkable": false,
+		"is_interactable": false,
+		"footstep_sound": "stone"
+	}) or failed
+	failed = _expect_tile_metadata(tile_set, SOURCE_BUILDING, STONE_THRESHOLD_TILE, {
+		"terrain_type": "stone_threshold",
+		"is_walkable": true,
+		"is_interactable": false,
+		"footstep_sound": "stone"
+	}) or failed
+	failed = _expect_tile_metadata(tile_set, SOURCE_OBJECT, Vector2i(7, 0), {
+		"terrain_type": "chest_marker",
+		"is_interactable": true,
+		"interaction_id": "chest",
+		"footstep_sound": "wood"
+	}) or failed
+	failed = _expect_tile_metadata(tile_set, SOURCE_OBJECT, Vector2i(2, 0), {
+		"terrain_type": "crate",
+		"is_walkable": false,
+		"footstep_sound": "wood"
+	}) or failed
+	failed = _expect_tile_metadata(tile_set, SOURCE_OBJECT, Vector2i(3, 0), {
+		"terrain_type": "well",
+		"is_walkable": false,
+		"footstep_sound": "stone"
+	}) or failed
+	failed = _expect_tile_metadata(tile_set, SOURCE_OBJECT, Vector2i(0, 1), {
+		"terrain_type": "withered_grass_tuft",
+		"is_walkable": true,
+		"biome": "field"
+	}) or failed
+	failed = _expect_tile_metadata(tile_set, SOURCE_OBJECT, Vector2i(5, 1), {
+		"terrain_type": "grim_signpost",
+		"is_walkable": false,
+		"footstep_sound": "wood"
+	}) or failed
+	failed = _expect_tile_metadata(tile_set, SOURCE_OBJECT, Vector2i(7, 1), {
+		"terrain_type": "marsh_reeds",
+		"is_walkable": true,
+		"biome": "marsh"
+	}) or failed
+	failed = _expect_tile_metadata(tile_set, SOURCE_OBJECT, Vector2i(1, 2), {
+		"terrain_type": "sarcophagus",
+		"is_walkable": false,
+		"biome": "dungeon"
+	}) or failed
+	failed = _expect_tile_metadata(tile_set, SOURCE_OBJECT, Vector2i(5, 2), {
+		"terrain_type": "ruined_wall_center",
+		"is_walkable": false,
+		"biome": "ruins"
+	}) or failed
+	if _tile_has_collision(tile_set, SOURCE_OBJECT, Vector2i(0, 1)):
+		push_error("Custom TileSet withered_grass_tuft should remain passable.")
+		failed = true
+	if not _tile_has_collision(tile_set, SOURCE_OBJECT, Vector2i(1, 2)):
+		push_error("Custom TileSet sarcophagus should block movement.")
+		failed = true
+
+	for blocking in [
+		{"source": SOURCE_ENVIRONMENT, "coords": VOID_WATER, "label": "void_water"},
+		{"source": SOURCE_ENVIRONMENT, "coords": MARSH_WATER, "label": "marsh_water"},
+		{"source": SOURCE_ENVIRONMENT, "coords": CLIFF, "label": "cliff_wall"},
+		{"source": SOURCE_BUILDING, "coords": Vector2i(0, 0), "label": "building_roof"},
+	]:
+		if not _tile_has_collision(tile_set, int(blocking.source), blocking.coords):
+			push_error("Custom TileSet tile %s is missing blocking collision." % str(blocking.label))
+			failed = true
+	if _tile_has_collision(tile_set, SOURCE_ENVIRONMENT, BRIDGE_PLANK):
+		push_error("Custom TileSet bridge_plank should remain passable.")
+		failed = true
+	if not _tile_has_collision(tile_set, SOURCE_BUILDING, PLASTER_DOOR_TILE):
+		push_error("Custom TileSet plaster_door should retain building collision.")
+		failed = true
+	if _tile_has_collision(tile_set, SOURCE_BUILDING, STONE_THRESHOLD_TILE):
+		push_error("Custom TileSet stone_threshold should remain passable.")
+		failed = true
+	for transition in [RIVER_BANK_WEST, MARSH_BANK_WEST, BRIDGE_APPROACH_WEST, VOID_BANK_NORTH, VOID_CORNER_NORTH_WEST]:
+		if _tile_has_collision(tile_set, SOURCE_ENVIRONMENT, transition):
+			push_error("Custom TileSet transition tile %s should remain passable." % str(transition))
+			failed = true
+
+	failed = await _validate_collision_alignment(tile_set) or failed
+	failed = await _validate_object_collision_footprint(tile_set) or failed
+	return failed
+
+func _validate_collision_alignment(tile_set: TileSet) -> bool:
+	var layer := TileMapLayer.new()
+	layer.tile_set = tile_set
+	layer.set_cell(Vector2i.ZERO, SOURCE_ENVIRONMENT, VOID_WATER)
+	get_root().add_child(layer)
+
+	await physics_frame
+	await physics_frame
+
+	var failed := false
+	for point in [Vector2(1, 1), Vector2(16, 16), Vector2(31, 31)]:
+		if not _physics_point_hits_world(point):
+			push_error("Custom TileSet collision does not cover expected tile point %s." % point)
+			failed = true
+	for point in [Vector2(-1, 16), Vector2(33, 16), Vector2(16, -1), Vector2(16, 33)]:
+		if _physics_point_hits_world(point):
+			push_error("Custom TileSet collision extends outside its tile at %s." % point)
+			failed = true
+
+	layer.free()
+	await process_frame
+	return failed
+
+func _validate_object_collision_footprint(tile_set: TileSet) -> bool:
+	var layer := TileMapLayer.new()
+	layer.tile_set = tile_set
+	layer.set_cell(Vector2i.ZERO, SOURCE_OBJECT, Vector2i(0, 0))
+	get_root().add_child(layer)
+
+	await physics_frame
+	await physics_frame
+
+	var failed := false
+	for point in [Vector2(8, 16), Vector2(16, 22), Vector2(24, 28)]:
+		if not _physics_point_hits_world(point):
+			push_error("Barrel collision misses its visible lower footprint at %s." % point)
+			failed = true
+	for point in [Vector2(1, 1), Vector2(30, 2), Vector2(2, 18), Vector2(30, 18)]:
+		if _physics_point_hits_world(point):
+			push_error("Barrel collision covers transparent tile space at %s." % point)
+			failed = true
+
+	layer.free()
+	await process_frame
+	return failed
+
+func _physics_point_hits_world(point: Vector2) -> bool:
+	var query := PhysicsPointQueryParameters2D.new()
+	query.position = point
+	query.collision_mask = 2
+	query.collide_with_bodies = true
+	return not get_root().world_2d.direct_space_state.intersect_point(query).is_empty()
+
+func _expect_tile_metadata(tile_set: TileSet, source_id: int, coords: Vector2i, expected: Dictionary) -> bool:
+	var failed := false
+	var tile_data := _get_tile_data(tile_set, source_id, coords)
+	if tile_data == null:
+		push_error("Custom TileSet missing tile source %d coords %s." % [source_id, str(coords)])
+		return true
+	for key in expected.keys():
+		var actual: Variant = tile_data.get_custom_data(str(key))
+		if actual != expected[key]:
+			push_error("Custom TileSet tile %d/%s expected %s=%s, got %s." % [source_id, str(coords), str(key), str(expected[key]), str(actual)])
+			failed = true
+	return failed
+
+func _expect_float_min(tile_set: TileSet, source_id: int, coords: Vector2i, key: String, minimum: float) -> bool:
+	var tile_data := _get_tile_data(tile_set, source_id, coords)
+	if tile_data == null:
+		push_error("Custom TileSet missing tile source %d coords %s." % [source_id, str(coords)])
+		return true
+	var actual := float(tile_data.get_custom_data(key))
+	if actual <= minimum:
+		push_error("Custom TileSet tile %d/%s expected %s > %.2f, got %.2f." % [source_id, str(coords), key, minimum, actual])
+		return true
+	return false
+
+func _get_tile_data(tile_set: TileSet, source_id: int, coords: Vector2i) -> TileData:
+	var source := tile_set.get_source(source_id) as TileSetAtlasSource
+	if source == null:
+		return null
+	return source.get_tile_data(coords, 0)
+
+func _tile_has_collision(tile_set: TileSet, source_id: int, coords: Vector2i) -> bool:
+	var tile_data := _get_tile_data(tile_set, source_id, coords)
+	return tile_data != null and tile_data.get_collision_polygons_count(0) > 0
 
 func _validate_map_metadata(map_id: String, expected_order: int) -> bool:
 	var failed := false
@@ -254,7 +617,10 @@ func _validate_generated_tile_layout(map_id: String, map_root: Node) -> bool:
 	failed = _validate_water_tiles_are_blocked(map_id, ground_layer, collision_layer) or failed
 	failed = _validate_cliff_tiles_are_blocked(map_id, decor_layer, collision_layer) or failed
 	failed = _validate_bridge_tiles_are_passable(map_id, ground_layer, collision_layer, map_root) or failed
-	failed = _validate_runtime_points_on_walkable_tiles(map_id, map_root, ground_layer, collision_layer) or failed
+	failed = _validate_path_transitions(map_id, ground_layer, collision_layer) or failed
+	failed = _validate_town_modular_buildings(map_id, decor_layer) or failed
+	failed = _validate_biome_prop_usage(map_id, decor_layer) or failed
+	failed = _validate_runtime_points_on_walkable_tiles(map_id, map_root, ground_layer, decor_layer, collision_layer) or failed
 	return failed
 
 func _validate_water_tiles_are_blocked(map_id: String, ground_layer: TileMapLayer, collision_layer: TileMapLayer) -> bool:
@@ -297,6 +663,87 @@ func _validate_bridge_tiles_are_passable(map_id: String, ground_layer: TileMapLa
 		failed = true
 	return failed
 
+func _validate_path_transitions(map_id: String, ground_layer: TileMapLayer, collision_layer: TileMapLayer) -> bool:
+	var expected_rows: Array[int] = []
+	match map_id:
+		"custom_kit_town":
+			expected_rows = [1, 3]
+		"custom_kit_field", "custom_kit_ruins":
+			expected_rows = [1]
+		"custom_kit_marsh":
+			expected_rows = [2]
+		_:
+			return false
+
+	var failed := false
+	for row in expected_rows:
+		var transition_cells: Array[Vector2i] = []
+		for column in range(8):
+			transition_cells.append_array(_get_cells_matching(ground_layer, SOURCE_ROUTE, Vector2i(column, row)))
+		if transition_cells.size() < 4:
+			push_error("Map %s should use path transition family row %d; found %d cells." % [map_id, row, transition_cells.size()])
+			failed = true
+		for cell in transition_cells:
+			if _is_cell_occupied(collision_layer, cell):
+				push_error("Map %s has a blocked path transition at %s." % [map_id, str(cell)])
+				failed = true
+	return failed
+
+func _validate_town_modular_buildings(map_id: String, decor_layer: TileMapLayer) -> bool:
+	if map_id != "custom_kit_town":
+		return false
+
+	var modular_count := 0
+	var legacy_count := 0
+	var door_count := 0
+	for cell in decor_layer.get_used_cells():
+		if decor_layer.get_cell_source_id(cell) != SOURCE_BUILDING:
+			continue
+		var coords := decor_layer.get_cell_atlas_coords(cell)
+		if coords.y == 0:
+			legacy_count += 1
+		else:
+			modular_count += 1
+		if coords == PLASTER_DOOR_TILE or coords == Vector2i(1, 3):
+			door_count += 1
+
+	var failed := false
+	if modular_count < 16:
+		push_error("Town should assemble at least two complete modular buildings; found %d modular tiles." % modular_count)
+		failed = true
+	if legacy_count > 0:
+		push_error("Town still contains %d legacy placeholder building tiles beneath scene buildings." % legacy_count)
+		failed = true
+	if door_count < 2:
+		push_error("Town modular buildings should expose two readable door tiles; found %d." % door_count)
+		failed = true
+	return failed
+
+func _validate_biome_prop_usage(map_id: String, decor_layer: TileMapLayer) -> bool:
+	var required: Array[Vector2i] = []
+	match map_id:
+		"custom_kit_town":
+			required = [Vector2i(5, 1), Vector2i(6, 1)]
+		"custom_kit_field":
+			required = [Vector2i(0, 1), Vector2i(3, 1), Vector2i(5, 1)]
+		"custom_kit_ruins":
+			required = [Vector2i(1, 1), Vector2i(4, 1), Vector2i(5, 2)]
+		"custom_kit_marsh":
+			required = [Vector2i(3, 1), Vector2i(7, 1)]
+		"custom_kit_catacombs":
+			required = [Vector2i(1, 2), Vector2i(2, 2), Vector2i(3, 2)]
+		"custom_kit_dark_keep":
+			required = [Vector2i(2, 2), Vector2i(6, 1), Vector2i(7, 2)]
+		_:
+			return false
+
+	var failed := false
+	for coords in required:
+		if _get_cells_matching(decor_layer, SOURCE_OBJECT, coords).is_empty():
+			push_error("Map %s is missing required biome prop %s." % [map_id, str(coords)])
+			failed = true
+	return failed
+
 func _get_cells_matching(layer: TileMapLayer, source_id: int, atlas_coords: Vector2i) -> Array[Vector2i]:
 	var result: Array[Vector2i] = []
 	for cell in layer.get_used_cells():
@@ -307,7 +754,7 @@ func _get_cells_matching(layer: TileMapLayer, source_id: int, atlas_coords: Vect
 func _is_cell_occupied(layer: TileMapLayer, cell: Vector2i) -> bool:
 	return layer.get_cell_source_id(cell) != -1
 
-func _validate_runtime_points_on_walkable_tiles(map_id: String, map_root: Node, ground_layer: TileMapLayer, collision_layer: TileMapLayer) -> bool:
+func _validate_runtime_points_on_walkable_tiles(map_id: String, map_root: Node, ground_layer: TileMapLayer, decor_layer: TileMapLayer, collision_layer: TileMapLayer) -> bool:
 	var failed := false
 	var points: Array[Dictionary] = []
 	var entry_parent := map_root.get_node_or_null("EntryPoints")
@@ -339,7 +786,14 @@ func _validate_runtime_points_on_walkable_tiles(map_id: String, map_root: Node, 
 		if _is_cell_occupied(collision_layer, cell):
 			push_error("Map %s point %s is on a blocked collision tile at %s." % [map_id, str(point["label"]), str(cell)])
 			failed = true
+		if _cell_has_world_collision(decor_layer, cell):
+			push_error("Map %s point %s overlaps blocking decor at %s." % [map_id, str(point["label"]), str(cell)])
+			failed = true
 	return failed
+
+func _cell_has_world_collision(layer: TileMapLayer, cell: Vector2i) -> bool:
+	var tile_data := layer.get_cell_tile_data(cell)
+	return tile_data != null and tile_data.get_collision_polygons_count(0) > 0
 
 func _validate_portals(map_id: String, map_root: Node) -> bool:
 	var failed := false

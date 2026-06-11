@@ -1,13 +1,31 @@
 {
+  "schema_version": 2,
   "item_id": "bronze_sword",
   "item_name": "Bronze Sword",
   "description": "A basic sword made of bronze. Good for beginners.",
   "item_type": 0,
+  "category": "equipment",
+  "slot": "weapon",
   "weapon_type": 0,
-  "damage": 12,
-  "attack_speed": 1.0,
-  "knockback": 100,
+  "material_tier": "bronze",
   "required_level": 1,
+  "allowed_classes": [],
+  "stackable": false,
+  "max_stack": 1,
+  "icon": "res://assets/sprites/weapons/sword_bronze.png",
+  "base_stats": {
+    "attack": 12,
+    "attack_speed": 1.0
+  },
+  "standard_roll": {
+    "attack": {
+      "min": 1,
+      "max": 5
+    }
+  },
+  "affix_pool": "weapon_basic",
+  "fixed_rarity": "common",
+  "knockback": 100,
   "buy_price": 100,
   "sell_price": 50
 }

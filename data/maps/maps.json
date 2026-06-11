@@ -1,5 +1,6 @@
 {
   "town": {
+    "content_state": "legacy",
     "scene": "res://scenes/maps/town.tscn",
     "display_name": "Safe Haven Town",
     "biome": "town",
@@ -19,19 +20,16 @@
     ]
   },
   "custom_kit_town": {
+    "content_state": "active",
     "scene": "res://scenes/maps/custom_kit_town.tscn",
     "display_name": "Custom Kit Town",
     "biome": "town",
     "zone_tier": 0,
     "route_order": 0,
+    "level_requirement": 1,
     "music": "res://assets/audio/music/town_theme.ogg",
     "encounter_table": "town_safe",
     "connections": [
-      {
-        "to": "town",
-        "via": "exit_west",
-        "spawn_at": "entry_east"
-      },
       {
         "to": "custom_kit_field",
         "via": "exit_east",
@@ -40,11 +38,13 @@
     ]
   },
   "custom_kit_field": {
+    "content_state": "active",
     "scene": "res://scenes/maps/custom_kit_field.tscn",
-    "display_name": "Corrupted Test Field",
+    "display_name": "Corrupted Fields",
     "biome": "grassland",
     "zone_tier": 1,
     "route_order": 1,
+    "level_requirement": 1,
     "quest_id": "purge_corrupted_field",
     "music": "res://assets/audio/music/field_theme.ogg",
     "encounter_table": "custom_kit_field_low",
@@ -62,11 +62,13 @@
     ]
   },
   "custom_kit_ruins": {
+    "content_state": "active",
     "scene": "res://scenes/maps/custom_kit_ruins.tscn",
     "display_name": "Ashbone Ruins",
     "biome": "ruins",
     "zone_tier": 2,
     "route_order": 2,
+    "level_requirement": 2,
     "quest_id": "break_ashbone_ruins",
     "music": "res://assets/audio/music/field_theme.ogg",
     "encounter_table": "custom_kit_ruins_mid",
@@ -84,11 +86,13 @@
     ]
   },
   "custom_kit_marsh": {
+    "content_state": "active",
     "scene": "res://scenes/maps/custom_kit_marsh.tscn",
     "display_name": "Blackwater Marsh",
     "biome": "swamp",
     "zone_tier": 3,
     "route_order": 3,
+    "level_requirement": 3,
     "quest_id": "drown_marsh_rot",
     "music": "res://assets/audio/music/swamp_theme.ogg",
     "encounter_table": "custom_kit_marsh_mid",
@@ -106,11 +110,13 @@
     ]
   },
   "custom_kit_catacombs": {
+    "content_state": "active",
     "scene": "res://scenes/maps/custom_kit_catacombs.tscn",
     "display_name": "Blackwater Catacombs",
     "biome": "cave",
     "zone_tier": 4,
     "route_order": 4,
+    "level_requirement": 4,
     "quest_id": "seal_blackwater_catacombs",
     "music": "res://assets/audio/music/cave_theme.ogg",
     "encounter_table": "custom_kit_catacombs_high",
@@ -128,11 +134,13 @@
     ]
   },
   "custom_kit_dark_keep": {
+    "content_state": "active",
     "scene": "res://scenes/maps/custom_kit_dark_keep.tscn",
     "display_name": "The Dark Keep",
     "biome": "dungeon",
     "zone_tier": 5,
     "route_order": 5,
+    "level_requirement": 5,
     "quest_id": "break_the_dark_keep",
     "music": "res://assets/audio/music/dungeon_theme.ogg",
     "encounter_table": "custom_kit_dark_keep_final",
@@ -150,6 +158,7 @@
     ]
   },
   "royal_courtyard": {
+    "content_state": "legacy",
     "scene": "res://scenes/maps/royal_courtyard.tscn",
     "display_name": "Royal Courtyard",
     "biome": "town",
@@ -164,6 +173,7 @@
     ]
   },
   "fields": {
+    "content_state": "legacy",
     "scene": "res://scenes/maps/fields.tscn",
     "display_name": "Eastern Fields",
     "biome": "grassland",
@@ -183,6 +193,7 @@
     ]
   },
   "mystic_forest": {
+    "content_state": "legacy",
     "scene": "res://scenes/maps/mystic_forest.tscn",
     "display_name": "Mystic Forest",
     "biome": "forest",
@@ -202,6 +213,7 @@
     ]
   },
   "river_crossing": {
+    "content_state": "legacy",
     "scene": "res://scenes/maps/river_crossing.tscn",
     "display_name": "River Crossing",
     "biome": "grassland",
@@ -221,6 +233,7 @@
     ]
   },
   "watchtower_ruins": {
+    "content_state": "legacy",
     "scene": "res://scenes/maps/watchtower_ruins.tscn",
     "display_name": "Watchtower Ruins",
     "biome": "grassland",
@@ -240,6 +253,7 @@
     ]
   },
   "sunken_marsh": {
+    "content_state": "legacy",
     "scene": "res://scenes/maps/sunken_marsh.tscn",
     "display_name": "Sunken Marsh",
     "biome": "swamp",
@@ -259,6 +273,7 @@
     ]
   },
   "swamp": {
+    "content_state": "legacy",
     "scene": "res://scenes/maps/swamp.tscn",
     "display_name": "Murky Swamp",
     "biome": "swamp",
@@ -278,6 +293,7 @@
     ]
   },
   "cave": {
+    "content_state": "legacy",
     "scene": "res://scenes/maps/cave.tscn",
     "display_name": "Dark Cave",
     "biome": "cave",
@@ -297,6 +313,7 @@
     ]
   },
   "dungeon": {
+    "content_state": "legacy",
     "scene": "res://scenes/maps/dungeon.tscn",
     "display_name": "Ancient Dungeon",
     "biome": "dungeon",
@@ -311,6 +328,7 @@
     ]
   },
   "test_map": {
+    "content_state": "development",
     "scene": "res://scenes/maps/test_map.tscn",
     "display_name": "Test Map",
     "biome": "test",

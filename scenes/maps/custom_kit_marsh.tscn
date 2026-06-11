@@ -137,13 +137,13 @@ position = Vector2(384, 504)
 [node name="SpawnPoints" type="Node2D" parent="."]
 
 [node name="spawn_01" type="Marker2D" parent="SpawnPoints"]
-position = Vector2(318, 178)
+position = Vector2(320, 320)
 
 [node name="spawn_02" type="Marker2D" parent="SpawnPoints"]
-position = Vector2(454, 392)
+position = Vector2(384, 368)
 
 [node name="spawn_03" type="Marker2D" parent="SpawnPoints"]
-position = Vector2(772, 402)
+position = Vector2(736, 352)
 
 [node name="BossSpawnPoint" type="Marker2D" parent="."]
 position = Vector2(804, 432)

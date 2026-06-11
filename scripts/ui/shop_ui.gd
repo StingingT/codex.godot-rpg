@@ -1,5 +1,7 @@
 extends Control
 
+const RPGUIStyle := preload("res://scripts/ui/rpg_ui_style.gd")
+
 @onready var shop_name_label: Label = $Panel/ShopName
 @onready var gold_label: Label = $Panel/GoldLabel
 @onready var tab_container: TabContainer = $Panel/TabContainer
@@ -19,10 +21,24 @@ var shop_data: Dictionary = {}
 var player_inventory: Inventory = null
 
 func _ready():
+	_apply_style()
 	hide()
 	action_button.pressed.connect(_on_action_pressed)
 	close_button.pressed.connect(close)
 	tab_container.tab_changed.connect(_on_tab_changed)
+
+func _apply_style() -> void:
+	RPGUIStyle.apply_screen(self)
+	RPGUIStyle.apply_panel($Panel, true)
+	RPGUIStyle.apply_title(shop_name_label, 20)
+	RPGUIStyle.apply_label(gold_label)
+	RPGUIStyle.apply_tab_container(tab_container)
+	RPGUIStyle.apply_dark_panel(item_info_panel)
+	RPGUIStyle.apply_title(item_name_label, 15)
+	RPGUIStyle.apply_label(item_desc_label)
+	RPGUIStyle.apply_label(item_price_label)
+	RPGUIStyle.apply_button(action_button, RPGUIStyle.GOLD)
+	RPGUIStyle.apply_button(close_button)
 
 func _input(event):
 	if visible and event.is_action_pressed("ui_cancel"):
@@ -72,6 +88,7 @@ func _update_shop_items():
 		var button = Button.new()
 		button.custom_minimum_size = Vector2(0, 34)
 		button.text = "%s - %dg" % [item.item_name, buy_price]
+		RPGUIStyle.apply_slot_button(button, _get_item_accent(item))
 		button.pressed.connect(_on_shop_item_selected.bind(item_data, item))
 		shop_items_list.add_child(button)
 
@@ -90,6 +107,7 @@ func _update_player_items():
 		button.custom_minimum_size = Vector2(0, 34)
 		var sell_price = slot.item.sell_price
 		button.text = "%s x%d - %dg" % [slot.item.item_name, slot.quantity, sell_price]
+		RPGUIStyle.apply_slot_button(button, _get_item_accent(slot.item))
 		button.pressed.connect(_on_player_item_selected.bind(slot))
 		player_items_list.add_child(button)
 
@@ -145,10 +163,20 @@ func _do_buy():
 	if not item:
 		return
 	
-	if player_inventory.add_item(item, 1):
-		player_inventory.remove_gold(buy_price)
-		_update_display()
-		_clear_selection()
+	var preview := player_inventory.preview_add_item(item, 1)
+	if int(preview.get("accepted", 0)) != 1:
+		return
+	var result := player_inventory.add_item_detailed(item, 1)
+	if int(result.get("accepted", 0)) != 1:
+		return
+	if not player_inventory.remove_gold(buy_price):
+		player_inventory.remove_item_by_id(item_id, 1)
+		return
+	var stock := int(selected_shop_item.get("quantity", -1))
+	if stock > 0:
+		selected_shop_item["quantity"] = stock - 1
+	_update_display()
+	_clear_selection()
 
 func _do_sell():
 	if selected_player_item == null or not player_inventory:
@@ -182,3 +210,16 @@ func _build_item_description(item: ItemData) -> String:
 	if item.get("mana_amount"):
 		desc += "Restores: %d Mana\n" % int(item.get("mana_amount"))
 	return desc.strip_edges()
+
+func _get_item_accent(item: ItemData) -> Color:
+	if item == null:
+		return RPGUIStyle.BORDER
+	match item.item_type:
+		ItemData.ItemType.WEAPON:
+			return RPGUIStyle.GOLD
+		ItemData.ItemType.ARMOR:
+			return RPGUIStyle.BLUE
+		ItemData.ItemType.CONSUMABLE:
+			return RPGUIStyle.GREEN
+		_:
+			return RPGUIStyle.BORDER

@@ -1,0 +1,170 @@
+{
+  "version": 1,
+  "style": "codex_mockup_v1",
+  "status": "art_delivered",
+  "notes": "Sprite agent delivered battle sheets, codex portraits, and shared affinity icons. Implementation agent imports monster paths from this manifest; affinity icon paths are deterministic under res://assets/sprites/monsters/icons/.",
+  "monsters": {
+    "slime_green": {
+      "display_name": "Green Slime",
+      "family": "slime",
+      "size_class": "small",
+      "affinities": [
+        "neutral"
+      ],
+      "codex_index": 1,
+      "frame_size": [
+        48,
+        48
+      ],
+      "battle_sheet": "res://assets/sprites/monsters/battle/slime_green_sheet.png",
+      "codex_portrait": "res://assets/sprites/monsters/codex/slime_green_portrait.png",
+      "description": "A basic blob creature that bounces and uses splash strikes.",
+      "animations_present": [
+        "idle",
+        "move",
+        "attack",
+        "hit",
+        "death",
+        "spawn"
+      ],
+      "weaknesses": [],
+      "resists": []
+    },
+    "slime_blue": {
+      "display_name": "Blue Slime",
+      "family": "slime",
+      "size_class": "small",
+      "affinities": [
+        "water"
+      ],
+      "codex_index": 2,
+      "frame_size": [
+        48,
+        48
+      ],
+      "battle_sheet": "res://assets/sprites/monsters/battle/slime_blue_sheet.png",
+      "codex_portrait": "res://assets/sprites/monsters/codex/slime_blue_portrait.png",
+      "description": "A rarer water slime that can drain magical energy.",
+      "animations_present": [
+        "idle",
+        "move",
+        "attack",
+        "hit",
+        "death",
+        "spawn"
+      ],
+      "weaknesses": [],
+      "resists": []
+    },
+    "bat": {
+      "display_name": "Bat",
+      "family": "bat",
+      "size_class": "small",
+      "affinities": [
+        "neutral"
+      ],
+      "codex_index": 3,
+      "frame_size": [
+        48,
+        48
+      ],
+      "battle_sheet": "res://assets/sprites/monsters/battle/bat_sheet.png",
+      "codex_portrait": "res://assets/sprites/monsters/codex/bat_portrait.png",
+      "description": "A fast flying pest, dangerous in quick swooping attacks.",
+      "animations_present": [
+        "idle",
+        "move",
+        "attack",
+        "hit",
+        "death",
+        "spawn"
+      ],
+      "weaknesses": [],
+      "resists": []
+    },
+    "skeleton": {
+      "display_name": "Skeleton",
+      "family": "skeleton",
+      "size_class": "normal",
+      "affinities": [
+        "undead"
+      ],
+      "codex_index": 4,
+      "frame_size": [
+        64,
+        64
+      ],
+      "battle_sheet": "res://assets/sprites/monsters/battle/skeleton_sheet.png",
+      "codex_portrait": "res://assets/sprites/monsters/codex/skeleton_portrait.png",
+      "description": "A reanimated bone warrior found in ruins; dangerous in melee.",
+      "animations_present": [
+        "idle",
+        "move",
+        "attack",
+        "hit",
+        "death",
+        "spawn"
+      ],
+      "weaknesses": [],
+      "resists": []
+    },
+    "swamp_monster": {
+      "display_name": "Swamp Monster",
+      "family": "beast",
+      "size_class": "elite",
+      "affinities": [
+        "poison"
+      ],
+      "codex_index": 5,
+      "frame_size": [
+        96,
+        96
+      ],
+      "battle_sheet": "res://assets/sprites/monsters/battle/swamp_monster_sheet.png",
+      "codex_portrait": "res://assets/sprites/monsters/codex/swamp_monster_portrait.png",
+      "description": "An elite predator that uses poison bites and gas clouds.",
+      "animations_present": [
+        "idle",
+        "move",
+        "attack",
+        "hit",
+        "death",
+        "spawn",
+        "cast",
+        "special"
+      ],
+      "weaknesses": [],
+      "resists": []
+    },
+    "dark_knight": {
+      "display_name": "Dark Knight",
+      "family": "skeleton",
+      "size_class": "boss",
+      "affinities": [
+        "undead",
+        "armored"
+      ],
+      "codex_index": 6,
+      "frame_size": [
+        128,
+        128
+      ],
+      "battle_sheet": "res://assets/sprites/monsters/battle/dark_knight_sheet.png",
+      "codex_portrait": "res://assets/sprites/monsters/codex/dark_knight_portrait.png",
+      "description": "A boss-tier cursed knight that delivers crushing strikes and drains life.",
+      "animations_present": [
+        "idle",
+        "move",
+        "attack",
+        "hit",
+        "death",
+        "spawn",
+        "cast",
+        "special",
+        "enrage"
+      ],
+      "weaknesses": [],
+      "resists": []
+    }
+  }
+}

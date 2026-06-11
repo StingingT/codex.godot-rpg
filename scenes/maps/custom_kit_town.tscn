@@ -11,8 +11,8 @@
 [ext_resource type="PackedScene" path="res://assets/objects/buildings/hub_house_small.tscn" id="9_house"]
 [ext_resource type="PackedScene" path="res://assets/objects/buildings/vendor_stall.tscn" id="10_vendor"]
 [ext_resource type="PackedScene" path="res://assets/objects/trees/corrupted_oak.tscn" id="11_oak"]
-[ext_resource type="PackedScene" path="res://assets/objects/portals/back_portal.tscn" id="12_back_portal"]
 [ext_resource type="PackedScene" path="res://assets/objects/portals/next_portal.tscn" id="13_next_portal"]
+[ext_resource type="PackedScene" path="res://assets/objects/buildings/guild_hall.tscn" id="14_guild"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_top_wall"]
 size = Vector2(960, 32)
@@ -67,14 +67,17 @@ shape = SubResource("RectangleShape2D_side_wall")
 [node name="YSortedObjects" type="Node2D" parent="."]
 y_sort_enabled = true
 
+[node name="GuildHall" parent="YSortedObjects" instance=ExtResource("14_guild")]
+position = Vector2(480, 198)
+
 [node name="WestHouse" parent="YSortedObjects" instance=ExtResource("9_house")]
-position = Vector2(240, 180)
+position = Vector2(232, 214)
 
 [node name="EastHouse" parent="YSortedObjects" instance=ExtResource("9_house")]
-position = Vector2(720, 180)
+position = Vector2(728, 214)
 
 [node name="VendorStall" parent="YSortedObjects" instance=ExtResource("10_vendor")]
-position = Vector2(480, 408)
+position = Vector2(480, 444)
 
 [node name="NorthOak" parent="YSortedObjects" instance=ExtResource("11_oak")]
 position = Vector2(130, 460)
@@ -127,11 +130,6 @@ position = Vector2(480, 320)
 
 [node name="Portals" type="Node2D" parent="."]
 
-[node name="BackPortal" parent="Portals" instance=ExtResource("12_back_portal")]
-position = Vector2(412, 318)
-target_map = "town"
-target_entry = "entry_east"
-
 [node name="NextPortal" parent="Portals" instance=ExtResource("13_next_portal")]
 position = Vector2(548, 318)
 target_map = "custom_kit_field"
@@ -142,7 +140,7 @@ target_entry = "entry_west"
 [node name="NPCs" type="Node2D" parent="."]
 
 [node name="Shopkeeper" parent="NPCs" instance=ExtResource("5_shop_npc")]
-position = Vector2(240, 246)
+position = Vector2(232, 280)
 shop_id = "general_store"
 shop_name = "General Store"
 npc_id = "shopkeeper"
@@ -150,7 +148,7 @@ npc_name = "Shopkeeper"
 dialogue_id = ""
 
 [node name="QuestGiver" parent="NPCs" instance=ExtResource("6_quest_npc")]
-position = Vector2(720, 246)
+position = Vector2(728, 280)
 quest_chain = ["purge_corrupted_field", "break_ashbone_ruins", "drown_marsh_rot", "seal_blackwater_catacombs", "break_the_dark_keep"]
 
 [node name="DialogueBox" parent="." instance=ExtResource("7_dialogue_box")]

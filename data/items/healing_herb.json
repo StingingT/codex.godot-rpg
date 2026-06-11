@@ -1,0 +1,15 @@
+{
+  "schema_version": 2,
+  "item_id": "healing_herb",
+  "item_name": "Healing Herb",
+  "description": "A fresh medicinal herb requested by the village healer.",
+  "item_type": 4,
+  "category": "quest",
+  "slot": "",
+  "required_level": 1,
+  "stackable": true,
+  "max_stack": 99,
+  "base_stats": {},
+  "buy_price": 0,
+  "sell_price": 0
+}

@@ -1,5 +1,6 @@
 {
   "quest_id": "clear_green_slimes",
+  "content_state": "legacy",
   "title": "Clear Green Slimes",
   "description": "Green slimes have overrun the meadow near the village. Cull their numbers to protect travelers.",
   "objectives": [

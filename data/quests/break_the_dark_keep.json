@@ -1,5 +1,6 @@
 {
   "quest_id": "break_the_dark_keep",
+  "content_state": "active",
   "quest_name": "Break the Dark Keep",
   "description": "A dark knight guards the keep beyond the catacombs. Defeat the dark knight and return to the Quest Giver before the route collapses into shadow.",
   "level_requirement": 5,

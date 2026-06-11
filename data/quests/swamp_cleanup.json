@@ -1,5 +1,6 @@
 {
   "quest_id": "swamp_cleanup",
+  "content_state": "legacy",
   "title": "Swamp Menace",
   "description": "The swamp has become dangerous with mutated creatures. Clear them out before they reach the town.",
   "objectives": [

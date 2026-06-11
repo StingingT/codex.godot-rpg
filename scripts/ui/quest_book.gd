@@ -1,9 +1,15 @@
 extends CanvasLayer
 class_name QuestBook
 
+const RPGUIStyle := preload("res://scripts/ui/rpg_ui_style.gd")
+
 @onready var control: Control = $Control
 @onready var book_panel: Panel = $Control/BookPanel
 @onready var title_label: Label = $Control/BookPanel/TitleLabel
+@onready var left_page: Control = $Control/BookPanel/LeftPage
+@onready var right_page: Control = $Control/BookPanel/RightPage
+@onready var rewards_title: Label = $Control/BookPanel/RightPage/RewardsTitle
+@onready var book_spine: Panel = $Control/BookPanel/BookSpine
 @onready var quest_title: Label = $Control/BookPanel/LeftPage/QuestTitle
 @onready var quest_description: Label = $Control/BookPanel/LeftPage/QuestDescription
 @onready var progress_label: Label = $Control/BookPanel/LeftPage/ProgressLabel
@@ -17,10 +23,25 @@ var quest_npc: QuestNPC = null
 var player: Player = null
 
 func _ready():
+	_apply_style()
 	control.hide()
 	accept_button.pressed.connect(_on_accept_pressed)
 	complete_button.pressed.connect(_on_complete_pressed)
 	close_button.pressed.connect(close)
+
+func _apply_style() -> void:
+	RPGUIStyle.apply_screen(control)
+	RPGUIStyle.apply_panel(book_panel, true)
+	RPGUIStyle.apply_dark_panel(book_spine)
+	RPGUIStyle.apply_title(title_label, 24)
+	RPGUIStyle.apply_title(quest_title, 18)
+	RPGUIStyle.apply_title(rewards_title, 18)
+	RPGUIStyle.apply_label(quest_description)
+	RPGUIStyle.apply_label(progress_label)
+	RPGUIStyle.apply_label(status_label)
+	RPGUIStyle.apply_button(accept_button, RPGUIStyle.GOLD)
+	RPGUIStyle.apply_button(complete_button, RPGUIStyle.GREEN)
+	RPGUIStyle.apply_button(close_button)
 
 func open(p_quest_npc: QuestNPC, p_player: Player):
 	quest_npc = p_quest_npc
@@ -116,6 +137,7 @@ func _update_rewards(rewards: Variant) -> void:
 func _add_reward_label(text: String) -> void:
 	var label := Label.new()
 	label.text = text
+	RPGUIStyle.apply_label(label)
 	rewards_list.add_child(label)
 
 func _input(event):

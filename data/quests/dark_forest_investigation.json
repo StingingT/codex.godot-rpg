@@ -1,5 +1,6 @@
 {
   "quest_id": "dark_forest_investigation",
+  "content_state": "legacy",
   "title": "Dark Forest Mystery",
   "description": "Strange creatures have been spotted in the Dark Forest. Investigate and clear the area.",
   "objectives": [

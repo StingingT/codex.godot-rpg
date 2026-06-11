@@ -1,5 +1,6 @@
 {
   "quest_id": "mystic_forest_patrol",
+  "content_state": "legacy",
   "quest_name": "Mystic Forest Patrol",
   "description": "Bats are nesting around the Mystic Forest path. Defeat 6 bats and return to the Quest Giver.",
   "level_requirement": 2,

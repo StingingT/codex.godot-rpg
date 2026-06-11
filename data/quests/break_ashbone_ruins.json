@@ -1,5 +1,6 @@
 {
   "quest_id": "break_ashbone_ruins",
+  "content_state": "active",
   "quest_name": "Break the Ashbone Ruins",
   "description": "The ruined walls beyond the field are crawling with restless bones. Defeat 4 skeletons in Ashbone Ruins and return to the Quest Giver.",
   "level_requirement": 2,

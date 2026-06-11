@@ -1,5 +1,6 @@
 {
   "quest_id": "cave_exploration",
+  "content_state": "legacy",
   "title": "Dark Cave Mystery",
   "description": "Strange noises have been coming from the cave. Investigate and defeat any dangerous creatures inside.",
   "objectives": [
@@ -19,7 +20,7 @@
   "rewards": [
     {"type": "gold", "amount": 200},
     {"type": "xp", "amount": 300},
-    {"type": "item", "target": "iron_sword"}
+    {"type": "item", "target": "steel_sword"}
   ],
   "prerequisites": ["kill_slimes"],
   "npc_giver": "elder",

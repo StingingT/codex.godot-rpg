@@ -1,7 +1,8 @@
 {
   "quest_id": "purge_corrupted_field",
+  "content_state": "active",
   "quest_name": "Purge the Corrupted Field",
-  "description": "The ash road outside the custom kit town has split open with green rot. Defeat 5 slimes in the Corrupted Test Field and return to the Quest Giver.",
+  "description": "The ash road outside the town has split open with green rot. Defeat 5 slimes in the Corrupted Fields and return to the Quest Giver.",
   "level_requirement": 1,
   "objectives": [
     {

@@ -93,69 +93,69 @@ anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
 offset_left = -100.0
-offset_top = 60.0
+offset_top = 20.0
 offset_right = 100.0
-offset_bottom = 90.0
+offset_bottom = 50.0
 grow_horizontal = 2
 theme_override_font_sizes/font_size = 24
 text = "Choose Your Class"
 horizontal_alignment = 1
 
 [node name="WarriorButton" type="Button" parent="ClassSelection"]
-custom_minimum_size = Vector2(180, 80)
+custom_minimum_size = Vector2(240, 66)
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -90.0
-offset_top = -100.0
-offset_right = 90.0
-offset_bottom = -20.0
+offset_left = -120.0
+offset_top = -120.0
+offset_right = 120.0
+offset_bottom = -54.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/normal = SubResource("StyleBoxFlat_class_btn")
-text = "⚔ WARRIOR ⚔
-Melee Combat
+text = "WARRIOR
+Knight Vanguard
 High HP & Defense"
 
 [node name="RangerButton" type="Button" parent="ClassSelection"]
-custom_minimum_size = Vector2(180, 80)
+custom_minimum_size = Vector2(240, 66)
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -90.0
-offset_top = 10.0
-offset_right = 90.0
-offset_bottom = 90.0
+offset_left = -120.0
+offset_top = -44.0
+offset_right = 120.0
+offset_bottom = 22.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/normal = SubResource("StyleBoxFlat_class_btn")
-text = "🏹 RANGER 🏹
-Ranged Combat
+text = "RANGER
+Wild Archer
 High Speed & Crit"
 
 [node name="MageButton" type="Button" parent="ClassSelection"]
-custom_minimum_size = Vector2(180, 80)
+custom_minimum_size = Vector2(240, 66)
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -90.0
-offset_top = 120.0
-offset_right = 90.0
-offset_bottom = 200.0
+offset_left = -120.0
+offset_top = 32.0
+offset_right = 120.0
+offset_bottom = 98.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/normal = SubResource("StyleBoxFlat_class_btn")
-text = "🔮 MAGE 🔮
-Elemental Magic
+text = "MAGE
+Arcane Scholar
 High Damage & Mana"
 
 [node name="BackButton" type="Button" parent="ClassSelection"]
@@ -167,9 +167,9 @@ anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
 offset_left = -50.0
-offset_top = -60.0
+offset_top = -52.0
 offset_right = 50.0
-offset_bottom = -30.0
+offset_bottom = -22.0
 grow_horizontal = 2
 grow_vertical = 0
 text = "Back"

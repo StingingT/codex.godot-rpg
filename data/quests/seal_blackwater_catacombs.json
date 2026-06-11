@@ -1,5 +1,6 @@
 {
   "quest_id": "seal_blackwater_catacombs",
+  "content_state": "active",
   "quest_name": "Seal the Blackwater Catacombs",
   "description": "The catacombs under the marsh are breathing bone dust into the water. Defeat 5 skeletons in the Blackwater Catacombs and return to the Quest Giver.",
   "level_requirement": 4,

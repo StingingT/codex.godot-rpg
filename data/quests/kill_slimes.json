@@ -1,5 +1,6 @@
 {
   "quest_id": "kill_slimes",
+  "content_state": "legacy",
   "quest_name": "Slime Extermination",
   "description": "Defeat 5 slimes in the Eastern Fields and return to the Quest Giver.",
   "level_requirement": 1,

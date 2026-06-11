@@ -1,9 +1,6 @@
 extends CanvasLayer
 
-# New signals for mobile controls
-signal attack_pressed
-signal ability_pressed(index: int)
-signal pause_pressed
+const RPGUIStyle := preload("res://scripts/ui/rpg_ui_style.gd")
 
 @onready var health_bar: ProgressBar = $HealthBar
 @onready var health_label: Label = $HealthBar/HealthLabel
@@ -20,21 +17,17 @@ signal pause_pressed
 @onready var character_button: Button = $CharacterButton
 @onready var level_up_notification: Panel = $LevelUpNotification
 
-# References to newly added mobile controls
-@onready var joystick: Control = $Joystick
-@onready var attack_button: Button = $AttackButton
-@onready var ability_button1: Button = $AbilityButton1
-@onready var ability_button2: Button = $AbilityButton2
-@onready var ability_button3: Button = $AbilityButton3
-@onready var ability_button4: Button = $AbilityButton4
 @onready var pause_button: Button = $PauseButton
 
 var player: Player = null
 var _player_connected: bool = false
+var _manual_pause_active: bool = false
 var character_screen: Control = null
 var minimap: Control = null
 
 func _ready():
+    _apply_style()
+
     # Connect to game signals via GameManager
     GameManager.player_health_changed.connect(_on_health_changed)
     GameManager.player_mana_changed.connect(_on_mana_changed)
@@ -52,24 +45,40 @@ func _ready():
     minimap = preload("res://scenes/ui/minimap.tscn").instantiate()
     add_child(minimap)
 
-    # Connect new mobile controls
-    attack_button.pressed.connect(_on_attack_button_pressed)
-    ability_button1.pressed.connect(_on_ability_button1_pressed)
-    ability_button2.pressed.connect(_on_ability_button2_pressed)
-    ability_button3.pressed.connect(_on_ability_button3_pressed)
-    ability_button4.pressed.connect(_on_ability_button4_pressed)
     pause_button.pressed.connect(_on_pause_button_pressed)
 
     # Initial player connection attempt
     call_deferred("_connect_to_player")
 
+func _apply_style() -> void:
+    RPGUIStyle.apply_progress_bar(health_bar, RPGUIStyle.RED)
+    RPGUIStyle.apply_progress_bar(mana_bar, RPGUIStyle.BLUE)
+    RPGUIStyle.apply_progress_bar(xp_bar, RPGUIStyle.GOLD)
+    RPGUIStyle.apply_label(health_label)
+    RPGUIStyle.apply_label(mana_label)
+    RPGUIStyle.apply_title(level_label, 18)
+    RPGUIStyle.apply_title(map_label, 18)
+    RPGUIStyle.apply_label(ap_label)
+    RPGUIStyle.apply_label(sp_label)
+    RPGUIStyle.apply_panel(level_up_notification, true)
+    RPGUIStyle.apply_button(character_button, RPGUIStyle.GOLD)
+    RPGUIStyle.apply_button(pause_button, RPGUIStyle.GOLD)
+
 func _input(event: InputEvent) -> void:
+    if event is InputEventKey and event.is_echo():
+        return
+    if event.is_action_pressed("pause"):
+        _toggle_manual_pause()
+        get_viewport().set_input_as_handled()
+        return
+    if get_tree().paused:
+        return
     if event.is_action_pressed("character"):
         _on_character_button_pressed()
-    elif event.is_action_pressed("inventory"):
+    elif event.is_action_pressed("open_inventory"):
         # Open character screen to inventory tab
         _on_inventory_button_pressed()
-    elif event.is_action_pressed("skill_tree"):
+    elif event.is_action_pressed("open_skill_tree"):
         # Open character screen to skills tab
         _on_skill_tree_pressed()
     elif event.is_action_pressed("toggle_minimap"):
@@ -255,21 +264,14 @@ func _hide_overlay(overlay: Panel) -> void:
     if is_instance_valid(overlay):
         overlay.visible = false
 
-# New handler functions for mobile controls
-func _on_attack_button_pressed() -> void:
-    emit_signal("attack_pressed")
-
-func _on_ability_button1_pressed() -> void:
-    emit_signal("ability_pressed", 1)
-
-func _on_ability_button2_pressed() -> void:
-    emit_signal("ability_pressed", 2)
-
-func _on_ability_button3_pressed() -> void:
-    emit_signal("ability_pressed", 3)
-
-func _on_ability_button4_pressed() -> void:
-    emit_signal("ability_pressed", 4)
-
 func _on_pause_button_pressed() -> void:
-    emit_signal("pause_pressed")
+    _toggle_manual_pause()
+
+func _toggle_manual_pause() -> void:
+    if _manual_pause_active:
+        _manual_pause_active = false
+        if GameManager.is_paused:
+            GameManager.resume_game()
+    elif not GameManager.is_paused:
+        _manual_pause_active = true
+        GameManager.pause_game()

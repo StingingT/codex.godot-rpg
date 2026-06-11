@@ -18,10 +18,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -260.0
-offset_top = -150.0
-offset_right = 260.0
-offset_bottom = 150.0
+offset_left = -310.0
+offset_top = -170.0
+offset_right = 310.0
+offset_bottom = 170.0
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -44,13 +44,39 @@ anchor_bottom = 1.0
 offset_left = 12.0
 offset_top = 32.0
 offset_right = -12.0
-offset_bottom = -30.0
+offset_bottom = -36.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_font_sizes/font_size = 16
 
 [node name="Stats" type="Control" parent="Panel/TabContainer"]
 layout_mode = 2
+
+[node name="PortraitPanel" type="Panel" parent="Panel/TabContainer/Stats"]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 34.0
+offset_right = 106.0
+offset_bottom = 162.0
+
+[node name="ClassPortrait" type="TextureRect" parent="Panel/TabContainer/Stats/PortraitPanel"]
+layout_mode = 0
+offset_left = 16.0
+offset_top = 8.0
+offset_right = 80.0
+offset_bottom = 88.0
+expand_mode = 1
+stretch_mode = 5
+
+[node name="ClassNameLabel" type="Label" parent="Panel/TabContainer/Stats/PortraitPanel"]
+layout_mode = 0
+offset_left = 6.0
+offset_top = 94.0
+offset_right = 90.0
+offset_bottom = 118.0
+theme_override_font_sizes/font_size = 13
+text = "Warrior"
+horizontal_alignment = 1
 
 [node name="LevelLabel" type="Label" parent="Panel/TabContainer/Stats"]
 layout_mode = 0
@@ -92,9 +118,9 @@ modulate = Color(0.3, 0.6, 0.9, 1)
 
 [node name="StatsLabel" type="Label" parent="Panel/TabContainer/Stats"]
 layout_mode = 0
-offset_left = 10.0
+offset_left = 122.0
 offset_top = 34.0
-offset_right = 145.0
+offset_right = 242.0
 offset_bottom = 130.0
 theme_override_font_sizes/font_size = 14
 text = "HP: 100/100
@@ -105,9 +131,9 @@ Speed: 80.0"
 
 [node name="AttributesLabel" type="Label" parent="Panel/TabContainer/Stats"]
 layout_mode = 0
-offset_left = 155.0
+offset_left = 250.0
 offset_top = 34.0
-offset_right = 220.0
+offset_right = 318.0
 offset_bottom = 145.0
 theme_override_font_sizes/font_size = 14
 text = "STR: 0
@@ -118,9 +144,9 @@ LCK: 0"
 
 [node name="APButtonsContainer" type="VBoxContainer" parent="Panel/TabContainer/Stats"]
 layout_mode = 0
-offset_left = 230.0
+offset_left = 324.0
 offset_top = 32.0
-offset_right = 258.0
+offset_right = 352.0
 offset_bottom = 145.0
 theme_override_constants/separation = 2
 
@@ -156,18 +182,18 @@ text = "+"
 
 [node name="EquipmentLabel" type="Label" parent="Panel/TabContainer/Stats"]
 layout_mode = 0
-offset_left = 280.0
+offset_left = 382.0
 offset_top = 34.0
-offset_right = 390.0
+offset_right = 500.0
 offset_bottom = 50.0
 theme_override_font_sizes/font_size = 14
 text = "Equipment"
 
 [node name="EquipmentContainer" type="VBoxContainer" parent="Panel/TabContainer/Stats"]
 layout_mode = 0
-offset_left = 280.0
+offset_left = 382.0
 offset_top = 56.0
-offset_right = 488.0
+offset_right = 588.0
 offset_bottom = 150.0
 theme_override_constants/separation = 4
 
@@ -197,10 +223,10 @@ text = "Accessory (Empty)"
 
 [node name="EquipmentStatsLabel" type="Label" parent="Panel/TabContainer/Stats"]
 layout_mode = 0
-offset_left = 280.0
+offset_left = 382.0
 offset_top = 154.0
-offset_right = 488.0
-offset_bottom = 210.0
+offset_right = 588.0
+offset_bottom = 276.0
 theme_override_font_sizes/font_size = 13
 text = "Equipment stats"
 autowrap_mode = 3
@@ -223,8 +249,8 @@ modulate = Color(1, 0.84, 0, 1)
 layout_mode = 0
 offset_left = 10.0
 offset_top = 32.0
-offset_right = 230.0
-offset_bottom = 208.0
+offset_right = 280.0
+offset_bottom = 240.0
 columns = 5
 theme_override_constants/h_separation = 4
 theme_override_constants/v_separation = 4
@@ -232,10 +258,10 @@ theme_override_constants/v_separation = 4
 [node name="ItemInfoPanel" type="Panel" parent="Panel/TabContainer/Inventory"]
 visible = false
 layout_mode = 0
-offset_left = 240.0
+offset_left = 300.0
 offset_top = 32.0
-offset_right = 488.0
-offset_bottom = 208.0
+offset_right = 588.0
+offset_bottom = 240.0
 
 [node name="ItemName" type="Label" parent="Panel/TabContainer/Inventory/ItemInfoPanel"]
 layout_mode = 1
@@ -297,16 +323,16 @@ modulate = Color(0.3, 0.6, 0.9, 1)
 layout_mode = 0
 offset_left = 10.0
 offset_top = 32.0
-offset_right = 230.0
-offset_bottom = 208.0
+offset_right = 280.0
+offset_bottom = 240.0
 
 [node name="SkillInfoPanel" type="Panel" parent="Panel/TabContainer/Skills"]
 visible = false
 layout_mode = 0
-offset_left = 240.0
+offset_left = 300.0
 offset_top = 32.0
-offset_right = 488.0
-offset_bottom = 208.0
+offset_right = 588.0
+offset_bottom = 240.0
 
 [node name="SkillName" type="Label" parent="Panel/TabContainer/Skills/SkillInfoPanel"]
 layout_mode = 1
@@ -358,9 +384,9 @@ anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
 offset_left = -40.0
-offset_top = -28.0
+offset_top = -32.0
 offset_right = 40.0
-offset_bottom = -4.0
+offset_bottom = -8.0
 grow_horizontal = 2
 grow_vertical = 0
 theme_override_font_sizes/font_size = 14

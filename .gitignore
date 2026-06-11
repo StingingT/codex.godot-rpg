@@ -9,3 +9,4 @@ ios/
 .codex/
 assets/maps/generated_maps_*.png
 assets/maps/tileset_contact_sheet.png
+review_artifacts/

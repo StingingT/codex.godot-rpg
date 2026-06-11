@@ -1,10 +1,27 @@
 {
+  "schema_version": 2,
   "item_id": "leather_bracelet",
   "item_name": "Leather Bracelet",
   "description": "A simple leather bracelet that boosts your strength.",
   "item_type": 3,
-  "attack_bonus": 5,
+  "category": "equipment",
+  "slot": "amulet",
+  "material_tier": "",
   "required_level": 1,
+  "allowed_classes": [],
+  "stackable": false,
+  "max_stack": 1,
+  "base_stats": {
+    "attack": 5
+  },
+  "standard_roll": {
+    "attack": {
+      "min": 1,
+      "max": 2
+    }
+  },
+  "affix_pool": "accessory_basic",
+  "fixed_rarity": "common",
   "buy_price": 80,
   "sell_price": 40
 }

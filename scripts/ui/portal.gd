@@ -11,24 +11,8 @@ const QUEST_STATUS_TURNED_IN := 4
 @export var requires_all_monsters_dead: bool = false
 @export var required_quest_id: String = ""
 @export var required_quest_turned_in: bool = false
-@export var available_maps: Array[Dictionary] = [
-	{"id": "town", "name": "Safe Haven Town", "level_req": 1},
-	{"id": "custom_kit_town", "name": "Custom Kit Town", "level_req": 1},
-	{"id": "custom_kit_field", "name": "Corrupted Test Field", "level_req": 1},
-	{"id": "custom_kit_ruins", "name": "Ashbone Ruins", "level_req": 2},
-	{"id": "custom_kit_marsh", "name": "Blackwater Marsh", "level_req": 3},
-	{"id": "custom_kit_catacombs", "name": "Blackwater Catacombs", "level_req": 4},
-	{"id": "custom_kit_dark_keep", "name": "The Dark Keep", "level_req": 5},
-	{"id": "fields", "name": "Eastern Fields", "level_req": 1},
-	{"id": "mystic_forest", "name": "Mystic Forest", "level_req": 2},
-	{"id": "river_crossing", "name": "River Crossing", "level_req": 3},
-	{"id": "watchtower_ruins", "name": "Watchtower Ruins", "level_req": 4},
-	{"id": "sunken_marsh", "name": "Sunken Marsh", "level_req": 6},
-	{"id": "royal_courtyard", "name": "Royal Courtyard", "level_req": 1},
-	{"id": "swamp", "name": "Murky Swamp", "level_req": 5},
-	{"id": "cave", "name": "Dark Cave", "level_req": 8},
-	{"id": "dungeon", "name": "Ancient Dungeon", "level_req": 12}
-]
+@export var use_custom_map_list: bool = false
+@export var available_maps: Array[Dictionary] = []
 
 @onready var label: Label = $Label
 
@@ -130,7 +114,10 @@ func _open_map_selector() -> void:
 	var player_level := 1
 	if player and player.stats:
 		player_level = player.stats.level
-	map_selector.open(player_level, available_maps)
+	var travel_maps := DataRegistry.get_travel_maps()
+	if use_custom_map_list and not available_maps.is_empty():
+		travel_maps = available_maps
+	map_selector.open(player_level, travel_maps)
 
 func _on_map_selected(map_id: String) -> void:
 	MapManager.change_map(map_id)

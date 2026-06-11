@@ -1,0 +1,30 @@
+{
+  "schema_version": 2,
+  "item_id": "short_bow",
+  "item_name": "Short Bow",
+  "description": "A compact bow suited to quick shots at close range.",
+  "item_type": 0,
+  "category": "equipment",
+  "slot": "weapon",
+  "weapon_type": 1,
+  "material_tier": "bronze",
+  "required_level": 1,
+  "allowed_classes": [],
+  "stackable": false,
+  "max_stack": 1,
+  "icon": "res://assets/sprites/weapons/bow_bronze.png",
+  "base_stats": {
+    "attack": 10,
+    "attack_speed": 1.15
+  },
+  "standard_roll": {
+    "attack": {
+      "min": 1,
+      "max": 4
+    }
+  },
+  "affix_pool": "weapon_basic",
+  "fixed_rarity": "common",
+  "buy_price": 75,
+  "sell_price": 26
+}

@@ -1,11 +1,16 @@
 {
+  "schema_version": 2,
   "item_id": "mana_potion",
   "item_name": "Mana Potion",
   "description": "Restores 30 Mana when consumed.",
   "item_type": 2,
-  "mana_amount": 30,
+  "category": "consumable",
+  "slot": "",
+  "required_level": 1,
   "stackable": true,
-  "max_stack": 99,
+  "max_stack": 20,
+  "mana_amount": 30,
+  "base_stats": {},
   "buy_price": 20,
   "sell_price": 8
 }

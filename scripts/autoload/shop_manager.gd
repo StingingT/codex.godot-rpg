@@ -37,17 +37,10 @@ func close_shop() -> void:
 	GameManager.resume_game()
 
 func _load_shop(shop_id: String) -> Dictionary:
-	var file_path = SHOPS_PATH + shop_id + ".json"
-	if FileAccess.file_exists(file_path):
-		var file = FileAccess.open(file_path, FileAccess.READ)
-		var json = JSON.new()
-		var error = json.parse(file.get_as_text())
-		if error == OK:
-			return json.data
-	return {}
+	return DataRegistry.get_shop(shop_id)
 
 func buy_item(item_id: String, quantity: int = 1) -> bool:
-	if not is_shop_open or player_inventory == null:
+	if not is_shop_open or player_inventory == null or quantity <= 0:
 		return false
 	
 	# Find item in shop
@@ -80,10 +73,17 @@ func buy_item(item_id: String, quantity: int = 1) -> bool:
 	if item_data == null:
 		return false
 	
-	# Deduct gold
-	if not player_inventory.add_item(item_data, quantity):
+	var preview: Dictionary = player_inventory.preview_add_item(item_data, quantity)
+	if int(preview.get("accepted", 0)) != quantity:
 		return false
-	player_inventory.remove_gold(total_price)
+	var add_result: Dictionary = player_inventory.add_item_detailed(item_data, quantity)
+	if int(add_result.get("accepted", 0)) != quantity:
+		if int(add_result.get("accepted", 0)) > 0:
+			player_inventory.remove_item_by_id(item_id, int(add_result.get("accepted", 0)))
+		return false
+	if not player_inventory.remove_gold(total_price):
+		player_inventory.remove_item_by_id(item_id, quantity)
+		return false
 	
 	# Reduce shop stock
 	if stock != -1:
@@ -95,7 +95,7 @@ func buy_item(item_id: String, quantity: int = 1) -> bool:
 	return true
 
 func sell_item(item_id: String, quantity: int = 1) -> bool:
-	if not is_shop_open or player_inventory == null:
+	if not is_shop_open or player_inventory == null or quantity <= 0:
 		return false
 	
 	# Check if player has item

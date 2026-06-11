@@ -2,23 +2,36 @@
 
 **Status:** Active agent guide for custom map kit work.
 
-**Related docs:** [Main_ChatGPT-Godot_RPG_Implementation_Plan.md](../Main_ChatGPT-Godot_RPG_Implementation_Plan.md) is the source of truth for autoloads, collision layers, map JSON, encounters, quests, and combat architecture. This document defines how art and map scenes support that vision.
+**Project:** Umbral Explorers: Relics of Grimvale
+
+**Related docs:** [Main_ChatGPT-Godot_RPG_Implementation_Plan.md](../Main_ChatGPT-Godot_RPG_Implementation_Plan.md) is the source of truth for architecture and phase order. [Grimvale_Lore_World_Tone_Foundation.md](Grimvale_Lore_World_Tone_Foundation.md) owns world tone and naming; [Combat_Ability_Logic_Feedback_Agent_Instructions.md](Combat_Ability_Logic_Feedback_Agent_Instructions.md) owns combat-space requirements; [monster_design_bible.md](monster_design_bible.md) covers monsters; [agent_skills_required.md](agent_skills_required.md) lists skills per role.
+
+## Master Plan Integration Locks
+
+- Grimvale is a country/island-scale setting with surviving towns, portal halls, routes, ruins, and multi-map dungeons.
+- Towns and guild spaces use a brighter blue/gold heroic identity. Umbral routes and dungeons become darker while preserving walkability and combat readability.
+- New-game and respawn targets come from `data/game_flow.json`; maps must not hardcode town scene paths.
+- `custom_kit_town` remains the current starting map ID until a reviewed content-naming migration updates data, saves, portals, and tests together.
+- New maps use metadata IDs and entry markers compatible with `MapManager`.
+- The old brown-road-on-grey-map template is a migration hold, not an acceptable target for new or refreshed maps.
+- This guide owns map art, layout, collision, and object-kit contracts. It does not own menu, save, quest, or combat runtime logic.
 
 ## Design Pillars
 
-This game is a **2D top-down** action RPG that mixes three references. Each reference owns different responsibilities. Do not blur them.
+This game is a **2D top-down** action RPG set in Grimvale. External references are production touchstones only; the lore foundation owns the final identity.
 
 | Reference | Owns in this project | Does *not* belong in tile art |
 |-----------|----------------------|-------------------------------|
-| **Pokemon** | Top-down camera, tile-grid movement, route-like zone connectivity, biome readability at a glance | Turn-based battles, creature-catching UI |
-| **Path of Exile** | Dark/gritty palette everywhere, escalating zone danger, loot-density expectations, grim lore tone, ARPG service hubs (vendor, quest giver, waypoint-style portals) | Isometric camera, full PoE UI clone |
+| **Pokemon** | Top-down camera, tile-grid movement, route-like zone connectivity, biome readability at a glance, buildings that show both roof/top planes and front walls | Turn-based battles, creature-catching UI, cheerful pastel palette |
+| **Path of Exile** | Worn material language, corruption, escalating Umbral danger, loot readability, ARPG service hubs | Grimdark story ownership, isometric camera, full UI cloning, or unreadably dark palettes |
 | **Zelda** | Real-time combat spaces, enemy patrol/aggro layout, dungeon room flow, interactable props (chests, barriers, switches), boss arenas | 3D or screen-scroll action |
 
 **Locked choices:**
 
-- **Perspective:** top-down Pokemon/Zelda (not isometric).
-- **World palette:** dark Path of Exile mood across all biomes.
-- **Readability rule:** world tiles stay top-down and readable. Darkness comes from palette and contrast, not from hiding whether ground is walkable or blocked.
+- **Perspective:** top-down Pokemon/Zelda (not isometric, not front-view-only).
+- **Buildings:** Pokemon-like top-down structure with visible roofs/top planes plus front walls; Grimvale materials and readable regional detailing.
+- **World palette:** Bright, welcoming guild/town spaces contrasted with darker Umbral routes and dungeons.
+- **Readability rule:** world tiles stay top-down and readable. Darkness comes from palette, material choice, and contrast, not from hiding whether ground is walkable or blocked.
 
 ## Goal
 
@@ -28,7 +41,7 @@ The kit should make maps easier to build, test, expand, and fix than the current
 
 Specifically, the kit must support:
 
-- A **connected overworld route** (Pokemon-style graph) painted with **dark PoE biomes** (corrupted grass, ash roads, bone cobble, void water).
+- A **connected Grimvale route graph** across towns, wilderness, ruins, and portal-linked multi-map dungeons.
 - **Zelda-shaped combat maps**: entry → safe lane → arena → boss pocket → exit, with clear sight lines for real-time hitboxes (monsters use ~80px detection and ~20px attack range in `scripts/monsters/monster_base.gd`).
 - **PoE-shaped progression hooks** in metadata: encounter tables, quest chains, zone tier — defined in the Main plan, not duplicated here.
 
@@ -39,7 +52,7 @@ Specifically, the kit must support:
 - Buildings, trees, cliffs, walls, rocks, wells, fences, and ruins should be objects or tiles with predictable collision.
 - Spawn points should always be placed on walkable ground in **open combat arenas**, not narrow Zelda chokepoints where knockback or projectiles break.
 - Portal positions should always be visible, reachable, and far enough from collision that the player cannot get trapped.
-- Maps should look like believable places with a grim PoE mood, not random dark tiles scattered without a route.
+- Maps should look like believable Grimvale locations with regional history and clear routes, not random dark tiles scattered without purpose.
 - Town hubs need a clear **service cluster** (shop, quest giver, waypoint portals) — not spread randomly.
 - Decor must not look interactable when it is not (common failure when everything is dark).
 - New maps should be faster to make because the same pieces can be reused across routes and zone tiers.
@@ -52,17 +65,39 @@ Use a consistent **top-down** pixel-art perspective (Pokemon route legibility, Z
 
 Touchstones in prose only (do not copy assets): *Link's Awakening* shape clarity, *Path of Exile* zone mood, *Pokemon* route legibility.
 
-### Palette (dark everywhere)
+### Palette (heroic hubs, readable Umbral danger)
 
 Base tones across all biomes:
 
-- Desaturated corrupted greens and cold grays for overworld.
+- Desaturated corrupted greens and cold grays for overworld, lifted enough that routes and collision remain obvious.
 - Ember accents and dried blood highlights for danger and interactables.
 - Sickly marsh greens and murky browns for wetlands.
 - Cold blue-gray stone for caves and dungeons.
-- Void or ink-black water with subtle edge highlights.
+- Void or ink-black water with clear edge highlights and readable blocked silhouettes.
 
-Avoid cheerful Pokemon pastels. Darkness is atmospheric, not an excuse to obscure gameplay.
+Avoid toy-like pastels and near-black values that flatten the scene. The target is **heroic mystery with darker Umbral escalation and immediate top-down readability**.
+
+### Building style
+
+Buildings must follow Pokemon-style top-down structure, not flat side-scroller or front-only facade art.
+
+Required building traits:
+
+- Show the **roof/top plane** clearly, usually occupying a large portion of the sprite.
+- Show the **front wall/facade** below the roof so doors, signs, windows, and service identity are readable.
+- Use slight top-down projection: roof, chimney tops, wall thickness, awnings, ruined parapets, and doorway depth should be visible.
+- Keep the camera relationship consistent with the rest of the map: top-down Pokemon/Zelda, not isometric PoE.
+- Use PoE-inspired materials: cracked slate roofs, dark timber, corroded metal trim, bone/stone accents, scorched banners, worn masonry, corruption stains.
+- Keep outlines, roof edges, doors, and walkable thresholds bright enough to read at gameplay zoom.
+
+Forbidden building traits:
+
+- Front-only rectangles where the player sees just the wall and door.
+- Pure PoE isometric buildings or diagonal perspective.
+- Overly black roofs/walls that merge into roads, cliffs, or water.
+- Decorative grime that hides entrances, collision boundaries, or NPC service points.
+
+Good target: **Pokemon building construction and top visibility, with brighter PoE material mood**.
 
 ### Contrast rules (readability)
 
@@ -112,6 +147,7 @@ When the Main plan is silent on **art and layout taste** (palette, hub layout, c
 | System | Main plan location | Kit responsibility |
 |--------|-------------------|-------------------|
 | Map metadata, connections, biomes | `data/maps/maps.json` | Biome-specific tile sheets, zone tier decor |
+| New-game and respawn targets | `data/game_flow.json` | Valid map IDs and safe entry markers; no hardcoded scene paths |
 | Encounters, spawn tables | `data/encounters/encounters.json` | Spawn markers, encounter-grass custom data |
 | Quests | `scripts/autoload/quest_manager.gd` | Quest NPC placement, turn-in hubs |
 | Loot, inventory, equipment | `scripts/inventory/` | Chests, pickups, shop fronts |
@@ -206,14 +242,15 @@ File: `assets/tilesets/custom/poe_building_tiles.png`
 
 Include:
 
-- Grim wall segments.
-- Roof pieces.
+- Grim wall segments with readable front facades.
+- Roof pieces with clear top planes, ridge lines, eaves, and corner caps.
 - Doors and barred windows.
 - Chimneys and gargoyle corners.
 - Stairs and tower segments.
 - Ruin wall and shattered pillar caps.
+- Shop/service variants with readable signage, awnings, or prop silhouettes.
 
-Building walls and roofs should have collision. Doors should only block if the building cannot be entered in the current version.
+Building walls and roofs should have collision. Doors should only block if the building cannot be entered in the current version. Building art must show both the roof/top and the front facade; do not create front-only building tiles.
 
 ### Object Tiles (small decor)
 
@@ -340,6 +377,7 @@ Buildings:
 - Collision covers walls, roof body, and closed doors.
 - NPCs stand on walkable tiles in front of facades.
 - Doors align with walkable paths.
+- Roof/top planes must remain visible from the top-down camera; collision should follow the building footprint, not the full visible roof height if the roof visually overlaps walkable foreground.
 
 Props:
 
@@ -396,7 +434,7 @@ Every map has a type. Use the template that matches.
 | Pillar | Layout rule |
 |--------|-------------|
 | Pokemon | Central plaza, obvious exits N/E/S/W (or clear portal pairs) |
-| Path of Exile | Vendor + quest giver cluster, waypoint portal, grim lore signage |
+| Grimvale | Vendor + quest giver cluster, portal hall/waypoint, guild and regional story signage |
 | Zelda | Safe zone — no ambient monster spawns in the hub core |
 
 Place services within one screen of the plaza. Use hub plaza ground tiles. No encounter-grass in the safe core.
@@ -406,7 +444,7 @@ Place services within one screen of the plaza. Use hub plaza ground tiles. No en
 | Pillar | Layout rule |
 |--------|-------------|
 | Pokemon | `BackPortal` → main path → `NextPortal`; readable biome shift |
-| Path of Exile | Visual corruption increases toward `NextPortal`; higher `zone_tier` in JSON |
+| Umbral escalation | Visual corruption increases toward `NextPortal`; higher `zone_tier` in JSON |
 | Zelda | Side pockets for optional fights, chests, or loops; main path stays wide |
 
 Flow: **entry → safe lane → combat pockets → boss or elite pocket → exit**.
@@ -416,7 +454,7 @@ Flow: **entry → safe lane → combat pockets → boss or elite pocket → exit
 | Pillar | Layout rule |
 |--------|-------------|
 | Pokemon | Always include `BackPortal`; last route map may add `TownPortal` |
-| Path of Exile | Denser encounter table, stronger zone tier, ritual decor |
+| Umbral escalation | Denser encounter table, stronger zone tier, relic/ritual decor |
 | Zelda | Room sequence, arena before boss, dodge space, line-of-sight to exit after fight |
 
 Avoid random placement. Place objects as if the area was fought over, corrupted, or abandoned — not as arbitrary tile noise.
@@ -428,7 +466,7 @@ Layout questions for every map:
 - Where are `BackPortal` and `NextPortal`?
 - Where do enemies patrol or spawn?
 - What objects tell the grim story of this zone?
-- What is blocked, and is that obvious in the dark palette?
+- What is blocked, and is that obvious in the grim but readable palette?
 
 ## Monster Map Portal Standard
 
@@ -582,7 +620,8 @@ For every new tile or object:
 
 - Matches base tile size.
 - Uses top-down perspective consistent with the kit.
-- Uses dark PoE palette with readability contrast rules.
+- Uses grim, PoE-inspired palette with readability contrast rules; brighter than PoE where needed.
+- Buildings show roof/top planes plus front facades, Pokemon-style.
 - Walkable vs blocked meaning is obvious.
 - Interactables use the shared highlight language.
 - Transparent background for standalone objects.
@@ -671,7 +710,7 @@ Start small. Build only what the core route needs.
 
 ## Quest Standard For New Maps
 
-Every new monster map should usually get one matching quest with grim PoE tone in copy.
+Every new monster map should usually get one matching quest with heroic-mystery Grimvale tone and region-specific stakes.
 
 Quest requirements:
 
@@ -716,7 +755,7 @@ Before a map is usable:
 - Player spawns inside the map on walkable ground.
 - Every entry marker is clear of collision.
 - `BackPortal` and `NextPortal` work (or `TownPortal` on finale).
-- Walkable vs blocked reads clearly in dark palette.
+- Walkable vs blocked reads clearly in the grim but readable palette.
 - Player cannot walk through water, buildings, or tree trunks.
 - Player can cross bridges.
 - Hub: vendor and quest NPC reachable; no spawns in safe core.
@@ -761,12 +800,21 @@ New maps should prefer this custom kit over flat background images.
 
 Generated or painted background maps may remain temporarily for legacy scenes, but they must not be the long-term standard. Migrate maps to `TileMapLayer` + `YSortedObjects` as the kit becomes available.
 
+Registered maps must declare `content_state` in `data/maps/maps.json`:
+
+- `active`: current route content; allowed in New Game and normal travel lists.
+- `legacy`: preserved for existing saves or migration reference; excluded from normal travel.
+- `development`: test-only content; excluded from player travel.
+
+Travel lists are derived from `DataRegistry.get_travel_maps()`. Do not serialize competing map lists into portals or NPCs.
+
 ## Open Decisions
 
 **Locked:**
 
-- Dark PoE palette for all world biomes.
+- Bright guild/town identity with darker readable Umbral biomes.
 - Top-down Pokemon/Zelda perspective.
+- Buildings show Pokemon-style roof/top planes plus front facades, with PoE-inspired materials.
 
 **Still open:**
 

@@ -29,6 +29,7 @@ var attack_cooldown: float = 1.0
 
 func _ready():
 	add_to_group("monsters")
+	_apply_registry_visuals()
 	
 	# Connect signals
 	detection_zone.body_entered.connect(_on_detection_body_entered)
@@ -44,6 +45,17 @@ func _ready():
 	
 	# Start idle
 	_enter_state(State.IDLE)
+
+func _apply_registry_visuals() -> void:
+	var data_id := "slime_green" if monster_type == "slime" else monster_type
+	var monster_data := DataRegistry.get_monster(data_id)
+	var frames_path := str(monster_data.get("sprite_frames", ""))
+	if frames_path.is_empty() or not ResourceLoader.exists(frames_path):
+		return
+
+	var frames := ResourceLoader.load(frames_path, "SpriteFrames") as SpriteFrames
+	if frames != null:
+		animated_sprite.sprite_frames = frames
 
 func _physics_process(delta: float) -> void:
 	if GameManager.is_paused or current_state == State.DEAD:
@@ -70,9 +82,9 @@ func _enter_state(new_state: State) -> void:
 		State.WANDER:
 			wander_direction = Vector2(randf_range(-1, 1), randf_range(-1, 1)).normalized()
 			wander_timer = randf_range(1.0, 2.0)
-			animated_sprite.play("walk")
+			animated_sprite.play("move")
 		State.CHASE:
-			animated_sprite.play("walk")
+			animated_sprite.play("move")
 		State.ATTACK:
 			velocity = Vector2.ZERO
 			animated_sprite.play("attack")

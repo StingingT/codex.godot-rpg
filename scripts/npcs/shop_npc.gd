@@ -37,20 +37,16 @@ func _open_shop():
 	shop_ui.open(shop_data, player.inventory)
 
 func _load_shop_data() -> Dictionary:
-	var file_path = "res://data/shops/" + shop_id + ".json"
-	if FileAccess.file_exists(file_path):
-		var file = FileAccess.open(file_path, FileAccess.READ)
-		var json = JSON.new()
-		var error = json.parse(file.get_as_text())
-		if error == OK:
-			return json.data
+	var registered_shop := DataRegistry.get_shop(shop_id)
+	if not registered_shop.is_empty():
+		return registered_shop
 	
 	# Return default shop if file not found
-	return {
+	return DataRegistry.normalize_shop_data(shop_id, {
 		"shop_id": shop_id,
 		"shop_name": shop_name,
 		"items": [
 			{"item_id": "bronze_sword", "buy_price": 100, "sell_price": 50, "quantity": -1},
 			{"item_id": "bronze_armor", "buy_price": 200, "sell_price": 100, "quantity": -1}
 		]
-	}
+	})

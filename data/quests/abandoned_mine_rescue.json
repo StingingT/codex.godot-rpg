@@ -1,5 +1,6 @@
 {
   "quest_id": "abandoned_mine_rescue",
+  "content_state": "legacy",
   "title": "Mine Rescue",
   "description": "Miners have gone missing in the abandoned mine. Find them and defeat the creatures lurking within.",
   "objectives": [

@@ -1,5 +1,6 @@
 {
   "quest_id": "slay_stone_golem",
+  "content_state": "legacy",
   "title": "Stone Golem Threat",
   "description": "A stone golem menaces the Mystic Forest. Defeat it to secure the area.",
   "objectives": [

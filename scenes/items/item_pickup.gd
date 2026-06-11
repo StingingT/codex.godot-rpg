@@ -17,6 +17,8 @@ var is_picked_up: bool = false
 func _ready():
 	body_entered.connect(_on_body_entered)
 	body_exited.connect(_on_body_exited)
+	input_event.connect(_on_input_event)
+	input_pickable = true
 	_create_placeholder_marker()
 	
 	# Start bobbing animation using the configured variables
@@ -28,7 +30,6 @@ func _ready():
 func _on_body_entered(body: Node2D):
 	if body is Player:
 		player_in_range = body as Player
-		_pick_up(player_in_range)
 
 func _on_body_exited(body: Node2D) -> void:
 	if body == player_in_range:
@@ -38,24 +39,43 @@ func _input(event: InputEvent) -> void:
 	if player_in_range and event.is_action_pressed("interact") and not (event is InputEventKey and event.is_echo()):
 		_pick_up(player_in_range)
 
+func _on_input_event(_viewport: Node, event: InputEvent, _shape_index: int) -> void:
+	if player_in_range == null:
+		return
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+		_pick_up(player_in_range)
+	elif event is InputEventScreenTouch and event.pressed:
+		_pick_up(player_in_range)
+
 func _pick_up(player: Player) -> void:
 	if is_picked_up or player == null:
 		return
+	is_picked_up = true
 	var item := DataRegistry.get_item_data(item_id)
 	if item and player.inventory:
-		if not player.inventory.add_item(item, quantity):
+		var result := player.inventory.add_item_detailed(item, quantity)
+		var accepted := int(result.get("accepted", 0))
+		var remaining := int(result.get("remaining", quantity))
+		if accepted <= 0:
+			_show_message("Quest item limit reached" if result.get("reason", "") == "quest_limit" else "Inventory full")
+			is_picked_up = false
 			return
-		GameManager.item_picked_up.emit(item_id, quantity)
-		_show_pickup_text(item.item_name)
+		GameManager.item_picked_up.emit(item_id, accepted)
+		_show_message("+ %s x%d" % [item.item_name, accepted])
+		quantity = remaining
+		if remaining > 0:
+			_show_message("Quest item limit reached" if result.get("reason", "") == "quest_limit" else "Inventory full")
+			is_picked_up = false
+			return
 	else:
-		GameManager.item_picked_up.emit(item_id, quantity)
-		_show_pickup_text(item_id)
-	is_picked_up = true
+		push_warning("Cannot pick up unknown item: %s" % item_id)
+		is_picked_up = false
+		return
 	queue_free()
 
-func _show_pickup_text(item_name: String):
+func _show_message(message: String) -> void:
 	var label = Label.new()
-	label.text = "+ %s" % item_name
+	label.text = message
 	label.position = global_position
 	_get_pickup_text_parent().add_child(label)
 	

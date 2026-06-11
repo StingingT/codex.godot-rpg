@@ -1,0 +1,15 @@
+{
+  "schema_version": 2,
+  "item_id": "iron_pickaxe",
+  "item_name": "Iron Pickaxe",
+  "description": "A sturdy mining tool recovered from the abandoned mine.",
+  "item_type": 3,
+  "category": "material",
+  "slot": "",
+  "required_level": 1,
+  "stackable": false,
+  "max_stack": 1,
+  "base_stats": {},
+  "buy_price": 120,
+  "sell_price": 60
+}

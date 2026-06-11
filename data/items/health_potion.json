@@ -1,11 +1,16 @@
 {
+  "schema_version": 2,
   "item_id": "health_potion",
   "item_name": "Health Potion",
   "description": "Restores 50 HP when consumed.",
   "item_type": 2,
-  "heal_amount": 50,
+  "category": "consumable",
+  "slot": "",
+  "required_level": 1,
   "stackable": true,
-  "max_stack": 99,
+  "max_stack": 20,
+  "heal_amount": 50,
+  "base_stats": {},
   "buy_price": 25,
   "sell_price": 10
 }

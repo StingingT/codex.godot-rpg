@@ -1,0 +1,29 @@
+{
+  "schema_version": 2,
+  "item_id": "steel_armor",
+  "item_name": "Steel Armor",
+  "description": "Heavy steel armor built to withstand punishing blows.",
+  "item_type": 1,
+  "category": "equipment",
+  "slot": "overall",
+  "armor_type": 0,
+  "material_tier": "steel",
+  "required_level": 5,
+  "allowed_classes": [],
+  "stackable": false,
+  "max_stack": 1,
+  "base_stats": {
+    "defense": 18,
+    "max_hp": 80
+  },
+  "standard_roll": {
+    "defense": {
+      "min": 2,
+      "max": 5
+    }
+  },
+  "affix_pool": "armor_basic",
+  "fixed_rarity": "common",
+  "buy_price": 800,
+  "sell_price": 280
+}

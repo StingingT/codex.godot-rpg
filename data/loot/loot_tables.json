@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "rarity_weights": {
+    "common": 75.0,
+    "rare": 20.0,
+    "epic": 4.5,
+    "legendary": 0.5
+  },
+  "pity": {
+    "rare_start_kills": 8,
+    "rare_bonus_per_kill": 0.01,
+    "rare_bonus_cap": 0.2,
+    "rare_guarantee_kill": 30,
+    "epic_start_kills": 30,
+    "epic_bonus_per_kill": 0.001,
+    "epic_bonus_cap": 0.03
+  },
+  "tables": {}
+}
