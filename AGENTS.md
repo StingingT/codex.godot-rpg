@@ -4,6 +4,7 @@ Use the master plan and routed domain guide for normal work. Use `$godogen` only
 **Skills by role:** [docs/agent_skills_required.md](docs/agent_skills_required.md)
 **Master plan:** [Main_ChatGPT-Godot_RPG_Implementation_Plan.md](Main_ChatGPT-Godot_RPG_Implementation_Plan.md)
 **Architect review:** [docs/architect_review_checklist.md](docs/architect_review_checklist.md)
+**Current work orders:** [docs/architect_agent_work_orders.md](docs/architect_agent_work_orders.md)
 **Agent handoff:** [docs/agent_handoff_template.md](docs/agent_handoff_template.md)
 **Integration log:** [docs/agent_integration_log.md](docs/agent_integration_log.md)
 
@@ -20,3 +21,5 @@ Use the master plan and routed domain guide for normal work. Use `$godogen` only
 | Inventory / equipment / loot | [docs/Inventory_Equipment_Itemization_Loot_Agent_Instructions.md](docs/Inventory_Equipment_Itemization_Loot_Agent_Instructions.md) |
 
 **Locked defaults:** heroic mystery with bright blue/gold guild identity and darker readable Umbral regions; Warrior playable in v1; Ranger/Mage disabled as **Coming Later**; one character-ID autosave plus index; global settings stored separately; one HUD modal coordinator; one `DamageCalculator`; one combat feedback owner; no v1 screen shake or hit-stop.
+
+Before editing, send the architect the intended files, dependencies, assumptions, and validation plan. After editing, submit the handoff and validation evidence to the architect. Do not merge, commit, push, or pass work to another agent until the architect records **Ready**.
